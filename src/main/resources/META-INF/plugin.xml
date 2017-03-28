@@ -1,65 +1,44 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.1.2</version>
+    <version>0.2.0</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
         <p>
             This plugins adds some codeInsight and framework knowledge for Open- and SAPUI5 to IDEA IDEs.
-            It doesn't do much in its current state, it's not "production ready" and it won't save you much time for
+            It does not do much in its current state, it is not "production ready" and it will not save your time for
             now.
         </p>
 
         <h3>Things it may be able to do now (experimental):</h3>
         <ul>
-            <li>Check XMLViews for invalid aggregations or invalid aggregation content (uses nightly api for now)</li>
-            <li>Highlight simple UI5 bindings</li>
-            <li>Shows errors for complex UI5 bindings even if they are correct (just kidding, this is a bug)</li>
+            <li>XMLView: Go To Controller</li>
+            <li>Collapse the controller name in the XMLView</li>
         </ul>
 
         <h3>Things that will (or will not) come:</h3>
         <ul>
+            <li>Settings to enable or disable certain features</li>
+            <li>Understanding & support for the UI5 binding syntax incl. completion, references, syntax checking</li>
             <li>Indexer for UI5 classes including metadata and inheritance tree</li>
-            <li>Go to Controller, go to View, go to formatter, go to event handler, ...</li>
-            <li>better support for the binding DSL & support for operations/autocomplete on bindings</li>
+            <li><s>Go to Controller, </s>go to View, go to formatter, go to event handler, ...</li>
             <li>support for manifest metadata like routes etc.</li>
         </ul>
         ]]></description>
 
 
-    <idea-version since-build="162"/>
+    <idea-version since-build="171"/>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.xml</depends>
     <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <lang.foldingBuilder language="XML" implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder" />
-        <!--
-        <fileBasedIndex implementation="de.uniorg.ui5helper.index.JavaScriptIndexer"/>
-
-        <projectViewNodeDecorator implementation="de.uniorg.ui5helper.projectView.NamespaceDecorator"/>
+        <lang.foldingBuilder language="XML"
+                             implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
+        <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoControllerProvider"/>
-        <externalAnnotator language="XML" implementationClass="de.uniorg.ui5helper.TestAnnotator"/>
-        <lang.syntaxHighlighterFactory language="UI5Binding"
-                                       implementationClass="de.uniorg.ui5helper.binding.SyntaxHighlightingFactory"/>
-        <lang.parserDefinition language="UI5Binding"
-                               implementationClass="de.uniorg.ui5helper.binding.BindingParserDefinition"/>
-        <fileTypeFactory implementation="de.uniorg.ui5helper.binding.BindingFileTypeFactory"/>
-        <lang.foldingBuilder language="XML" implementationClass="de.uniorg.ui5helper.XMLViewFoldingBuilder"/>
-        <multiHostInjector implementation="de.uniorg.ui5helper.BindingLanguageInjector"/>-->
     </extensions>
-    <!--<actions>
-        <action id="de.uniorg.ui5helper.actions.SetNamespaceRoot" class="de.uniorg.ui5helper.actions.SetNamespaceRoot"
-                text="Set Namespace" description="Marks this Folder as the root for a namespace">
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-        </action>
-    </actions>
-    <project-components>
-        <component>
-            <implementation-class>de.uniorg.ui5helper.component.Ui5Project</implementation-class>
-        </component>
-    </project-components>-->
 </idea-plugin>

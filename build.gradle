@@ -28,7 +28,8 @@ intellij {
     type 'IU'
     plugins 'coverage', 'JavaScriptLanguage', 'CSS'
     pluginName 'ui5-helper'
+    alternativeIdePath PhpStormPath
 }
 
 group 'de.uniorg'
-version '1.0-SNAPSHOT'
+version '0.2.0'
