@@ -1,30 +1,23 @@
 package de.uniorg.ui5helper.index.mvc;
 
-import com.intellij.lang.javascript.JavaScriptFileType;
-import com.intellij.lang.javascript.psi.JSFile;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
-import de.uniorg.ui5helper.ui.mvc.ControllerUtil;
+import de.uniorg.ui5helper.ui.mvc.XmlViewUtil;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-/**
- * Created by masch on 3/28/17.
- */
-public class NaiveControllerIndexer extends ScalarIndexExtension<String> {
-
-    public static final ID<String, Void> KEY = ID.create("de.uniorg.ui5helper.cache.index.mvc.controller");
+public class NaiveXmlViewIndexer extends ScalarIndexExtension<String> {
+    public static final ID<String, Void> KEY = ID.create("de.uniorg.ui5helper.cache.index.mvc.xmlview");
     private final KeyDescriptor<String> myKeyDescriptor = new EnumeratorStringDescriptor();
 
     @NotNull
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
-        return (file) -> file.getFileType() instanceof JavaScriptFileType && file.getName().contains(".controller.");
+        return (file) -> file.getName().contains(".view.xml");
     }
 
     @Override
@@ -50,13 +43,17 @@ public class NaiveControllerIndexer extends ScalarIndexExtension<String> {
                 return map;
             }
 
-            if (!(file instanceof JSFile)) {
+            if (!XmlViewUtil.isXmlView(file)) {
                 return map;
             }
 
-            Map<String, PsiElement> declarations = ControllerUtil.findDeclarations(file);
+            String controllerName = XmlViewUtil.getControllerName(file);
 
-            declarations.forEach((key, value) -> map.put(key, null));
+            if (controllerName == null) {
+                return map;
+            }
+
+            map.put(controllerName, null);
 
             return map;
         };
