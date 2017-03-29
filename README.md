@@ -9,6 +9,7 @@ now.
 
  - XMLView: Go To Controller
  - Collapse the controller name in the XMLView
+ - complete target names in manifest.json
 
 
 ### Things that will (or will not) come:

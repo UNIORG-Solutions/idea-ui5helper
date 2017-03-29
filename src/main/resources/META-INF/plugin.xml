@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
@@ -15,6 +15,7 @@
         <ul>
             <li>XMLView: Go To Controller</li>
             <li>Collapse the controller name in the XMLView</li>
+            <li>complete target names in manifest.json</li>
         </ul>
 
         <h3>Things that will (or will not) come:</h3>
@@ -40,5 +41,7 @@
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoControllerProvider"/>
+        <completion.contributor language="JSON"
+                                implementationClass="de.uniorg.ui5helper.codeInsight.ManifestCompletionContributor"/>
     </extensions>
 </idea-plugin>
