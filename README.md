@@ -8,7 +8,8 @@ now.
 ### Things it may be able to do now (experimental):
 
  - XMLView: Go To Controller
- - Collapse the controller name in the XMLView
+ - Controller: Go To (XML)View
+ - collapse the controller name in XMLViews
  - complete target names in manifest.json
 
 
@@ -17,7 +18,7 @@ now.
  - Settings to enable or disable certain features
  - Understanding & support for the UI5 binding syntax incl. completion, references, syntax checking, ...
  - Indexer for UI5 classes including metadata and inheritance tree
- - <s>Go to Controller, </s>go to View, go to formatter, go to event handler, ...
+ - <s>Go to Controller, go to View,</s> go to formatter, go to event handler, ...
  - support for manifest metadata like routes etc.
 
 
