@@ -31,4 +31,4 @@ intellij {
 patchPluginXml { sinceBuild = '171' }
 
 group 'de.uniorg'
-version '0.2.2'
+version '0.2.3'

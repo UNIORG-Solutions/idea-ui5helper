@@ -22,3 +22,10 @@ now.
  - support for manifest metadata like routes etc.
 
 
+#### Changelog
+
+ __0.2.3__
+ - Bugfix: controllerName lookup for "sap.ui.core.mvc.XMLView" should work just like "sap.ui.core.mvc.View"</li>
+
+ __0.2.2__
+ - Feature: Controller: go to View
