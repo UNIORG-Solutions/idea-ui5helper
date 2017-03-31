@@ -67,6 +67,6 @@ public class NaiveXmlViewIndexer extends ScalarIndexExtension<String> {
 
     @Override
     public int getVersion() {
-        return 0;
+        return 1;
     }
 }

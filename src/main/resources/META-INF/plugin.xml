@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.2.2</version>
+    <version>0.2.3</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
@@ -27,6 +27,23 @@
             <li><s>Go to Controller, go to View, </s>go to formatter, go to event handler, ...</li>
             <li>support for manifest metadata like routes etc.</li>
         </ul>
+
+        <h4>Changelog<h4>
+        <dl>
+            <dt>0.2.3</dt>
+            <dd>
+                <ul>
+                    <li>Bugfix: controllerName lookup for "sap.ui.core.mvc.XMLView" should work just like "sap.ui.core.mvc.View"</li>
+                </ul>
+            </dd>
+
+            <dt>0.2.2</dt>
+            <dd>
+                <ul>
+                    <li>Feature: Controller: go to View</li>
+                </ul>
+            </dd>
+        </dl>
         ]]></description>
 
 

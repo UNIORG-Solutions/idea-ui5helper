@@ -3,13 +3,10 @@ buildscript {
         mavenCentral()
         maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
     }
-    dependencies {
-        classpath "gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.1.10"
-    }
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version "0.2.0"
+    id 'org.jetbrains.intellij' version "0.2.7"
 }
 
 repositories {
@@ -30,6 +27,8 @@ intellij {
     pluginName 'ui5-helper'
     alternativeIdePath PhpStormPath
 }
+
+patchPluginXml { sinceBuild = '171' }
 
 group 'de.uniorg'
 version '0.2.2'

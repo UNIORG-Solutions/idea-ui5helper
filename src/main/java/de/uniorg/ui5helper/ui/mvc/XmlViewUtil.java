@@ -17,7 +17,7 @@ public class XmlViewUtil {
         XmlFile xmlFile = (XmlFile) file;
 
         try {
-            return xmlFile.getRootTag().getLocalName().equals("View");
+            return xmlFile.getRootTag().getLocalName().equals("View") || xmlFile.getRootTag().getLocalName().equals("XMLView");
         } catch (NullPointerException npe) {
             return false;
         }
@@ -30,7 +30,7 @@ public class XmlViewUtil {
 
         try {
             XmlTag viewTag = ((XmlFile) file).getRootTag();
-            if (!viewTag.getLocalName().equals("View")) {
+            if (!viewTag.getLocalName().equals("View") && !viewTag.getLocalName().equals("XMLView")) {
                 return null;
             }
 

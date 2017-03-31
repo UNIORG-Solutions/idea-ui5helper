@@ -37,7 +37,7 @@ public class GotoControllerProvider extends RelatedItemLineMarkerProvider {
         }
 
         XmlTag xmlElement = (XmlTag) psiElement;
-        if (!xmlElement.getLocalName().equalsIgnoreCase("View")) {
+        if (!xmlElement.getLocalName().equalsIgnoreCase("View") && !xmlElement.getLocalName().equalsIgnoreCase("XMLView")) {
             return list;
         }
 
