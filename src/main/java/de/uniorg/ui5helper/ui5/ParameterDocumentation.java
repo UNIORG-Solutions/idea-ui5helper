@@ -1,25 +1,10 @@
 package de.uniorg.ui5helper.ui5;
 
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
 
-public class ParameterDocumentation implements ApiSymbol {
-    private String name;
+public class ParameterDocumentation extends AbstractApiSymbol {
     private String type;
     private boolean optional;
-    private String description;
-
-    @NotNull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-        return description;
-    }
 
     public String getType() {
         return type;
@@ -31,10 +16,11 @@ public class ParameterDocumentation implements ApiSymbol {
 
     static ParameterDocumentation fromJsonDoc(JsonObject doc) {
         ParameterDocumentation pdoc = new ParameterDocumentation();
-        pdoc.name = doc.getAsJsonPrimitive("name").getAsString();
-        pdoc.type = doc.getAsJsonPrimitive("type").getAsString();
-        pdoc.optional = doc.getAsJsonPrimitive("optional").getAsBoolean();
-        pdoc.description = doc.getAsJsonPrimitive("description").getAsString();
+        ParserUtil parser = new ParserUtil(doc);
+        pdoc.name = parser.getName();
+        pdoc.description = parser.getDescription();
+        pdoc.type = parser.getString("type", "");
+        pdoc.optional = parser.getBool("optional", false);
 
         return pdoc;
     }

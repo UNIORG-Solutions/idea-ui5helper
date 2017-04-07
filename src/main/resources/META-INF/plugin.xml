@@ -54,6 +54,17 @@
     <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
+        <lang.documentationProvider language="XML"
+                                    implementationClass="de.uniorg.ui5helper.docs.XMLDocumentationProvider"/>
+
+        <projectService serviceImplementation="de.uniorg.ui5helper.settings.Settings"/>
+
+        <projectConfigurable instance="de.uniorg.ui5helper.settings.SettingsForm"
+                             displayName="UI5 Helper"
+                             id="UI5.SettingsForm"/>
+
+
         <lang.foldingBuilder language="XML"
                              implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
@@ -65,4 +76,9 @@
         <completion.contributor language="JSON"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.ManifestCompletionContributor"/>
     </extensions>
+    <project-components>
+        <component>
+            <implementation-class>de.uniorg.ui5helper.ProjectComponent</implementation-class>
+        </component>
+    </project-components>
 </idea-plugin>

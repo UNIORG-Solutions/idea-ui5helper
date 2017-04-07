@@ -1,6 +1,5 @@
 package de.uniorg.ui5helper.ui5;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
@@ -13,20 +12,28 @@ public class ClassDocumentation implements ModuleApiSymbol {
 
     private Map<String, MethodDocumentation> methods = new THashMap<>();
 
-    static ClassDocumentation fromJsonDoc(JsonObject jsonObject) {
-        String className = jsonObject.getAsJsonPrimitive("name").getAsString();
-        ClassDocumentation symbol = new ClassDocumentation(className);
+    private MethodDocumentation constructor;
 
-        for (JsonElement method : jsonObject.getAsJsonArray("methods")) {
-            MethodDocumentation m = MethodDocumentation.fromJsonDoc(method.getAsJsonObject());
-            symbol.methods.put(m.getName(), m);
-        }
+    private String description;
 
-        return symbol;
-    }
+    private String resource;
 
-    private ClassDocumentation(String className) {
-        this.className = className;
+    private String module;
+
+    private UI5Metadata ui5Metadata;
+
+    static ClassDocumentation fromJsonDoc(JsonObject doc) {
+        ClassDocumentation cdoc = new ClassDocumentation();
+        ParserUtil parser = new ParserUtil(doc);
+
+        cdoc.className = parser.getName();
+        cdoc.methods = parser.mapArray("methods", MethodDocumentation::fromJsonDoc);
+        cdoc.description = parser.getString("description", "");
+        cdoc.constructor = parser.getObject("constructor", MethodDocumentation::constructorFromJsonDoc);
+        cdoc.resource = parser.getString("resource", null);
+        cdoc.module = parser.getString("module", null);
+        cdoc.ui5Metadata = parser.getObject("ui5-metadata", UI5Metadata::fromJsonDoc);
+        return cdoc;
     }
 
     @NotNull
@@ -37,7 +44,7 @@ public class ClassDocumentation implements ModuleApiSymbol {
     @Override
     @NotNull
     public String getDescription() {
-        return "";
+        return description;
     }
 
     public Map<String, MethodDocumentation> getMethods() {
@@ -46,11 +53,19 @@ public class ClassDocumentation implements ModuleApiSymbol {
 
     @Override
     public String getSourceFile() {
-        return null;
+        return resource;
     }
 
     @Override
     public String getModuleName() {
-        return null;
+        return module;
+    }
+
+    public MethodDocumentation getConstructor() {
+        return constructor;
+    }
+
+    public UI5Metadata getUI5Metadata() {
+        return ui5Metadata;
     }
 }

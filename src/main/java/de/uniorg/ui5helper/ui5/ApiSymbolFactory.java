@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
  */
 public class ApiSymbolFactory {
     public static ApiSymbol parseSymbol(JsonObject jsonObject) {
-        switch(jsonObject.getAsJsonPrimitive("kind").getAsString()) {
+        switch (jsonObject.getAsJsonPrimitive("kind").getAsString()) {
             case "class":
                 return ClassDocumentation.fromJsonDoc(jsonObject);
         }

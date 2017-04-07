@@ -24,15 +24,37 @@ public class ApiDocumentation {
      */
     private String library;
 
-
-    public ApiDocumentation(JsonObject apijson) {
+    ApiDocumentation(JsonObject apijson) {
         this.version = SemVer.parseFromText(apijson.getAsJsonPrimitive("version").getAsString());
         this.library = apijson.getAsJsonPrimitive("library").getAsString();
         this.symbols = new THashMap<>();
         for (JsonElement jsonElement : apijson.getAsJsonArray("symbols")) {
             if (jsonElement.isJsonObject()) {
                 ApiSymbol symbol = ApiSymbolFactory.parseSymbol(jsonElement.getAsJsonObject());
+                if (symbol != null) {
+                    this.symbols.put(symbol.getName(), symbol);
+                }
             }
         }
+    }
+
+    public boolean has(String name) {
+        return this.symbols.containsKey(name);
+    }
+
+    public ApiSymbol get(String name) {
+        return this.symbols.get(name);
+    }
+
+    public String getLibrary() {
+        return library;
+    }
+
+    public SemVer getVersion() {
+        return version;
+    }
+
+    void createIndex(ApiIndex index) {
+        this.symbols.keySet().forEach(key -> index.register(key, this));
     }
 }

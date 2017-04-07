@@ -1,33 +1,17 @@
 package de.uniorg.ui5helper.ui5;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import gnu.trove.THashMap;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class MethodDocumentation implements ApiSymbol {
-
-    private String name;
-
-    private String description;
+public class MethodDocumentation extends AbstractApiSymbol {
 
     private Map<String, ParameterDocumentation> parameters = new THashMap<>();
 
     private ReturnValueDocumentation returnValue;
 
-    @NotNull
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @NotNull
-    @Override
-    public String getDescription() {
-        return description;
-    }
+    private boolean isStatic;
 
     public Map<String, ParameterDocumentation> getParameters() {
         return parameters;
@@ -39,19 +23,26 @@ public class MethodDocumentation implements ApiSymbol {
 
     static MethodDocumentation fromJsonDoc(JsonObject doc) {
         MethodDocumentation mdoc = new MethodDocumentation();
-        mdoc.name = doc.getAsJsonPrimitive("name").getAsString();
-        mdoc.description = doc.getAsJsonPrimitive("description").getAsString();
+        ParserUtil parser = new ParserUtil(doc);
+        mdoc.name = parser.getName();
+        mdoc.description = parser.getDescription();
+        mdoc.isStatic = parser.getBool("static", false);
+        mdoc.parameters = parser.mapArray("parameters", ParameterDocumentation::fromJsonDoc);
+        mdoc.returnValue = parser.getObject("returnValue", ReturnValueDocumentation::fromJsonDoc);
 
-        for (JsonElement parameter : doc.getAsJsonArray("parameters")) {
-            ParameterDocumentation pdoc = ParameterDocumentation.fromJsonDoc(parameter.getAsJsonObject());
+        return mdoc;
+    }
 
-            mdoc.parameters.put(pdoc.getName(), pdoc);
-        }
+    public boolean isStatic() {
+        return isStatic;
+    }
 
-        if (doc.has("returnValue") && doc.get("returnValue").isJsonObject()) {
-            mdoc.returnValue = ReturnValueDocumentation.fromJsonDoc(doc.getAsJsonObject("returnValue"));
-        }
-
+    static MethodDocumentation constructorFromJsonDoc(JsonObject doc) {
+        MethodDocumentation mdoc = new MethodDocumentation();
+        ParserUtil parser = new ParserUtil(doc);
+        mdoc.name = "constructor";
+        mdoc.description = parser.getDescription();
+        mdoc.parameters = parser.mapArray("parameters", ParameterDocumentation::fromJsonDoc);
         return mdoc;
     }
 }
