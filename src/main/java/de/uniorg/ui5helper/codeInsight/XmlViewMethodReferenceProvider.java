@@ -9,7 +9,6 @@ import com.intellij.util.ProcessingContext;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.ui.mvc.XmlViewUtil;
 import de.uniorg.ui5helper.ui5.ApiIndex;
-import de.uniorg.ui5helper.ui5.ApiService;
 import de.uniorg.ui5helper.ui5.ClassDocumentation;
 import de.uniorg.ui5helper.ui5.EventDocumentation;
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +31,7 @@ public class XmlViewMethodReferenceProvider extends PsiReferenceContributor {
                         XmlAttributeValue attrValue = (XmlAttributeValue) element;
                         XmlAttribute attr = (XmlAttribute) attrValue.getParent();
                         XmlTag propTag = (XmlTag) attrValue.getParent().getParent();
-                        ApiService api = element.getProject().getComponent(ProjectComponent.class).getApiService();
-                        ApiIndex index = api.getIndex("latest");
+                        ApiIndex index = element.getProject().getComponent(ProjectComponent.class).getApiIndex();
                         ClassDocumentation doc = (ClassDocumentation) index.lookup(propTag.getNamespace() + "." + propTag.getLocalName());
                         if (doc == null) {
                             return new PsiReference[0];
@@ -49,7 +47,7 @@ public class XmlViewMethodReferenceProvider extends PsiReferenceContributor {
                             return new PsiReference[0];
                         }
 
-                        return new PsiReference[] { new EventHandlerReference(attrValue) };
+                        return new PsiReference[]{new EventHandlerReference(attrValue)};
                     }
                 }
         );

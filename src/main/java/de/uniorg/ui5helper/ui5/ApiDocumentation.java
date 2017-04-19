@@ -24,7 +24,7 @@ public class ApiDocumentation {
      */
     private String library;
 
-    ApiDocumentation(JsonObject apijson) {
+    public ApiDocumentation(JsonObject apijson) {
         this.version = SemVer.parseFromText(apijson.getAsJsonPrimitive("version").getAsString());
         this.library = apijson.getAsJsonPrimitive("library").getAsString();
         this.symbols = new THashMap<>();
@@ -54,7 +54,7 @@ public class ApiDocumentation {
         return version;
     }
 
-    void createIndex(ApiIndex index) {
+    public void createIndex(ApiIndex index) {
         this.symbols.keySet().forEach(key -> index.register(key, this));
     }
 }

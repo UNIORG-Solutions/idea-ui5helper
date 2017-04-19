@@ -1,16 +1,18 @@
 package de.uniorg.ui5helper.settings;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import de.uniorg.ui5helper.remote.Ui5InfoService;
-import de.uniorg.ui5helper.remote.Ui5Version;
+import de.uniorg.ui5helper.ProjectComponent;
+import de.uniorg.ui5helper.ui5.receive.CacheStorage;
+import de.uniorg.ui5helper.ui5.receive.HttpsClient;
+import de.uniorg.ui5helper.ui5.receive.Provider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,8 +20,7 @@ import java.util.List;
  */
 public class SettingsForm implements Configurable {
     private final Project project;
-    private JComboBox<Ui5Version> ui5Version;
-    private JCheckBox collapsControllerName;
+    private JComboBox<String> ui5Version;
     private JPanel panel;
     private JButton refreshVersions;
 
@@ -43,34 +44,31 @@ public class SettingsForm implements Configurable {
     @Override
     public JComponent createComponent() {
 
+        Provider apiProvider = new Provider(new CacheStorage(PathManager.getSystemPath() + "/caches"), new HttpsClient());
+
+        refreshVersions.setEnabled(false);
+        ui5Version.removeAllItems();
+        apiProvider.getAvailableVersions(this::onNewVersion);
+
         refreshVersions.addActionListener(actionEvent -> {
-            String selectedVersion = getSettings().ui5Version;
-
-            Runnable refresh = () -> {
-                try {
-                    refreshVersions.setEnabled(false);
-                    ui5Version.setEnabled(false);
-                    ui5Version.removeAllItems();
-                    List<Ui5Version> versions = Ui5InfoService.getVersions();
-                    versions.forEach(version -> {
-                        ui5Version.addItem(version);
-                        if (version.getText().equals(selectedVersion)) {
-                            ui5Version.setSelectedItem(version);
-                        }
-                    });
-
-                    ui5Version.setEnabled(true);
-                    refreshVersions.setEnabled(true);
-                } catch (IOException iox) {
-                    System.err.println(iox.getLocalizedMessage());
-                    refreshVersions.setEnabled(true);
-                }
-            };
-
-            new Thread(refresh).start();
+            refreshVersions.setEnabled(false);
+            ui5Version.removeAllItems();
+            apiProvider.refreshAvailableVersions(this::onNewVersion);
         });
 
         return panel;
+    }
+
+    private void onNewVersion(List<String> versions) {
+        String selectedVersion = getSettings().ui5Version;
+        versions.forEach(version -> {
+            ui5Version.addItem(version);
+            if (version.equals(selectedVersion)) {
+                ui5Version.setSelectedItem(version);
+            }
+        });
+        ui5Version.setEnabled(true);
+        refreshVersions.setEnabled(true);
     }
 
     @Override
@@ -78,12 +76,11 @@ public class SettingsForm implements Configurable {
         return !getSelectedVersion().equals(getSettings().ui5Version);
     }
 
-    private void updateViewFromSettings()
-    {
+    private void updateViewFromSettings() {
         String selectedVersion = getSettings().ui5Version;
         int items = ui5Version.getItemCount();
         for (int i = 0; i < items; i++) {
-            if (ui5Version.getItemAt(i).getText().equals(selectedVersion)) {
+            if (ui5Version.getItemAt(i).equals(selectedVersion)) {
                 ui5Version.setSelectedIndex(i);
                 break;
             }
@@ -91,10 +88,6 @@ public class SettingsForm implements Configurable {
     }
 
     private String getSelectedVersion() {
-        if (ui5Version.getSelectedItem() instanceof Ui5Version) {
-            return ((Ui5Version) ui5Version.getSelectedItem()).getText();
-        }
-
         return (String) ui5Version.getSelectedItem();
     }
 
@@ -104,6 +97,11 @@ public class SettingsForm implements Configurable {
 
     @Override
     public void apply() throws ConfigurationException {
+        if (!getSettings().ui5Version.equals(getSelectedVersion())) {
+            this.project.getComponent(ProjectComponent.class).changeApiVersion(getSelectedVersion());
+        }
+
         getSettings().ui5Version = getSelectedVersion();
+
     }
 }

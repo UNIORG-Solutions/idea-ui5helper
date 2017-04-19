@@ -1,7 +1,12 @@
 package de.uniorg.ui5helper;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
-import de.uniorg.ui5helper.ui5.ApiService;
+import de.uniorg.ui5helper.settings.Settings;
+import de.uniorg.ui5helper.ui5.ApiIndex;
+import de.uniorg.ui5helper.ui5.receive.CacheStorage;
+import de.uniorg.ui5helper.ui5.receive.HttpsClient;
+import de.uniorg.ui5helper.ui5.receive.Provider;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,18 +14,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ProjectComponent implements com.intellij.openapi.components.ProjectComponent {
 
-    private final ApiService apiService;
-
+    private final Provider apiProvider;
     private Project project;
+    private ApiIndex apiIndex;
 
     public ProjectComponent(Project project) {
         this.project = project;
-        this.apiService = new ApiService();
+        this.apiProvider = new Provider(new CacheStorage(PathManager.getSystemPath() + "/caches"), new HttpsClient());
     }
 
     @Override
     public void projectOpened() {
-
+        Settings settings = Settings.getInstance(this.project);
+        this.changeApiVersion(settings.ui5Version);
     }
 
     @Override
@@ -30,7 +36,7 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
 
     @Override
     public void initComponent() {
-        this.apiService.prefetchDocs("latest");
+
     }
 
     @Override
@@ -43,7 +49,13 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
         return "Ui5ProjectComponent";
     }
 
-    public ApiService getApiService() {
-        return apiService;
+    public ApiIndex getApiIndex() {
+        return apiIndex;
+    }
+
+    public void changeApiVersion(String selectedVersion) {
+        this.apiProvider.getApiIndex(selectedVersion, index -> {
+            this.apiIndex = index;
+        });
     }
 }

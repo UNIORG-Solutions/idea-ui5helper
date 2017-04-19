@@ -8,7 +8,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
 import de.uniorg.ui5helper.ProjectComponent;
-import de.uniorg.ui5helper.ui5.ApiService;
+import de.uniorg.ui5helper.ui5.ApiIndex;
 import de.uniorg.ui5helper.ui5.ApiSymbol;
 import de.uniorg.ui5helper.ui5.ClassDocumentation;
 import de.uniorg.ui5helper.ui5.UI5Metadata;
@@ -78,8 +78,8 @@ public class XMLDocumentationProvider implements DocumentationProvider {
     }
 
     private String getPropertyDoc(Project project, String className, String propertyName) {
-        ApiService service = project.getComponent(ProjectComponent.class).getApiService();
-        ApiSymbol doc = service.getIndex("latest").lookup(className);
+        ApiIndex apiIndex = project.getComponent(ProjectComponent.class).getApiIndex();
+        ApiSymbol doc = apiIndex.lookup(className);
         if (doc == null || !(doc instanceof ClassDocumentation)) {
             System.out.println("doc for " + className + " is null");
             return null;
@@ -98,8 +98,8 @@ public class XMLDocumentationProvider implements DocumentationProvider {
     }
 
     private String getClassDoc(Project project, String className) {
-        ApiService service = project.getComponent(ProjectComponent.class).getApiService();
-        ApiSymbol doc = service.getIndex("latest").lookup(className);
+        ApiIndex apiIndex = project.getComponent(ProjectComponent.class).getApiIndex();
+        ApiSymbol doc = apiIndex.lookup(className);
         if (doc == null) {
             System.out.println("doc for " + className + " is null");
             return null;
