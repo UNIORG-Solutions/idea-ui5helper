@@ -1,6 +1,7 @@
 package de.uniorg.ui5helper.ui5.receive;
 
 import com.google.gson.*;
+import de.uniorg.ui5helper.cache.CacheStorage;
 import de.uniorg.ui5helper.ui5.ApiDocumentation;
 import de.uniorg.ui5helper.ui5.ApiIndex;
 
@@ -59,7 +60,6 @@ public class Provider {
 
     public void getApiIndex(String version, Consumer<ApiIndex> callback) {
         this.getAvailableLibraries(version, libs -> {
-            System.out.println("got lib list: " + libs);
             List<CompletableFuture<String>> jsons = libs.parallelStream().map(libName -> {
                 CompletableFuture<String> contentFuture = new CompletableFuture<>();
                 this.getApiJson(version, libName, contentFuture::complete);
@@ -91,7 +91,6 @@ public class Provider {
     }
 
     private void buildApiDocumentation(String apiJson, ApiIndex index) {
-        System.out.println("buildApiDocumentation");
         JsonParser parser = new JsonParser();
         JsonElement docs = parser.parse(apiJson);
         if (docs.isJsonObject()) {
@@ -105,14 +104,39 @@ public class Provider {
     }
 
     private void getApiJson(String version, String libName, Consumer<String> callback) {
-        String api = null;
         try {
-            api = this.client.fetchDocs(version, libName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            callback.accept(null);
+            if (this.storage.has(version, libName)) {
+                this.readApiFromCache(version, libName, callback);
+                return;
+            }
+        } catch (IOException ex) {
+            System.err.println("IOException while reading cache: " + ex.getMessage());
+            System.err.println("falling back to remote api");
         }
+
+        this.refreshApiJson(version, libName, callback);
+    }
+
+    private void readApiFromCache(String version, String libName, Consumer<String> callback) throws IOException {
+        String api = this.storage.get(version, libName);
         callback.accept(api);
+    }
+
+    private void refreshApiJson(String version, String libName, Consumer<String> callback) {
+        new Thread(() -> {
+            try {
+                String api = this.client.fetchDocs(version, libName);
+                this.writeApiToCache(version, libName, api);
+                callback.accept(api);
+            } catch (IOException e) {
+                e.printStackTrace();
+                callback.accept(null);
+            }
+        }).start();
+    }
+
+    private void writeApiToCache(String version, String libName, String api) throws IOException {
+        this.storage.store(version, libName, api);
     }
 
     public void getAvailableLibraries(String version, Consumer<List<String>> callback) {

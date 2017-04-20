@@ -71,6 +71,7 @@
     <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <cachesInvalidator implementation="de.uniorg.ui5helper.cache.CacheInvalidator"/>
 
         <lang.documentationProvider language="XML"
                                     implementationClass="de.uniorg.ui5helper.docs.XMLDocumentationProvider"/>

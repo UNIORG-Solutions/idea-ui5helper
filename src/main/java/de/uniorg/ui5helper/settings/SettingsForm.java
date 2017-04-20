@@ -1,11 +1,10 @@
 package de.uniorg.ui5helper.settings;
 
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import de.uniorg.ui5helper.ProjectComponent;
-import de.uniorg.ui5helper.ui5.receive.CacheStorage;
+import de.uniorg.ui5helper.cache.CacheStorage;
 import de.uniorg.ui5helper.ui5.receive.HttpsClient;
 import de.uniorg.ui5helper.ui5.receive.Provider;
 import org.jetbrains.annotations.Nls;
@@ -44,7 +43,7 @@ public class SettingsForm implements Configurable {
     @Override
     public JComponent createComponent() {
 
-        Provider apiProvider = new Provider(new CacheStorage(PathManager.getSystemPath() + "/caches"), new HttpsClient());
+        Provider apiProvider = new Provider(CacheStorage.getInstance(), new HttpsClient());
 
         refreshVersions.setEnabled(false);
         ui5Version.removeAllItems();

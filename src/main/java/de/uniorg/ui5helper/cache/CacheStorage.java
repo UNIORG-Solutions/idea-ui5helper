@@ -1,4 +1,7 @@
-package de.uniorg.ui5helper.ui5.receive;
+package de.uniorg.ui5helper.cache;
+
+import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.util.io.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +13,18 @@ import java.nio.file.StandardOpenOption;
 public class CacheStorage {
     private String basePath;
 
-    public CacheStorage(String path) {
+    private static CacheStorage INSTANCE = null;
+
+    private CacheStorage(String path) {
         this.basePath = path;
+    }
+
+    public static CacheStorage getInstance() {
+        if (CacheStorage.INSTANCE == null) {
+            CacheStorage.INSTANCE = new CacheStorage(Paths.get(PathManager.getSystemPath(), "caches").toAbsolutePath().toString());
+        }
+
+        return CacheStorage.INSTANCE;
     }
 
     public void store(String version, String file, String content) throws IOException {
@@ -33,5 +46,20 @@ public class CacheStorage {
 
     private Path getPath(String version, String file) {
         return Paths.get(basePath, "ui5_api", version, file);
+    }
+
+    public void checkForInvalidation() {
+        if (this.getInvalidationMarker().exists()) {
+            FileUtil.delete(Paths.get(this.basePath).toFile());
+        }
+    }
+
+    public void invalidate() {
+        FileUtil.createIfDoesntExist(this.getInvalidationMarker());
+        System.out.println("invalidated caches");
+    }
+
+    private File getInvalidationMarker() {
+        return Paths.get(this.basePath, "ui5_api", "invalidate.marker").toFile();
     }
 }
