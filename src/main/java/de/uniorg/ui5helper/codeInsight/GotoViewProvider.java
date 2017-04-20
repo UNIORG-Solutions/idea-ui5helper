@@ -36,6 +36,10 @@ public class GotoViewProvider extends RelatedItemLineMarkerProvider {
 
         String controllerName = ControllerUtil.getNameFromDeclaration((JSCallExpression) psiElement);
 
+        if (controllerName == null) {
+            return list;
+        }
+
         Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(NaiveXmlViewIndexer.KEY, controllerName, GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.allScope(psiElement.getProject()), XmlFileType.INSTANCE));
 
         fileCollection.iterator().forEachRemaining(
