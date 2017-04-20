@@ -36,6 +36,8 @@
             <dd>
                 <ul>
                     <li>References to event handlers</li>
+                    <li>Caching for API docs</li>
+                    <li>Version selection in settings actually works.</li>
                 </ul>
             </dd>
 
@@ -62,7 +64,6 @@
         </dl>
         ]]></description>
 
-
     <idea-version since-build="171"/>
 
     <depends>com.intellij.modules.lang</depends>
@@ -81,7 +82,6 @@
                              id="UI5.SettingsForm"/>
         <psi.referenceContributor language="XML"
                                   implementation="de.uniorg.ui5helper.codeInsight.XmlViewMethodReferenceProvider"/>
-
         <lang.foldingBuilder language="XML"
                              implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>

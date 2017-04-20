@@ -11,18 +11,27 @@ now.
  - Controller: Go To (XML)View
  - collapse the controller name in XMLViews
  - complete target names in manifest.json
-
+ - Provide API Docs in XMLView
+ - References to event handler implementation in XMLViews
 
 ### Things that will (or will not) come:
 
  - Settings to enable or disable certain features
  - Understanding & support for the UI5 binding syntax incl. completion, references, syntax checking, ...
  - Indexer for UI5 classes including metadata and inheritance tree
- - <s>Go to Controller, go to View,</s> go to formatter, go to event handler, ...
+ - Go to formatter, ...
  - support for manifest metadata like routes etc.
 
 
 #### Changelog
+
+ __0.2.5__
+ - References to event handlers
+ - Caching for API docs
+ - Version selection in settings actually works.
+
+ __0.2.4__
+ - First implementation of API docs in XMLViews. More to come!
 
  __0.2.3__
  - Bugfix: controllerName lookup for "sap.ui.core.mvc.XMLView" should work just like "sap.ui.core.mvc.View"</li>
