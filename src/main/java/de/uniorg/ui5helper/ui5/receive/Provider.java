@@ -13,9 +13,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-/**
- * Created by masch on 4/19/17.
- */
 public class Provider {
 
     private final String LIBS = "libs.json";
@@ -47,8 +44,6 @@ public class Provider {
             if (this.storage.has("_", VERSIONS)) {
                 this.readListFromCache("_", VERSIONS, callback);
                 return;
-            } else {
-                System.err.println("CACHE MISS: falling back to remote api");
             }
         } catch (IOException ex) {
             System.err.println("IOException while reading cache: " + ex.getMessage());
@@ -144,8 +139,6 @@ public class Provider {
             if (this.storage.has(version, LIBS)) {
                 this.readListFromCache(version, LIBS, callback);
                 return;
-            } else {
-                System.err.println("getAvailableLibraries(" + version + "): CACHE MISS: falling back to remote api");
             }
         } catch (IOException ex) {
             System.err.println("IOException while reading cache: " + ex.getMessage());

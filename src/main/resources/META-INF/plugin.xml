@@ -94,6 +94,9 @@
         <completion.contributor language="JSON"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.ManifestCompletionContributor"/>
     </extensions>
+    <extensions defaultExtensionNs="JavaScript">
+        <frameworkIndexingHandler implementation="de.uniorg.ui5helper.framework.IndexingHandler" />
+    </extensions>
     <project-components>
         <component>
             <implementation-class>de.uniorg.ui5helper.ProjectComponent</implementation-class>

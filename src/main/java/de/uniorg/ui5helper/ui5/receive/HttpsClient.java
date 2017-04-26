@@ -34,7 +34,13 @@ public class HttpsClient implements ApiClient {
     }
 
     private String fetchString(String url) throws IOException {
-        return HttpRequests.request(this.host + url).accept("application/json").forceHttps(true).gzip(true).useProxy(true).readString(null);
+        return HttpRequests
+                .request(this.host + url)
+                .accept("application/json")
+                .forceHttps(true)
+                .gzip(true)
+                .useProxy(true)
+                .readString(null);
     }
 
     public List<String> getAvailableLibraries(String version) throws IOException {
