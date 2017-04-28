@@ -29,6 +29,8 @@ now.
  - References to event handlers
  - Caching for API docs
  - Version selection in settings actually works.
+ - Completion in XML Views
+ - Gathers some knowledge about own ui5 classes. Not that useful for now.
 
  __0.2.4__
  - First implementation of API docs in XMLViews. More to come!

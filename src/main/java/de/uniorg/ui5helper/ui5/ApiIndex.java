@@ -19,4 +19,8 @@ public class ApiIndex {
 
         return this.index.get(className).get(className);
     }
+
+    public ApiSymbol lookup(String namespace, String className) {
+        return this.lookup(namespace + "." + className);
+    }
 }

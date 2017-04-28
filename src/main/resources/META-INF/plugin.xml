@@ -38,6 +38,8 @@
                     <li>References to event handlers</li>
                     <li>Caching for API docs</li>
                     <li>Version selection in settings actually works.</li>
+                    <li>Completion in XML Views</li>
+                    <li>Gathers some knowledge about own ui5 classes. Not that useful for now.</li>
                 </ul>
             </dd>
 
@@ -93,6 +95,8 @@
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoViewProvider"/>
         <completion.contributor language="JSON"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.ManifestCompletionContributor"/>
+        <completion.contributor language="XML"
+                                implementationClass="de.uniorg.ui5helper.codeInsight.XmlViewCompletionContributor" />
     </extensions>
     <extensions defaultExtensionNs="JavaScript">
         <frameworkIndexingHandler implementation="de.uniorg.ui5helper.framework.IndexingHandler" />

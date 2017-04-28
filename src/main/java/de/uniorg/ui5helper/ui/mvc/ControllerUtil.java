@@ -3,12 +3,14 @@ package de.uniorg.ui5helper.ui.mvc;
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.psi.JSCallExpression;
 import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.indexing.FileBasedIndexImpl;
@@ -49,6 +51,26 @@ public class ControllerUtil {
         );
 
         return results.toArray(new PsiElement[results.size()]);
+    }
+
+    public static Set<String> getMethodNames(PsiElement controllerReference) {
+        Set<String> targetReferences = new THashSet<>();
+        controllerReference.accept(new PsiRecursiveElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (element == null) {
+                    return;
+                }
+
+                if (element instanceof JSFunction) {
+                    targetReferences.add(((JSFunction) element).getName());
+                } else {
+                    super.visitElement(element);
+                }
+            }
+        });
+
+        return targetReferences;
     }
 
     public static boolean isControllerDeclaration(PsiElement element) {
