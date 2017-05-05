@@ -34,6 +34,7 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.T_STRING ('UI_CONTRACTKTEXT')\n" +
                         "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
                         "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUESTIONMARK ('?')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
                         "BindingTokenType.T_CURLY_OPEN ('{')\n" +

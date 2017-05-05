@@ -154,10 +154,10 @@ NOT_OPEN = [^{]
     "false"                  { return BindingTokenType.T_FALSE; }
     "["                      { return BindingTokenType.T_BRACKET_OPEN;}
     "]"                      { return BindingTokenType.T_BRACKET_CLOSE;}
+    ":"                      { return BindingTokenType.T_COLON; }
 }
 
 <IN_COMPLEX> {
-    ":"                      { return BindingTokenType.T_COLON; }
     ","                      { return BindingTokenType.T_COMMA; }
     {QUOTED_STRING}          { return BindingTokenType.T_QUOTED_STRING; }
     {IDENTIFIER_CHAR}+       { yybegin(IN_COMPLEX); return BindingTokenType.T_STRING; }
@@ -170,6 +170,7 @@ NOT_OPEN = [^{]
     "==="                    { return BindingTokenType.T_EQEQEQ; }
     "!=="                    { return BindingTokenType.T_NEEQEQ; }
     "."                      { return BindingTokenType.T_DOT;}
+    "?"                      { return BindingTokenType.T_QUESTIONMARK;}
     "("                      { return BindingTokenType.T_ROUND_OPEN;}
     ")"                      { return BindingTokenType.T_ROUND_CLOSE;}
 
