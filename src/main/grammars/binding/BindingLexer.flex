@@ -56,6 +56,7 @@ PATH_CHAR = [a-zA-Z0-9_.\ -]
 IDENTIFIER_CHAR = [a-zA-Z0-9_]
 NOT_OPEN = [^{]
 
+
 %state IN_CONTEXT
 %state IN_EXPRESSION
 %state IN_PATH

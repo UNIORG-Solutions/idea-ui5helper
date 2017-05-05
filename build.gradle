@@ -2,6 +2,10 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath "com.github.hurricup:gradle-grammar-kit-plugin:354bb8c477"
     }
 }
 
@@ -13,28 +17,69 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testCompile 'junit:junit:4.+'
-}
+import org.jetbrains.grammarkit.tasks.GenerateLexer
+import org.jetbrains.grammarkit.tasks.GenerateParser
 
 def isCi = System.env.CI != null
 
-def ideVersion = "2017.1"
+def ideVersion = '2017.1'
 
 apply plugin: 'idea'
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
-intellij {
-    type 'IU'
-    version ideVersion
-    updateSinceUntilBuild false
-    instrumentCode false
-    downloadSources !isCi
-    plugins 'coverage', 'JavaScriptLanguage', 'CSS'
-    pluginName 'ui5-helper'
-    alternativeIdePath PhpStormPath
+allprojects {
+    apply plugin: 'idea'
+    idea {
+        module {
+            generatedSourceDirs += file('src/main/gen')
+        }
+    }
+
+    intellij {
+        type 'IU'
+        version ideVersion
+        updateSinceUntilBuild false
+        instrumentCode false
+        downloadSources !isCi
+        plugins 'coverage', 'JavaScriptLanguage', 'CSS'
+        pluginName 'ui5-helper'
+        if (!isCi) {
+            alternativeIdePath PhpStormPath
+        }
+    }
+
+    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    sourceSets {
+        main {
+            java.srcDirs += 'src/main/gen'
+        }
+    }
+
+    apply plugin: 'org.jetbrains.grammarkit'
+    grammarKit {
+        grammarKitRelease = '1.5.1'
+        grammarKitTargetRoot = 'src/main/gen'
+        purgeOldFiles = true
+    }
+
+    dependencies {
+        compileOnly('com.github.JetBrains:Grammar-Kit:34fd65b92af957c25d940b828d81ab3ba9b398b0') {
+            exclude group: 'org.jetbrains.plugins'
+            exclude module: 'idea'
+        }
+
+        testCompile 'junit:junit:4.+'
+    }
 }
+
+task generateBindingLexer(type: GenerateLexer) {
+    source 'src/main/grammars/binding/BindingLexer.flex'
+    targetDir 'src/main/gen/de/uniorg/ui5helper/binding/'
+    targetClass 'BindingLexer'
+}
+
+compileJava.dependsOn(generateBindingLexer)
 
 group 'de.uniorg'
 version '0.2.5'

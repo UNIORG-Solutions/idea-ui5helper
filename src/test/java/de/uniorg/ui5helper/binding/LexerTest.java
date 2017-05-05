@@ -1,6 +1,6 @@
 package de.uniorg.ui5helper.binding;
 
-import com.intellij.lexer.*;
+import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.testFramework.LexerTestCase;
 
@@ -20,6 +20,35 @@ public class LexerTest extends LexerTestCase {
     }
 
     public void testExpressionBinding() {
+        doTest("{= ${user>/config/UI_CONTRACTKTEXT} ? ${Ktext} : ${Bstnk} }",
+                "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_EXPRESSION_MARKER ('=')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_STRING ('user')\n" +
+                        "BindingTokenType.T_MODEL_SEP ('>')\n" +
+                        "BindingTokenType.T_PATH_SEP ('/')\n" +
+                        "BindingTokenType.T_STRING ('config')\n" +
+                        "BindingTokenType.T_PATH_SEP ('/')\n" +
+                        "BindingTokenType.T_STRING ('UI_CONTRACTKTEXT')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_STRING ('Ktext')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_STRING ('Bstnk')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')"
+        );
         doTest(
                 "{= ${my/Path}.isCool() === true }",
                 "BindingTokenType.T_CURLY_OPEN ('{')\n" +
