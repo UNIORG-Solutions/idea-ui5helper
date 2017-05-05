@@ -29,6 +29,7 @@ public class BindingTokenType extends IElementType {
     public static final BindingTokenType T_CMP_GTE = new BindingTokenType("T_CMP_GTE");  // =
     public static final BindingTokenType T_DOT = new BindingTokenType("T_DOT");  // .
     public static final BindingTokenType T_QUESTIONMARK = new BindingTokenType("T_QUESTIONMARK");  // ?
+    public static final BindingTokenType T_NOT_OPERATOR = new BindingTokenType("T_NOT_OPERATOR");  // !
 
     public BindingTokenType(@NotNull String debugName) {
         super(debugName, BindingLanguage.INSTANCE);

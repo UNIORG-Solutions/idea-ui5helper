@@ -20,6 +20,69 @@ public class LexerTest extends LexerTestCase {
     }
 
     public void testExpressionBinding() {
+        doTest(
+                "{= ${ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' } !== '0' &amp;&amp; ${ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' } !== '' }",
+                "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_EXPRESSION_MARKER ('=')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_STRING ('path')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
+                        "BindingTokenType.T_COMMA (',')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_STRING ('formatter')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_NEEQEQ ('!==')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING (''0'')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_LOGIC_AND ('&amp;&amp;')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_STRING ('path')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING (''cart>to_art_classf'')\n" +
+                        "BindingTokenType.T_COMMA (',')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_STRING ('formatter')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING (''.formatter.getGasketColor'')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_NEEQEQ ('!==')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING ('''')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')"
+
+        );
+        doTest("{=!${visibility>/addAllToCart}}",
+                "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_EXPRESSION_MARKER ('=')\n" +
+                        "BindingTokenType.T_NOT_OPERATOR ('!')\n" +
+                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "BindingTokenType.T_STRING ('visibility')\n" +
+                        "BindingTokenType.T_MODEL_SEP ('>')\n" +
+                        "BindingTokenType.T_PATH_SEP ('/')\n" +
+                        "BindingTokenType.T_STRING ('addAllToCart')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')"
+        );
         doTest("{= ${user>/config/UI_CONTRACTKTEXT} ? ${Ktext} : ${Bstnk} }",
                 "BindingTokenType.T_CURLY_OPEN ('{')\n" +
                         "BindingTokenType.T_EXPRESSION_MARKER ('=')\n" +
@@ -99,6 +162,22 @@ public class LexerTest extends LexerTestCase {
     }
 
     public void testComplexBinding() {
+        doTest("{ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' }",
+                "BindingTokenType.T_CURLY_OPEN ('{')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_STRING ('path')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
+                        "BindingTokenType.T_COMMA (',')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_STRING ('formatter')\n" +
+                        "BindingTokenType.T_COLON (':')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
+                        "WHITE_SPACE (' ')\n" +
+                        "BindingTokenType.T_CURLY_CLOSE ('}')"
+        );
         doTest(
                 "{ path: 'my/path', formatter: '.formatterFunction' }",
                 "BindingTokenType.T_CURLY_OPEN ('{')\n" +

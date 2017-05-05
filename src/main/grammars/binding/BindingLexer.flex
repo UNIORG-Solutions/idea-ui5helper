@@ -137,16 +137,15 @@ NOT_OPEN = [^{]
         return TokenType.BAD_CHARACTER;
     }
 }
+<IN_CONTEXT, IN_EXPRESSION, IN_PATH, IN_COMPLEX> {
+    {WHITE_SPACE}+           { return TokenType.WHITE_SPACE; }
+    "}"                      { returnToContext(); return BindingTokenType.T_CURLY_CLOSE; }
+}
 
 <IN_PATH> {
     "/"                      { return BindingTokenType.T_PATH_SEP; }
     {PATH_START}{PATH_CHAR}* { return BindingTokenType.T_STRING; }
-}
-
-
-<IN_CONTEXT, IN_EXPRESSION, IN_PATH, IN_COMPLEX> {
-    {WHITE_SPACE}+           { return TokenType.WHITE_SPACE; }
-    "}"                      { returnToContext(); return BindingTokenType.T_CURLY_CLOSE; }
+    .                        { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_EXPRESSION, IN_COMPLEX> {
@@ -155,12 +154,13 @@ NOT_OPEN = [^{]
     "["                      { return BindingTokenType.T_BRACKET_OPEN;}
     "]"                      { return BindingTokenType.T_BRACKET_CLOSE;}
     ":"                      { return BindingTokenType.T_COLON; }
+    {QUOTED_STRING}          { return BindingTokenType.T_QUOTED_STRING; }
 }
 
 <IN_COMPLEX> {
     ","                      { return BindingTokenType.T_COMMA; }
-    {QUOTED_STRING}          { return BindingTokenType.T_QUOTED_STRING; }
-    {IDENTIFIER_CHAR}+       { yybegin(IN_COMPLEX); return BindingTokenType.T_STRING; }
+    {IDENTIFIER_CHAR}+       { return BindingTokenType.T_STRING; }
+    .                       { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_EXPRESSION> {
@@ -171,10 +171,12 @@ NOT_OPEN = [^{]
     "!=="                    { return BindingTokenType.T_NEEQEQ; }
     "."                      { return BindingTokenType.T_DOT;}
     "?"                      { return BindingTokenType.T_QUESTIONMARK;}
+    "!"                      { return BindingTokenType.T_NOT_OPERATOR;}
     "("                      { return BindingTokenType.T_ROUND_OPEN;}
     ")"                      { return BindingTokenType.T_ROUND_CLOSE;}
 
     {IDENTIFIER_CHAR}+       { return BindingTokenType.T_STRING; }
+    .                       { return TokenType.BAD_CHARACTER; }
 }
 
 <NEXT_IS_EMBEDDED> {
