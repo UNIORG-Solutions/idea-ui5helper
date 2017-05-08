@@ -4,6 +4,7 @@ import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
 import de.uniorg.ui5helper.binding.psi.BindingTokenType;
+import de.uniorg.ui5helper.binding.psi.BindingTypes;
 import java.util.Stack;
 %%
 
@@ -73,10 +74,10 @@ NOT_OPEN = [^{]
         contexts.push(ContextType.UNKNOWN);
         beforeFirstIdentifier = true;
         afterFirstIdentifier = false;
-        return BindingTokenType.T_CURLY_OPEN;
+        return BindingTypes.CURLY_OPEN;
      }
 
-     {NOT_OPEN}+     { yybegin(YYINITIAL); return BindingTokenType.T_STRING; }
+     {NOT_OPEN}+     { yybegin(YYINITIAL); return BindingTypes.STRING; }
 }
 
 <IN_CONTEXT> {
@@ -97,7 +98,7 @@ NOT_OPEN = [^{]
             contexts.push(ContextType.SIMPLE);
             yybegin(IN_PATH);
             afterFirstIdentifier = false;
-            return BindingTokenType.T_MODEL_SEP;
+            return BindingTypes.MODEL_SEP;
         }
 
         return TokenType.BAD_CHARACTER;
@@ -110,7 +111,7 @@ NOT_OPEN = [^{]
             contexts.pop();
             contexts.push(ContextType.SIMPLE);
             yybegin(IN_PATH);
-            return BindingTokenType.T_PATH_SEP;
+            return BindingTypes.PATH_SEP;
         }
 
         return TokenType.BAD_CHARACTER;
@@ -131,7 +132,7 @@ NOT_OPEN = [^{]
         if (beforeFirstIdentifier && !afterFirstIdentifier) {
             beforeFirstIdentifier = false;
             afterFirstIdentifier = true;
-            return BindingTokenType.T_STRING;
+            return BindingTypes.STRING;
         }
 
         return TokenType.BAD_CHARACTER;
@@ -139,12 +140,12 @@ NOT_OPEN = [^{]
 }
 <IN_CONTEXT, IN_EXPRESSION, IN_PATH, IN_COMPLEX> {
     {WHITE_SPACE}+           { return TokenType.WHITE_SPACE; }
-    "}"                      { returnToContext(); return BindingTokenType.T_CURLY_CLOSE; }
+    "}"                      { returnToContext(); return BindingTypes.CURLY_CLOSE; }
 }
 
 <IN_PATH> {
-    "/"                      { return BindingTokenType.T_PATH_SEP; }
-    {PATH_START}{PATH_CHAR}* { return BindingTokenType.T_STRING; }
+    "/"                      { return BindingTypes.PATH_SEP; }
+    {PATH_START}{PATH_CHAR}* { return BindingTypes.STRING; }
     .                        { return TokenType.BAD_CHARACTER; }
 }
 
@@ -159,7 +160,7 @@ NOT_OPEN = [^{]
 
 <IN_COMPLEX> {
     ","                      { return BindingTokenType.T_COMMA; }
-    {IDENTIFIER_CHAR}+       { return BindingTokenType.T_STRING; }
+    {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
     .                       { return TokenType.BAD_CHARACTER; }
 }
 
@@ -175,7 +176,7 @@ NOT_OPEN = [^{]
     "("                      { return BindingTokenType.T_ROUND_OPEN;}
     ")"                      { return BindingTokenType.T_ROUND_CLOSE;}
 
-    {IDENTIFIER_CHAR}+       { return BindingTokenType.T_STRING; }
+    {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
     .                       { return TokenType.BAD_CHARACTER; }
 }
 
@@ -185,7 +186,7 @@ NOT_OPEN = [^{]
         contexts.push(ContextType.UNKNOWN);
         beforeFirstIdentifier = true;
         afterFirstIdentifier = false;
-        return BindingTokenType.T_CURLY_OPEN;
+        return BindingTypes.CURLY_OPEN;
      }
     .                       { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 }

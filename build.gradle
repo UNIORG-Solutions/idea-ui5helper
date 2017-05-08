@@ -79,6 +79,13 @@ task generateBindingLexer(type: GenerateLexer) {
     targetClass 'BindingLexer'
 }
 
+task generateBindingParser(type: GenerateParser) {
+    source 'src/main/grammars/binding/Binding.bnf'
+    pathToParser '/src/main/gen/de/uniorg/ui5helper/binding/RustParser.java'
+    pathToPsiRoot '/src/main/java/de/uniorg/ui5helper/binding/psi/'
+}
+
+
 compileJava.dependsOn(generateBindingLexer)
 
 group 'de.uniorg'

@@ -73,6 +73,7 @@
     <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>
         <cachesInvalidator implementation="de.uniorg.ui5helper.cache.CacheInvalidator"/>
 
         <lang.documentationProvider language="XML"
