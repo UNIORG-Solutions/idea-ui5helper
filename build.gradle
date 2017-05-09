@@ -77,13 +77,13 @@ allprojects {
 }
 
 task downloadPHPStorm(type: Download) {
-    src 'https://download.jetbrains.com/webide/PhpStorm-${ideVersion}.tar.gz'
-    dest new File(project.projectDir, 'debugger/lib/phpstorm-${ideVersion}.tar.gz')
+    src "https://download.jetbrains.com/webide/PhpStorm-${ideVersion}.tar.gz"
+    dest new File(project.projectDir, "debugger/lib/phpstorm-${ideVersion}.tar.gz")
     overwrite false
 }
 
 task unpackPHPStorm(dependsOn: downloadPHPStorm, type: Copy) {
-    from tarTree('debugger/lib/phpstorm-${ideVersion}.tar.gz')
+    from tarTree("debugger/lib/phpstorm-${ideVersion}.tar.gz")
     into new File(project.projectDir, 'debugger/lib')
 }
 
