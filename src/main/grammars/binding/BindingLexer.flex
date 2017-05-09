@@ -57,6 +57,23 @@ PATH_CHAR = [a-zA-Z0-9_.\ -]
 IDENTIFIER_CHAR = [a-zA-Z0-9_]
 NOT_OPEN = [^{]
 
+EXPONENT      = [eE] [-+]? [0-9_]+
+
+FLT_LITERAL   = ( {DEC_LITERAL} \. {DEC_LITERAL} {EXPONENT}? )
+              | ( {DEC_LITERAL} {EXPONENT} )
+              | ( {DEC_LITERAL} )
+
+FLT_LITERAL_TDOT = {DEC_LITERAL} \.
+
+INT_LITERAL = ( {DEC_LITERAL}
+              | {HEX_LITERAL}
+              | {OCT_LITERAL}
+              | {BIN_LITERAL} )
+
+DEC_LITERAL = [0-9] [0-9_]*
+HEX_LITERAL = "0x" [a-fA-F0-9_]*
+OCT_LITERAL = "0o" [0-7_]*
+BIN_LITERAL = "0b" [01_]*
 
 %state IN_CONTEXT
 %state IN_EXPRESSION
@@ -150,15 +167,18 @@ NOT_OPEN = [^{]
 }
 
 <IN_EXPRESSION, IN_COMPLEX> {
-    "true"                   { return BindingTokenType.T_TRUE; }
-    "false"                  { return BindingTokenType.T_FALSE; }
-    "["                      { return BindingTokenType.T_BRACKET_OPEN;}
-    "]"                      { return BindingTokenType.T_BRACKET_CLOSE;}
+    "true"                   { return BindingTypes.TRUE; }
+    "false"                  { return BindingTypes.FALSE; }
+    "["                      { return BindingTypes.BRACKET_OPEN;}
+    "]"                      { return BindingTypes.BRACKET_CLOSE;}
     ":"                      { return BindingTypes.COLON; }
+    {FLT_LITERAL}            { return BindingTypes.NUMBER; }
+    {INT_LITERAL}            { return BindingTypes.NUMBER; }
     {QUOTED_STRING}          { return BindingTypes.QUOTED_STRING; }
 }
 
 <IN_COMPLEX> {
+    "{"                      { contexts.push(ContextType.COMPLEX); return BindingTypes.CURLY_OPEN; }
     ","                      { return BindingTypes.COMMA; }
     {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
     .                       { return TokenType.BAD_CHARACTER; }
