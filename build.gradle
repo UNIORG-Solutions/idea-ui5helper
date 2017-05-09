@@ -11,12 +11,15 @@ buildscript {
 
 plugins {
     id 'org.jetbrains.intellij' version '0.2.7'
+    id 'de.undercouch.download' version '3.2.0'
 }
 
 repositories {
     mavenCentral()
 }
 
+
+import de.undercouch.gradle.tasks.download.Download
 import org.jetbrains.grammarkit.tasks.GenerateLexer
 import org.jetbrains.grammarkit.tasks.GenerateParser
 
@@ -72,6 +75,17 @@ allprojects {
     }
 }
 
+task downloadPHPStorm(type: Download) {
+    src 'https://download.jetbrains.com/webide/PhpStorm-${ideVersion}.tar.gz'
+    dest new File(project.projectDir, 'debugger/lib/phpstorm-${ideVersion}.tar.gz')
+    overwrite false
+}
+
+task unpackPHPStorm(dependsOn: downloadPHPStorm, type: Copy) {
+    from tarTree('debugger/lib/phpstorm-${ideVersion}.tar.gz')
+    into new File(project.projectDir, 'debugger/lib')
+}
+
 task generateBindingLexer(type: GenerateLexer) {
     source 'src/main/grammars/binding/BindingLexer.flex'
     targetDir 'src/main/gen/de/uniorg/ui5helper/binding/'
@@ -84,7 +98,7 @@ task generateBindingParser(type: GenerateParser) {
     pathToPsiRoot '/de/uniorg/ui5helper/binding/psi/'
 }
 
-compileJava.dependsOn(generateBindingLexer, generateBindingParser)
+compileJava.dependsOn(generateBindingLexer, generateBindingParser, unpackPHPStorm)
 
 group 'de.uniorg'
 version '0.2.5'
