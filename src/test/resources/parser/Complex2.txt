@@ -1,4 +1,4 @@
-Simple File
+Binding File
   ComplexBindingImpl(COMPLEX_BINDING)
     PsiElement(BindingTokenType.CURLY_OPEN)('{')
     PsiWhiteSpace(' ')

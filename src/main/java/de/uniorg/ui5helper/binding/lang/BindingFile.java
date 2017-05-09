@@ -18,6 +18,6 @@ public class BindingFile extends PsiFileBase {
 
     @Override
     public String toString() {
-        return "Simple File";
+        return "Binding File";
     }
 }

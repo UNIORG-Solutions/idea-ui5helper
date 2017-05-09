@@ -1,4 +1,4 @@
-Simple File
+Binding File
   SimpleBindingImpl(SIMPLE_BINDING)
     PsiElement(BindingTokenType.CURLY_OPEN)('{')
     PsiElement(BindingTokenType.STRING)('model')

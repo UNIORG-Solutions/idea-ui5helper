@@ -44,7 +44,7 @@ allprojects {
         version ideVersion
         updateSinceUntilBuild false
         instrumentCode false
-        downloadSources false
+        downloadSources !isCi
         plugins 'coverage', 'JavaScriptLanguage', 'CSS'
         pluginName 'ui5-helper'
         if (!isCi) {
