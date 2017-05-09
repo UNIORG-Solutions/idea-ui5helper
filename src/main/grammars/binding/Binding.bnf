@@ -3,7 +3,7 @@
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-  psiClassPrefix="Simple"
+  psiClassPrefix=""
   psiImplClassSuffix="Impl"
   psiPackage="de.uniorg.ui5helper.binding.psi"
   psiImplPackage="de.uniorg.ui5helper.binding.psi.impl"
@@ -17,6 +17,10 @@
 
 value ::= item_*
 
-private item_ ::= (binding|STRING)
-
-binding ::= (CURLY_OPEN (STRING MODEL_SEP)? PATH_SEP? (STRING PATH_SEP)* STRING? CURLY_CLOSE)
+private item_ ::= (binding_|STRING)
+private binding_ ::= (simple_binding|complex_binding)
+complex_binding_value ::= QUOTED_STRING
+complex_binding_key   ::= STRING
+complex_binding_entry ::= complex_binding_key COLON complex_binding_value
+complex_binding ::= CURLY_OPEN complex_binding_entry (COMMA complex_binding_entry)*CURLY_CLOSE
+simple_binding ::= CURLY_OPEN (STRING MODEL_SEP)? PATH_SEP? (STRING PATH_SEP)* STRING? CURLY_CLOSE

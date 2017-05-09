@@ -29,21 +29,21 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('path')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('formatter')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_NEEQEQ ('!==')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING (''0'')\n" +
+                        "BindingTokenType.QUOTED_STRING (''0'')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_LOGIC_AND ('&amp;&amp;')\n" +
                         "WHITE_SPACE (' ')\n" +
@@ -51,21 +51,21 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('path')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING (''cart>to_art_classf'')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.QUOTED_STRING (''cart>to_art_classf'')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('formatter')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING (''.formatter.getGasketColor'')\n" +
+                        "BindingTokenType.QUOTED_STRING (''.formatter.getGasketColor'')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_NEEQEQ ('!==')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('''')\n" +
+                        "BindingTokenType.QUOTED_STRING ('''')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
 
@@ -104,7 +104,7 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.STRING ('Ktext')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
@@ -166,15 +166,15 @@ public class LexerTest extends LexerTestCase {
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('path')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('formatter')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
@@ -183,15 +183,15 @@ public class LexerTest extends LexerTestCase {
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('path')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'my/path\'')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'my/path\'')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('formatter')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'.formatterFunction\'')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'.formatterFunction\'')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
@@ -200,26 +200,26 @@ public class LexerTest extends LexerTestCase {
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('parts')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE ('  ')\n" +
                         "BindingTokenType.T_BRACKET_OPEN ('[')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'{my/path}\'')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'{my/path}\'')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'{model>bla}\'')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'{model>bla}\'')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_BRACKET_CLOSE (']')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('formatter')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_QUOTED_STRING ('\'.formatterFunction\'')\n" +
-                        "BindingTokenType.T_COMMA (',')\n" +
+                        "BindingTokenType.QUOTED_STRING ('\'.formatterFunction\'')\n" +
+                        "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('paused')\n" +
-                        "BindingTokenType.T_COLON (':')\n" +
+                        "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.T_TRUE ('true')\n" +
                         "WHITE_SPACE (' ')\n" +

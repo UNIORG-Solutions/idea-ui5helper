@@ -1,5 +1,5 @@
 Simple File
-  SimpleBindingImpl(BINDING)
+  SimpleBindingImpl(SIMPLE_BINDING)
     PsiElement(BindingTokenType.CURLY_OPEN)('{')
     PsiElement(BindingTokenType.PATH_SEP)('/')
     PsiElement(BindingTokenType.STRING)('foo')

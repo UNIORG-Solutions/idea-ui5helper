@@ -11,6 +11,7 @@ public class ParserTest extends ParsingTestCase {
     public void testSimpleBindingWithoutModel() { doTest(true); }
     public void testI18nBinding() { doTest(true); }
     public void testMixedSimple() { doTest(true); }
+    public void testComplex() { doTest(true); }
 
     @Override
     protected String getTestDataPath() { return "src/test/resources/parser"; }

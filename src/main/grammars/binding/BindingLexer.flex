@@ -123,7 +123,7 @@ NOT_OPEN = [^{]
            contexts.push(ContextType.COMPLEX);
            yybegin(IN_COMPLEX);
            afterFirstIdentifier = false;
-           return BindingTokenType.T_COLON;
+           return BindingTypes.COLON;
        }
     }
 
@@ -154,12 +154,12 @@ NOT_OPEN = [^{]
     "false"                  { return BindingTokenType.T_FALSE; }
     "["                      { return BindingTokenType.T_BRACKET_OPEN;}
     "]"                      { return BindingTokenType.T_BRACKET_CLOSE;}
-    ":"                      { return BindingTokenType.T_COLON; }
-    {QUOTED_STRING}          { return BindingTokenType.T_QUOTED_STRING; }
+    ":"                      { return BindingTypes.COLON; }
+    {QUOTED_STRING}          { return BindingTypes.QUOTED_STRING; }
 }
 
 <IN_COMPLEX> {
-    ","                      { return BindingTokenType.T_COMMA; }
+    ","                      { return BindingTypes.COMMA; }
     {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
     .                       { return TokenType.BAD_CHARACTER; }
 }
