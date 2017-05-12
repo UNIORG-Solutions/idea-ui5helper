@@ -103,7 +103,7 @@ BIN_LITERAL = "0b" [01_]*
             contexts.pop();
             contexts.push(ContextType.EXPRESSION);
             yybegin(IN_EXPRESSION);
-            return BindingTokenType.T_EXPRESSION_MARKER;
+            return BindingTypes.EXPRESSION_MARKER;
         }
 
         return TokenType.BAD_CHARACTER;
@@ -185,16 +185,16 @@ BIN_LITERAL = "0b" [01_]*
 }
 
 <IN_EXPRESSION> {
-    "$"                      { yybegin(NEXT_IS_EMBEDDED); return BindingTokenType.T_EMBEDDED_MARKER; }
-    "&amp;&amp;"             { return BindingTokenType.T_LOGIC_AND; }
-    "||"                     { return BindingTokenType.T_LOGIC_OR; }
-    "==="                    { return BindingTokenType.T_EQEQEQ; }
-    "!=="                    { return BindingTokenType.T_NEEQEQ; }
-    "."                      { return BindingTokenType.T_DOT;}
-    "?"                      { return BindingTokenType.T_QUESTIONMARK;}
-    "!"                      { return BindingTokenType.T_NOT_OPERATOR;}
-    "("                      { return BindingTokenType.T_ROUND_OPEN;}
-    ")"                      { return BindingTokenType.T_ROUND_CLOSE;}
+    "$"                      { yybegin(NEXT_IS_EMBEDDED); return BindingTypes.EMBEDDED_MARKER; }
+    "&amp;&amp;"             { return BindingTypes.LOGIC_AND; }
+    "||"                     { return BindingTypes.LOGIC_OR; }
+    "==="                    { return BindingTypes.EQEQEQ; }
+    "!=="                    { return BindingTypes.NEEQEQ; }
+    "."                      { return BindingTypes.DOT;}
+    "?"                      { return BindingTypes.QUESTIONMARK;}
+    "!"                      { return BindingTypes.NOT_OPERATOR;}
+    "("                      { return BindingTypes.ROUND_OPEN;}
+    ")"                      { return BindingTypes.ROUND_CLOSE;}
 
     {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
     .                       { return TokenType.BAD_CHARACTER; }

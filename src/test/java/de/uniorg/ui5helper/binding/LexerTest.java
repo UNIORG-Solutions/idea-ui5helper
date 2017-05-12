@@ -81,12 +81,12 @@ public class LexerTest extends LexerTestCase {
         }
 
         ResultBuilder expression() {
-            return this.add("BindingTokenType.T_EXPRESSION_MARKER", "=");
+            return this.add("BindingTokenType.EXPRESSION_MARKER", "=");
         }
 
         ResultBuilder embedded(String content) {
             return this
-                    .add("BindingTokenType.T_EMBEDDED_MARKER", "$")
+                    .add("BindingTokenType.EMBEDDED_MARKER", "$")
                     .curlyOpen()
                     .append(content)
                     .curlyClose();
@@ -128,9 +128,9 @@ public class LexerTest extends LexerTestCase {
         doTest(
                 "{= ${ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' } !== '0' &amp;&amp; ${ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' } !== '' }",
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
-                        "BindingTokenType.T_EXPRESSION_MARKER ('=')\n" +
+                        "BindingTokenType.EXPRESSION_MARKER ('=')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.EMBEDDED_MARKER ('$')\n" +
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('path')\n" +
@@ -146,13 +146,13 @@ public class LexerTest extends LexerTestCase {
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_NEEQEQ ('!==')\n" +
+                        "BindingTokenType.NEEQEQ ('!==')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.QUOTED_STRING (''0'')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_LOGIC_AND ('&amp;&amp;')\n" +
+                        "BindingTokenType.LOGIC_AND ('&amp;&amp;')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_EMBEDDED_MARKER ('$')\n" +
+                        "BindingTokenType.EMBEDDED_MARKER ('$')\n" +
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.STRING ('path')\n" +
@@ -168,7 +168,7 @@ public class LexerTest extends LexerTestCase {
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.T_NEEQEQ ('!==')\n" +
+                        "BindingTokenType.NEEQEQ ('!==')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.QUOTED_STRING ('''')\n" +
                         "WHITE_SPACE (' ')\n" +
@@ -179,7 +179,7 @@ public class LexerTest extends LexerTestCase {
                 builder()
                         .curlyOpen()
                         .expression()
-                        .add("BindingTokenType.T_NOT_OPERATOR", "!")
+                        .add("BindingTokenType.NOT_OPERATOR", "!")
                         .embedded(builder().string("visibility").modelSeparator().pathSeparator().string("addAllToCart").get())
                         .curlyClose().get()
         );
@@ -191,7 +191,7 @@ public class LexerTest extends LexerTestCase {
                         .space()
                         .embedded(builder().string("user").modelSeparator().pathSeparator().path("config", "UI_CONTRACTKTEXT").get())
                         .space()
-                        .add("BindingTokenType.T_QUESTIONMARK", "?")
+                        .add("BindingTokenType.QUESTIONMARK", "?")
                         .space()
                         .embedded(builder().string("Ktext").get())
                         .space()
@@ -209,12 +209,12 @@ public class LexerTest extends LexerTestCase {
                         .expression()
                         .space()
                         .embedded(builder().path("my", "Path").get())
-                        .add("BindingTokenType.T_DOT", ".")
+                        .add("BindingTokenType.DOT", ".")
                         .string("isCool")
-                        .add("BindingTokenType.T_ROUND_OPEN", "(")
-                        .add("BindingTokenType.T_ROUND_CLOSE", ")")
+                        .add("BindingTokenType.ROUND_OPEN", "(")
+                        .add("BindingTokenType.ROUND_CLOSE", ")")
                         .space()
-                        .add("BindingTokenType.T_EQEQEQ", "===")
+                        .add("BindingTokenType.EQEQEQ", "===")
                         .space()
                         .boolTrue()
                         .space()
@@ -229,12 +229,12 @@ public class LexerTest extends LexerTestCase {
                         .expression()
                         .space()
                         .embedded(builder().path("my", "Path").get())
-                        .add("BindingTokenType.T_DOT", ".")
+                        .add("BindingTokenType.DOT", ".")
                         .string("isCool")
-                        .add("BindingTokenType.T_ROUND_OPEN", "(")
-                        .add("BindingTokenType.T_ROUND_CLOSE", ")")
+                        .add("BindingTokenType.ROUND_OPEN", "(")
+                        .add("BindingTokenType.ROUND_CLOSE", ")")
                         .space()
-                        .add("BindingTokenType.T_NEEQEQ", "!==")
+                        .add("BindingTokenType.NEEQEQ", "!==")
                         .space()
                         .boolFalse()
                         .space()
