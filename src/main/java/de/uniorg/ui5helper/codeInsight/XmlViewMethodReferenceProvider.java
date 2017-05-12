@@ -29,6 +29,9 @@ public class XmlViewMethodReferenceProvider extends PsiReferenceContributor {
                         }
 
                         XmlAttributeValue attrValue = (XmlAttributeValue) element;
+                        if (!(attrValue.getParent() instanceof XmlAttribute)) {
+                            return new PsiReference[0];
+                        }
                         XmlAttribute attr = (XmlAttribute) attrValue.getParent();
                         XmlTag propTag = (XmlTag) attrValue.getParent().getParent();
                         ApiIndex index = element.getProject().getComponent(ProjectComponent.class).getApiIndex();
