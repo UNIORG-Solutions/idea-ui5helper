@@ -28,7 +28,9 @@ public class SimplifyBindingAnnotator implements Annotator {
         ExprExpression expr = expressions.get(0);
 
         if (expr.getFirstChild() instanceof ExprValue && expr.getFirstChild().getFirstChild() instanceof EmbeddedBinding) {
-            annotationHolder.createWeakWarningAnnotation(psiElement.getTextRange(), "Binding can be simplified.");
+            annotationHolder
+                    .createWarningAnnotation(psiElement.getTextRange(), "Binding can be simplified.")
+                    .registerFix(new SimplifyExpressionBindingQuickFix());
         }
     }
 }
