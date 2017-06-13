@@ -11,6 +11,7 @@ import com.intellij.lang.javascript.psi.literal.JSLiteralImplicitElementProvider
 import com.intellij.lang.javascript.psi.stubs.JSElementIndexingData;
 import com.intellij.lang.javascript.psi.stubs.JSImplicitElement;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitElementImpl;
+import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitFunctionImpl;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitParameterStructure;
 import com.intellij.lang.javascript.psi.types.JSContext;
 import com.intellij.openapi.util.text.StringUtil;
@@ -32,7 +33,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
         switch (name) {
             case "metadata":
                 if (!(value instanceof JSObjectLiteralExpression)) {
-                    return false;
+                    return true;
                 }
                 JSObjectLiteralExpression object = (JSObjectLiteralExpression) value;
 
@@ -41,7 +42,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                     JSObjectLiteralExpression props = (JSObjectLiteralExpression) properties.getValue();
                     JSSymbolUtil.forEachIdentifierProperty(props, (titleCasedPropName, property) -> {
                         String typeString = getPropertyType(property);
-                        JSImplicitElementImpl.Builder getterBuilder = (new JSImplicitElementImpl.Builder(JSSymbolUtil.suggestGetterName(titleCasedPropName), property)).setProperties(JSImplicitElement.Property.GetFunction);
+                        JSImplicitElementImpl.Builder getterBuilder = new JSImplicitElementImpl.Builder(JSSymbolUtil.suggestGetterName(titleCasedPropName), property);
                         getterBuilder.setNamespace(((JSProperty) value.getParent()).getNamespace())
                                 .setContext(JSContext.INSTANCE)
                                 .setProperties(JSImplicitElement.Property.GetFunction)
@@ -49,7 +50,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                                 .setTypeString(typeString);
 
                         outData.addImplicitElement(getterBuilder.toImplicitElement());
-                        JSImplicitElementImpl.Builder setterBuilder = (new JSImplicitElementImpl.Builder(JSSymbolUtil.suggestSetterName(titleCasedPropName), property)).setProperties(JSImplicitElement.Property.SetFunction);
+                        JSImplicitFunctionImpl.Builder setterBuilder = (new JSImplicitFunctionImpl.Builder(JSSymbolUtil.suggestSetterName(titleCasedPropName), property));
                         List<JSImplicitParameterStructure> parameters = new ArrayList<>();
                         parameters.add(new JSImplicitParameterStructure("value", typeString, false, false, false));
                         setterBuilder.setNamespace(((JSProperty) value.getParent()).getNamespace())
@@ -59,10 +60,12 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                                 .setParameters(parameters);
                         outData.addImplicitElement(setterBuilder.toImplicitElement());
                     });
+
+                    return false;
                 }
         }
 
-        return false;
+        return true;
     }
 
     private String getPropertyType(JSProperty jsProperty) {
@@ -83,12 +86,11 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                 public void fillIndexingData(@NotNull JSLiteralExpression argument, @NotNull JSCallExpression callExpression, @NotNull JSElementIndexingData outIndexingData) {
                     JSExpression[] arguments = callExpression.getArguments();
                     if (arguments.length >= 2 && arguments[0] instanceof JSLiteralExpression && ((JSLiteralExpression) arguments[0]).isQuotedLiteral()) {
-                        // das ist dann wohl ein "asdf.extend('',.." call
-
                         String name = (String) ((JSLiteralExpression) arguments[0]).getValue();
                         if (name == null || name.lastIndexOf(".") == -1) {
                             return;
                         }
+
                         String namespace = name.substring(0, name.lastIndexOf("."));
                         String className = name.substring(name.lastIndexOf(".") + 1);
                         JSImplicitElementImpl.Builder builder = (new JSImplicitElementImpl.Builder(className, argument))
@@ -126,7 +128,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
 
     @Override
     public int getVersion() {
-        return 10;
+        return 12;
     }
 
     static {

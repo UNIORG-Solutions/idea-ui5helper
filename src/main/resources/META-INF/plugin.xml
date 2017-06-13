@@ -85,6 +85,8 @@
                              id="UI5.SettingsForm"/>
         <psi.referenceContributor language="XML"
                                   implementation="de.uniorg.ui5helper.codeInsight.XmlViewMethodReferenceProvider"/>
+        <psi.referenceContributor language="JSON"
+                                  implementation="de.uniorg.ui5helper.codeInsight.json.ManifestReferences" />
         <lang.foldingBuilder language="XML"
                              implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
@@ -93,10 +95,13 @@
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoControllerProvider"/>
         <codeInsight.lineMarkerProvider language="JavaScript"
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoViewProvider"/>
+        <!--<completion.contributor language="JavaScript"
+                                implementationClass="de.uniorg.ui5helper.codeInsight.js.Ui5ControlsContributor" /> -->
         <completion.contributor language="JSON"
-                                implementationClass="de.uniorg.ui5helper.codeInsight.ManifestCompletionContributor"/>
+                                implementationClass="de.uniorg.ui5helper.codeInsight.json.ManifestCompletionContributor"/>
         <completion.contributor language="XML"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.XmlViewCompletionContributor" />
+        <annotator language="XML" implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.AttributeAnnotator"/>
     </extensions>
     <extensions defaultExtensionNs="JavaScript">
         <frameworkIndexingHandler implementation="de.uniorg.ui5helper.framework.IndexingHandler" />
