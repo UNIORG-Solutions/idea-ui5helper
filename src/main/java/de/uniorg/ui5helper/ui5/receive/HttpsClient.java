@@ -66,7 +66,7 @@ public class HttpsClient implements ApiClient {
             }
 
             String name = ((JsonObject) library).getAsJsonPrimitive("name").getAsString();
-            if (!name.startsWith("theme") && !name.equalsIgnoreCase("test-resources")) {
+            if (!name.startsWith("theme") && !name.equalsIgnoreCase("test-resources") && !name.contains("server.java")) {
                 libNames.add(name);
             }
         }
