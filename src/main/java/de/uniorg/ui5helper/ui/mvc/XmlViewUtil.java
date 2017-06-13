@@ -5,9 +5,6 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 
-/**
- * Created by masch on 3/29/17.
- */
 public class XmlViewUtil {
     public static boolean isXmlView(PsiFile file) {
         if (!(file instanceof XmlFile)) {

@@ -20,7 +20,12 @@ public class AggregationDocumentation extends AbstractApiSymbol {
         adoc.name = parser.getName();
         adoc.description = parser.getDescription();
         adoc.type = parser.getString("type", "any");
-        adoc.multiple = parser.getBool("multiple", false);
+        String card = parser.getString("cardinality", null);
+        if (card == null) {
+            adoc.multiple = parser.getBool("multiple", false);
+        } else {
+            adoc.multiple = card.equals("0..n") | card.equals("1..n");
+        }
 
         return adoc;
     }

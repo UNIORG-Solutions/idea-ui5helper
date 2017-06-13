@@ -20,6 +20,8 @@ public class ClassDocumentation implements ModuleApiSymbol {
 
     private String module;
 
+    private String inherits;
+
     private UI5Metadata ui5Metadata;
 
     static ClassDocumentation fromJsonDoc(JsonObject doc) {
@@ -33,6 +35,7 @@ public class ClassDocumentation implements ModuleApiSymbol {
         cdoc.resource = parser.getString("resource", null);
         cdoc.module = parser.getString("module", null);
         cdoc.ui5Metadata = parser.getObject("ui5-metadata", UI5Metadata::fromJsonDoc);
+        cdoc.inherits = parser.getString("extends", null);
         return cdoc;
     }
 
@@ -59,6 +62,10 @@ public class ClassDocumentation implements ModuleApiSymbol {
     @Override
     public String getModuleName() {
         return module;
+    }
+
+    public String getInherits() {
+        return inherits;
     }
 
     public MethodDocumentation getConstructor() {

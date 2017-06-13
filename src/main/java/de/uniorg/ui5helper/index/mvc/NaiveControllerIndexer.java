@@ -13,9 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-/**
- * Created by masch on 3/28/17.
- */
 public class NaiveControllerIndexer extends ScalarIndexExtension<String> {
 
     public static final ID<String, Void> KEY = ID.create("de.uniorg.ui5helper.cache.index.mvc.controller");

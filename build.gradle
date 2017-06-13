@@ -6,7 +6,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version "0.2.7"
+    id 'org.jetbrains.intellij' version '0.2.7'
 }
 
 repositories {
@@ -17,13 +17,20 @@ dependencies {
     testCompile 'junit:junit:4.+'
 }
 
+def isCi = System.env.CI != null
+
+def ideVersion = "2017.1"
+
 apply plugin: 'idea'
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
 intellij {
     type 'IU'
+    version ideVersion
     updateSinceUntilBuild false
+    instrumentCode false
+    downloadSources !isCi
     plugins 'coverage', 'JavaScriptLanguage', 'CSS'
     pluginName 'ui5-helper'
     alternativeIdePath PhpStormPath

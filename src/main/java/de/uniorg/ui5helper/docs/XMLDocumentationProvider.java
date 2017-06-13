@@ -8,18 +8,12 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
 import de.uniorg.ui5helper.ProjectComponent;
-import de.uniorg.ui5helper.ui5.ApiIndex;
-import de.uniorg.ui5helper.ui5.ApiSymbol;
-import de.uniorg.ui5helper.ui5.ClassDocumentation;
-import de.uniorg.ui5helper.ui5.UI5Metadata;
+import de.uniorg.ui5helper.ui5.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by masch on 4/5/17.
- */
 public class XMLDocumentationProvider implements DocumentationProvider {
 
     private String getClassName(XmlTag tag) {
@@ -79,22 +73,56 @@ public class XMLDocumentationProvider implements DocumentationProvider {
 
     private String getPropertyDoc(Project project, String className, String propertyName) {
         ApiIndex apiIndex = project.getComponent(ProjectComponent.class).getApiIndex();
-        ApiSymbol doc = apiIndex.lookup(className);
-        if (doc == null || !(doc instanceof ClassDocumentation)) {
-            System.out.println("doc for " + className + " is null");
-            return null;
+        ApiSymbol member = ResolverUtil.getMetadataMember(apiIndex, className, propertyName);
+
+        if (member == null) {
+            return "";
         }
 
-        UI5Metadata metadata = ((ClassDocumentation) doc).getUI5Metadata();
-        if (metadata == null) {
-            return null;
+        if (member instanceof EventDocumentation) {
+            return this.renderEventDocumentation((EventDocumentation) member);
         }
 
-        if (!metadata.getProperties().containsKey(propertyName)) {
-            return null;
+        if (member instanceof PropertyDocumentation) {
+            return this.renderPropertyDocumentation((PropertyDocumentation) member);
         }
 
-        return metadata.getProperties().get(propertyName).getDescription();
+        if (member instanceof AggregationDocumentation) {
+            return this.renderAggregationDocumentation((AggregationDocumentation) member);
+        }
+
+        return member.getDescription();
+    }
+
+    private String renderAggregationDocumentation(AggregationDocumentation aggregationDocumentation) {
+        return String.format(
+                "<strong>%s%s %s</strong> (Aggregation)<br />" +
+                        "<p>%s</p>",
+                aggregationDocumentation.getType(),
+                aggregationDocumentation.isMultiple() ? "[]" : "",
+                aggregationDocumentation.getName(),
+                aggregationDocumentation.getDescription()
+        );
+    }
+
+    private String renderPropertyDocumentation(PropertyDocumentation propertyDocumentation) {
+        return String.format(
+                "<strong>%s %s</strong><br />" +
+                        "<p>%s</p>",
+                propertyDocumentation.getType(),
+                propertyDocumentation.getName(),
+                propertyDocumentation.getDescription()
+        );
+    }
+
+    private String renderEventDocumentation(EventDocumentation member) {
+        return String.format(
+                "<strong>%s Event: %s</strong><br />" +
+                        "<p>%s</p>",
+                member.getVisibility(),
+                member.getName(),
+                member.getDescription()
+        );
     }
 
     private String getClassDoc(Project project, String className) {
