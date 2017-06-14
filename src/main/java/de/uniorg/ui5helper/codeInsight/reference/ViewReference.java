@@ -23,7 +23,20 @@ public class ViewReference extends PsiReferenceBase<PsiElement> implements PsiPo
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
         System.out.println(this.fullViewName);
-        PsiFile[] files = this.getElement().getProject().getComponent(ProjectComponent.class).tryLookupFile(this.fullViewName, FileType.XML_VIEW);
+        FileType ft = FileType.XML_VIEW;
+        switch (this.viewType.toUpperCase()) {
+            case "JSON":
+                ft = FileType.JSON_VIEW;
+                break;
+            case "JAVASCRIPT":
+            case "JS":
+                ft = FileType.JS_VIEW;
+                break;
+            case "XML":
+            default:
+                ft = FileType.XML_VIEW;
+        }
+        PsiFile[] files = this.getElement().getProject().getComponent(ProjectComponent.class).getPathResolver().tryLookupFile(this.fullViewName, ft);
 
         return Arrays.stream(files).map(PsiElementResolveResult::new).toArray(ResolveResult[]::new);
     }
