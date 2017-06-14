@@ -1,4 +1,5 @@
 .idea/
 .gradle/
+src/main/gen/
 build/
 gradle.properties

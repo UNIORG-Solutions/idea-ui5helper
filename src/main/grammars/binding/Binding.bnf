@@ -1,0 +1,45 @@
+{
+  parserClass="de.uniorg.ui5helper.binding.BindingParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix=""
+  psiImplClassSuffix="Impl"
+  psiPackage="de.uniorg.ui5helper.binding.psi"
+  psiImplPackage="de.uniorg.ui5helper.binding.psi.impl"
+
+  elementTypeHolderClass="de.uniorg.ui5helper.binding.psi.BindingTypes"
+  elementTypeClass="de.uniorg.ui5helper.binding.psi.BindingElementType"
+  tokenTypeClass="de.uniorg.ui5helper.binding.psi.BindingTokenType"
+
+  psiImplUtilClass="de.uniorg.ui5helper.binding.psi.impl.BindingParserImplUtil"
+}
+
+value ::= item_*
+
+private item_ ::= (binding_|STRING)
+private binding_ ::= (simple_binding|complex_binding|expression_binding)
+
+complex_array ::= BRACKET_OPEN complex_binding_value (COMMA complex_binding_value)* BRACKET_CLOSE
+complex_object ::= CURLY_OPEN complex_binding_entry (COMMA complex_binding_entry)* CURLY_CLOSE
+complex_boolean ::= TRUE|FALSE
+complex_binding_value ::= QUOTED_STRING|NUMBER|complex_array|complex_object|complex_boolean
+complex_binding_key ::= STRING|QUOTED_STRING
+complex_binding_entry ::= complex_binding_key COLON complex_binding_value
+complex_binding ::= CURLY_OPEN complex_binding_entry (COMMA complex_binding_entry)*CURLY_CLOSE
+
+embedded_binding ::= EMBEDDED_MARKER binding_
+expr_group ::= ( ROUND_OPEN statement_ ROUND_CLOSE )
+expr_call ::= embedded_binding DOT STRING (DOT STRING)* ROUND_OPEN ROUND_CLOSE
+expr_literal ::= TRUE|FALSE|QUOTED_STRING|STRING
+expr_value ::= embedded_binding|expr_literal|expr_group|expr_call|
+expr_binary ::= expr_value (NEEQEQ|EQEQEQ|LOGIC_AND|LOGIC_OR) expr_value
+expr_ternary ::= expr_value QUESTIONMARK expr_value COLON expr_value
+expr_unary  ::= NOT_OPERATOR expr_value
+expr_expression ::= expr_binary|expr_unary|expr_ternary|expr_value
+private statement_ ::= expr_expression
+expression_binding ::= CURLY_OPEN EXPRESSION_MARKER statement_* CURLY_CLOSE
+
+model_name ::= STRING
+private simple_model_ ::= model_name MODEL_SEP
+simple_binding ::= CURLY_OPEN simple_model_? PATH_SEP? (STRING PATH_SEP)* STRING? CURLY_CLOSE

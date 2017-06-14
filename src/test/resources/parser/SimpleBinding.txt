@@ -1,0 +1,11 @@
+Binding File
+  SimpleBindingImpl(SIMPLE_BINDING)
+    PsiElement(BindingTokenType.CURLY_OPEN)('{')
+    ModelNameImpl(MODEL_NAME)
+      PsiElement(BindingTokenType.STRING)('model')
+    PsiElement(BindingTokenType.MODEL_SEP)('>')
+    PsiElement(BindingTokenType.PATH_SEP)('/')
+    PsiElement(BindingTokenType.STRING)('foo')
+    PsiElement(BindingTokenType.PATH_SEP)('/')
+    PsiElement(BindingTokenType.STRING)('bar')
+    PsiElement(BindingTokenType.CURLY_CLOSE)('}')
