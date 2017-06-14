@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.2.5</version>
+    <version>0.2.6-rc1</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
@@ -32,6 +32,16 @@
 
         <h4>Changelog<h4>
         <dl>
+            <dt>0.2.6</dt>
+            <dd>
+                <ul>
+                    <li>Basic binding support</li>
+                    <li>References in manifest.json</li>
+                    <li>Documentation for ui5 API in XMLViews</li>
+                    <li>Annotations for wrong attributes in XMLView (a lot false positives)</li>
+                    <li>References to event handlers in XMLViews<li>
+                </ul>
+            </dd>
             <dt>0.2.5</dt>
             <dd>
                 <ul>
@@ -67,7 +77,6 @@
         ]]></description>
 
     <idea-version since-build="171"/>
-
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.xml</depends>
     <depends>JavaScript</depends>
@@ -99,8 +108,11 @@
                                 implementationClass="de.uniorg.ui5helper.codeInsight.js.Ui5ControlsContributor" /> -->
         <completion.contributor language="JSON"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.json.ManifestCompletionContributor"/>
-        <completion.contributor language="XML"
-                                implementationClass="de.uniorg.ui5helper.codeInsight.XmlViewCompletionContributor" />
+        <xml.elementDescriptorProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.TagProvider"/>
+        <xml.attributeDescriptorsProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.AttributesProvider"
+                                          order="first"/>
+        <!--<completion.contributor language="XML"
+                                implementationClass="de.uniorg.ui5helper.codeInsight.XmlViewCompletionContributor" /> -->
         <annotator language="XML" implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.AttributeAnnotator"/>
         <annotator language="UI5 Binding" implementationClass="de.uniorg.ui5helper.codeInsight.binding.SimplifyBindingAnnotator" />
         <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>

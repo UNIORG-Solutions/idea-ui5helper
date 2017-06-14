@@ -6,6 +6,8 @@ public class PropertyDocumentation extends AbstractApiSymbol {
 
     private String type;
 
+    private String defaultValue;
+
     public String getType() {
         return type;
     }
@@ -17,7 +19,12 @@ public class PropertyDocumentation extends AbstractApiSymbol {
         pdoc.name = parser.getName();
         pdoc.description = parser.getDescription();
         pdoc.type = parser.getString("type", "");
+        pdoc.defaultValue = parser.getString("defaultValue", "");
 
         return pdoc;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
     }
 }

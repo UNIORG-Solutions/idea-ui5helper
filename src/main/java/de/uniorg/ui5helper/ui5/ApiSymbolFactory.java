@@ -10,6 +10,9 @@ public class ApiSymbolFactory {
         switch (jsonObject.getAsJsonPrimitive("kind").getAsString()) {
             case "class":
                 return ClassDocumentation.fromJsonDoc(jsonObject);
+
+            case "enum":
+                return EnumDocumentation.fromJsonDoc(jsonObject);
         }
 
         return null;
