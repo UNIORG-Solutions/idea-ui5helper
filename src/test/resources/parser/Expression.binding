@@ -1,0 +1,1 @@
+{= (${ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' } !== '0') &amp;&amp; (${ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' } !== '') }

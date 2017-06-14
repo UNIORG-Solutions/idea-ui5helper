@@ -1,0 +1,12 @@
+{
+    string: 'asdf',
+    array: [
+        'asdf',
+        2,
+        true
+    ],
+    object: {
+        bool: true,
+        'quoted_string': 'geht auch'
+    }
+}

@@ -102,6 +102,10 @@
         <completion.contributor language="XML"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.XmlViewCompletionContributor" />
         <annotator language="XML" implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.AttributeAnnotator"/>
+        <annotator language="UI5 Binding" implementationClass="de.uniorg.ui5helper.codeInsight.binding.SimplifyBindingAnnotator" />
+        <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>
+        <multiHostInjector implementation="de.uniorg.ui5helper.binding.XmlViewInjector" />
+        <lang.parserDefinition language="UI5 Binding" implementationClass="de.uniorg.ui5helper.binding.BindingParserDefinition" />
     </extensions>
     <extensions defaultExtensionNs="JavaScript">
         <frameworkIndexingHandler implementation="de.uniorg.ui5helper.framework.IndexingHandler" />

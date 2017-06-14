@@ -1,0 +1,8 @@
+Binding File
+  SimpleBindingImpl(SIMPLE_BINDING)
+    PsiElement(BindingTokenType.CURLY_OPEN)('{')
+    ModelNameImpl(MODEL_NAME)
+      PsiElement(BindingTokenType.STRING)('i18n')
+    PsiElement(BindingTokenType.MODEL_SEP)('>')
+    PsiElement(BindingTokenType.STRING)('Scary.Key with_stupid things')
+    PsiElement(BindingTokenType.CURLY_CLOSE)('}')
