@@ -11,18 +11,23 @@ import com.intellij.xml.XmlElementsGroup;
 import com.intellij.xml.XmlNSDescriptor;
 import com.intellij.xml.impl.schema.AnyXmlElementDescriptor;
 import de.uniorg.ui5helper.ProjectComponent;
+import de.uniorg.ui5helper.codeInsight.xmlview.attributes.AggregationAttributeDescriptor;
+import de.uniorg.ui5helper.codeInsight.xmlview.attributes.EventAttributeDescriptor;
 import de.uniorg.ui5helper.codeInsight.xmlview.attributes.PropertyAttributeDescriptor;
-import de.uniorg.ui5helper.ui5.ApiIndex;
-import de.uniorg.ui5helper.ui5.ClassDocumentation;
-import de.uniorg.ui5helper.ui5.PropertyDocumentation;
+import de.uniorg.ui5helper.ui5.*;
+import gnu.trove.THashMap;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ControlTag implements XmlElementDescriptor {
 
     private final ClassDocumentation classDocumentation;
     private XmlTag self;
+    private Map<String, XmlAttributeDescriptor> _attributeMap;
 
     public ControlTag(ClassDocumentation classDocumentation, XmlTag self) {
         this.classDocumentation = classDocumentation;
@@ -64,21 +69,16 @@ public class ControlTag implements XmlElementDescriptor {
 
     @Override
     public XmlAttributeDescriptor[] getAttributesDescriptors(@Nullable XmlTag context) {
-        final ApiIndex apiIndex = this.getApiIndex(context.getProject());
-        return classDocumentation.getUI5Metadata()
-                .getProperties()
-                .values().stream()
-                .map(propertyDocumentation -> new PropertyAttributeDescriptor(propertyDocumentation, apiIndex, context))
-                .toArray(XmlAttributeDescriptor[]::new);
+        return this.getAttributeMap().values().toArray(new XmlAttributeDescriptor[0]);
     }
 
     @Nullable
     @Override
     public XmlAttributeDescriptor getAttributeDescriptor(String attributeName, @Nullable XmlTag context) {
-        final ApiIndex apiIndex = this.getApiIndex(context.getProject());
-        Map<String, PropertyDocumentation> props = classDocumentation.getUI5Metadata().getProperties();
-        if (props.containsKey(attributeName)) {
-            return new PropertyAttributeDescriptor(props.get(attributeName), apiIndex, context.getAttribute(attributeName));
+        Map<String, XmlAttributeDescriptor> map = this.getAttributeMap();
+
+        if (map.containsKey(attributeName)) {
+            return map.get(attributeName);
         }
 
         return null;
@@ -144,5 +144,33 @@ public class ControlTag implements XmlElementDescriptor {
 
     private ApiIndex getApiIndex(Project project) {
         return project.getComponent(ProjectComponent.class).getApiIndex();
+    }
+
+    private Map<String, XmlAttributeDescriptor> getAttributeMap() {
+        final ApiIndex apiIndex = this.getApiIndex(self.getProject());
+        if (this._attributeMap != null) {
+            return this._attributeMap;
+        }
+
+        List<XmlAttributeDescriptor> list = ResolverUtil.mapMember(apiIndex, classDocumentation, (ApiSymbol apiSymbol) -> {
+            if (apiSymbol instanceof PropertyDocumentation) {
+                return new PropertyAttributeDescriptor((PropertyDocumentation) apiSymbol, apiIndex, self);
+            }
+            if (apiSymbol instanceof EventDocumentation) {
+                return new EventAttributeDescriptor((EventDocumentation) apiSymbol, apiIndex, self);
+            }
+            if (apiSymbol instanceof AggregationDocumentation) {
+                return new AggregationAttributeDescriptor((AggregationDocumentation) apiSymbol, apiIndex, self);
+            }
+
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        final Map<String, XmlAttributeDescriptor> result = new THashMap<>();
+        list.forEach(desc -> result.put(desc.getName(), desc));
+
+        this._attributeMap = result;
+
+        return result;
     }
 }

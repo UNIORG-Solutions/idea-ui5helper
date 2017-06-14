@@ -92,8 +92,6 @@
         <projectConfigurable instance="de.uniorg.ui5helper.settings.SettingsForm"
                              displayName="UI5 Helper"
                              id="UI5.SettingsForm"/>
-        <psi.referenceContributor language="XML"
-                                  implementation="de.uniorg.ui5helper.codeInsight.XmlViewMethodReferenceProvider"/>
         <psi.referenceContributor language="JSON"
                                   implementation="de.uniorg.ui5helper.codeInsight.json.ManifestReferences" />
         <lang.foldingBuilder language="XML"
@@ -111,9 +109,6 @@
         <xml.elementDescriptorProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.TagProvider"/>
         <xml.attributeDescriptorsProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.AttributesProvider"
                                           order="first"/>
-        <!--<completion.contributor language="XML"
-                                implementationClass="de.uniorg.ui5helper.codeInsight.XmlViewCompletionContributor" /> -->
-        <annotator language="XML" implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.AttributeAnnotator"/>
         <annotator language="UI5 Binding" implementationClass="de.uniorg.ui5helper.codeInsight.binding.SimplifyBindingAnnotator" />
         <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>
         <multiHostInjector implementation="de.uniorg.ui5helper.binding.XmlViewInjector" />

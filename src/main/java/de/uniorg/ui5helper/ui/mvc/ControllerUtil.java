@@ -6,6 +6,7 @@ import com.intellij.lang.javascript.psi.JSExpression;
 import com.intellij.lang.javascript.psi.JSFunction;
 import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -20,6 +21,7 @@ import gnu.trove.THashSet;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class ControllerUtil {
@@ -29,16 +31,14 @@ public class ControllerUtil {
                 .getContainingFiles(
                         NaiveControllerIndexer.KEY,
                         controllerName,
-                        GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.allScope(project), JavaScriptFileType.INSTANCE)
+                        GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.projectScope(project), JavaScriptFileType.INSTANCE)
                 );
-        Set<PsiElement> results = new THashSet<>();
-        fileCollection.iterator().forEachRemaining(
-                virtualFile -> {
-                    PsiFile targetFile = PsiManager.getInstance(project).findFile(virtualFile);
-                    if (targetFile == null) {
-                        return;
-                    }
 
+        return fileCollection.stream()
+                .filter(vfile -> !ProjectRootManager.getInstance(project).getFileIndex().isExcluded(vfile))
+                .filter(vfile -> PsiManager.getInstance(project).findFile(vfile) != null)
+                .map(virtualFile -> {
+                    PsiFile targetFile = PsiManager.getInstance(project).findFile(virtualFile);
                     Map<String, PsiElement> declarations = ControllerUtil.findDeclarations(targetFile);
 
                     PsiElement target = targetFile;
@@ -46,11 +46,10 @@ public class ControllerUtil {
                         target = declarations.get(controllerName);
                     }
 
-                    results.add(target);
-                }
-        );
-
-        return results.toArray(new PsiElement[results.size()]);
+                    return target;
+                })
+                .filter(Objects::nonNull)
+                .toArray(PsiElement[]::new);
     }
 
     public static Set<String> getMethodNames(PsiElement controllerReference) {

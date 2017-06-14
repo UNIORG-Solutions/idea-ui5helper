@@ -13,6 +13,8 @@ import java.util.Set;
 
 public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor {
 
+    private final String[] BOOL_ENUM = new String[]{"true", "false"};
+
     private final PropertyDocumentation propertyDocumentation;
 
     private final ApiIndex apiIndex;
@@ -43,7 +45,11 @@ public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor {
     @Override
     public boolean isEnumerated() {
         ApiSymbol symbol = this.apiIndex.lookup(this.propertyDocumentation.getType());
-        return symbol instanceof EnumDocumentation;
+        return this.isBool() || symbol instanceof EnumDocumentation;
+    }
+
+    private boolean isBool() {
+        return this.propertyDocumentation.getType().equalsIgnoreCase("boolean");
     }
 
     @Override
@@ -78,6 +84,10 @@ public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor {
 
     @Override
     public String[] getEnumeratedValues() {
+        if (isBool()) {
+            return BOOL_ENUM;
+        }
+
         ApiSymbol symbol = this.apiIndex.lookup(this.propertyDocumentation.getType());
         if (!(symbol instanceof EnumDocumentation)) {
             return new String[0];

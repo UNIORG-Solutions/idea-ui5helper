@@ -33,7 +33,7 @@ public class TagProvider implements XmlElementDescriptorProvider {
 
 
     private ClassDocumentation getClassDoc(XmlTag tag) {
-        ApiSymbol tagDocs = this.getApiIndex(tag.getProject()).lookup(tag.getNamespace(), tag.getName());
+        ApiSymbol tagDocs = this.getApiIndex(tag.getProject()).lookup(tag.getNamespace(), tag.getLocalName());
         if (tagDocs == null || !(tagDocs instanceof ClassDocumentation)) {
             return null;
         }
