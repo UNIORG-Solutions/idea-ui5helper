@@ -53,6 +53,8 @@ public class NaiveXmlViewIndexer extends ScalarIndexExtension<String> {
                 return map;
             }
 
+            file.putUserData(XmlViewUtil.CONTROLLER_NAME, controllerName);
+
             map.put(controllerName, null);
 
             return map;
@@ -67,6 +69,6 @@ public class NaiveXmlViewIndexer extends ScalarIndexExtension<String> {
 
     @Override
     public int getVersion() {
-        return 1;
+        return 2;
     }
 }
