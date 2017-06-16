@@ -91,7 +91,8 @@
 
         <projectConfigurable instance="de.uniorg.ui5helper.settings.SettingsForm"
                              displayName="UI5 Helper"
-                             id="UI5.SettingsForm"/>
+                             id="UI5.SettingsForm"
+                             nonDefaultProject="true"/>
         <psi.referenceContributor language="JSON"
                                   implementation="de.uniorg.ui5helper.codeInsight.json.ManifestReferences" />
         <lang.foldingBuilder language="XML"

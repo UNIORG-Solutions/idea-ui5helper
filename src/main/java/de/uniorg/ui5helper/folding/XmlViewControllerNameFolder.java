@@ -9,6 +9,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
+import de.uniorg.ui5helper.Features;
+import de.uniorg.ui5helper.ProjectComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +22,10 @@ public class XmlViewControllerNameFolder extends FoldingBuilderEx {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement psiElement, @NotNull Document document, boolean b) {
+        if (!ProjectComponent.isEnabled(psiElement.getProject(), Features.XML_COLLPASE_CONTROLLER_NAME)) {
+            return FoldingDescriptor.EMPTY;
+        }
+
         FoldingGroup group = FoldingGroup.newGroup("controllerName");
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         Collection<XmlAttribute> literalExpressions = PsiTreeUtil.findChildrenOfType(psiElement, XmlAttribute.class);

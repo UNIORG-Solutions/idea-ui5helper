@@ -1,19 +1,19 @@
 package de.uniorg.ui5helper.settings;
 
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.Nullable;
 
-@State(
-        name = "UI5HelperPluginSettings",
-        storages = {
-                @Storage(id = "default", file = StoragePathMacros.PROJECT_FILE),
-        }
-)
+@State(name = "UI5HelperPluginSettings", storages = {@Storage("ui5helper.xml")})
 public class Settings implements PersistentStateComponent<Settings> {
 
     public String ui5Version = "latest";
+
+    public boolean pluginEnabled = false;
 
     public boolean foldControllerName = true;
 

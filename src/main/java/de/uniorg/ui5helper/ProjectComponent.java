@@ -27,9 +27,21 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
 
     @Override
     public void projectOpened() {
+        this.checkEnabled();
+
+        if (isEnabled()) {
+            this.projectEnabled();
+        }
+    }
+
+    public void projectEnabled() {
         Settings settings = Settings.getInstance(this.project);
         this.changeApiVersion(settings.ui5Version);
         this.pathResolver.updateMap();
+    }
+
+    private void checkEnabled() {
+        Settings.getInstance(project);
     }
 
     @Override
@@ -44,6 +56,30 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
 
     @Override
     public void disposeComponent() {
+    }
+
+    public boolean isEnabled() {
+        return Settings.getInstance(project).pluginEnabled;
+    }
+
+    public static boolean isEnabled(Project project) {
+        return project.getComponent(ProjectComponent.class).isEnabled();
+    }
+
+    public static boolean isEnabled(Project project, Features feature) {
+        ProjectComponent component = project.getComponent(ProjectComponent.class);
+        if (component == null || !component.isEnabled()) {
+            return false;
+        }
+
+        Settings setting = Settings.getInstance(project);
+
+        switch (feature) {
+            case XML_COLLPASE_CONTROLLER_NAME:
+                return setting.foldControllerName;
+            default:
+                return false;
+        }
     }
 
     @NotNull

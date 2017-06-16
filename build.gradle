@@ -71,7 +71,7 @@ allprojects {
             exclude group: 'org.jetbrains.plugins'
             exclude module: 'idea'
         }
-
+        compile 'com.intellij:forms_rt:7.0.3'
         testCompile 'junit:junit:4.+'
     }
 }
