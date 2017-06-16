@@ -7,8 +7,7 @@
     <description><![CDATA[
         <p>
             This plugins adds some codeInsight and framework knowledge for Open- and SAPUI5 to IDEA IDEs.
-            It does not do much in its current state, it is not "production ready" and it will not save your time for
-            now.
+            Beware: This is still experimental and might crash or eat your homework
         </p>
 
         <h3>Things it may be able to do now (experimental):</h3>
@@ -17,14 +16,15 @@
             <li>Controller: Go To (XML)View</li>
             <li>Collapse the controller name in the XMLView</li>
             <li>complete target names in manifest.json</li>
+            <li>go to views from manifest.json</li>
             <li>Provide API Docs in XMLView</li>
             <li>References to event handler implementation in XMLViews</li>
+            <li>Basic understanding of the binding syntax for XMLViews</li>
         </ul>
 
         <h3>Things that will (or will not) come:</h3>
         <ul>
-            <li>Settings to enable or disable certain features</li>
-            <li>Understanding & support for the UI5 binding syntax incl. completion, references, syntax checking</li>
+            <li>Better understanding & support for the UI5 binding syntax incl. completion, references, syntax checking</li>
             <li>Indexer for UI5 classes including metadata and inheritance tree</li>
             <li><s>Go to Controller, go to View, </s>go to formatter<s>, go to event handler,</s> ...</li>
             <li>support for manifest metadata like routes etc.</li>
@@ -37,9 +37,10 @@
                 <ul>
                     <li>Basic binding support</li>
                     <li>References in manifest.json</li>
-                    <li>Documentation for ui5 API in XMLViews</li>
+                    <li>Documentation for UI5 API in XMLViews</li>
                     <li>Annotations for wrong attributes in XMLView (a lot false positives)</li>
                     <li>References to event handlers in XMLViews<li>
+                    <li>References to required files & rename handling</li>
                 </ul>
             </dd>
             <dt>0.2.5</dt>
@@ -82,6 +83,7 @@
     <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <include.provider implementation="de.uniorg.ui5helper.framework.IncludeProvider"/>
         <cachesInvalidator implementation="de.uniorg.ui5helper.cache.CacheInvalidator"/>
 
         <lang.documentationProvider language="XML"
@@ -95,6 +97,8 @@
                              nonDefaultProject="true"/>
         <psi.referenceContributor language="JSON"
                                   implementation="de.uniorg.ui5helper.codeInsight.json.ManifestReferences" />
+        <psi.referenceContributor language="JavaScript"
+                                  implementation="de.uniorg.ui5helper.codeInsight.js.IncludeReferenceProvider"/>
         <lang.foldingBuilder language="XML"
                              implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
@@ -103,8 +107,6 @@
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoControllerProvider"/>
         <codeInsight.lineMarkerProvider language="JavaScript"
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoViewProvider"/>
-        <!--<completion.contributor language="JavaScript"
-                                implementationClass="de.uniorg.ui5helper.codeInsight.js.Ui5ControlsContributor" /> -->
         <completion.contributor language="JSON"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.json.ManifestCompletionContributor"/>
         <xml.elementDescriptorProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.TagProvider"/>

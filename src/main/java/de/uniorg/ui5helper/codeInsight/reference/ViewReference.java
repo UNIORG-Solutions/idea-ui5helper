@@ -22,7 +22,6 @@ public class ViewReference extends PsiReferenceBase<PsiElement> implements PsiPo
     @NotNull
     @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        System.out.println(this.fullViewName);
         FileType ft = FileType.XML_VIEW;
         switch (this.viewType.toUpperCase()) {
             case "JSON":

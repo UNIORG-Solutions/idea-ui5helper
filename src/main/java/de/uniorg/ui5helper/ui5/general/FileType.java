@@ -7,5 +7,6 @@ public enum FileType {
     CONTROLLER,
     MANIFEST_JSON,
     PROPERTIES,
+    JAVASCRIPT,
     OTHER
 }

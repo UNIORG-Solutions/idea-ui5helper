@@ -61,6 +61,8 @@ public class PathResolver {
                 return ".json";
             case PROPERTIES:
                 return ".properties";
+            case JAVASCRIPT:
+                return ".js";
             default:
                 return "";
         }
