@@ -22,7 +22,7 @@ public class XmlViewControllerNameFolder extends FoldingBuilderEx {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement psiElement, @NotNull Document document, boolean b) {
-        if (!ProjectComponent.isEnabled(psiElement.getProject(), Features.XML_COLLPASE_CONTROLLER_NAME)) {
+        if (!ProjectComponent.isEnabled(psiElement.getProject(), Features.XML_COLLAPSE_CONTROLLER_NAME)) {
             return FoldingDescriptor.EMPTY;
         }
 

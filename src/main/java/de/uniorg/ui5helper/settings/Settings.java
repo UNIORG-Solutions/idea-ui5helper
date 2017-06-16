@@ -15,6 +15,8 @@ public class Settings implements PersistentStateComponent<Settings> {
 
     public boolean pluginEnabled = false;
 
+    public boolean injectBindingLanguage = true;
+
     public boolean foldControllerName = true;
 
     public static Settings getInstance(Project project) {

@@ -7,15 +7,21 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
+import de.uniorg.ui5helper.Features;
+import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.binding.lang.BindingLanguage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class XmlViewInjector implements MultiHostInjector {
     @Override
     public void getLanguagesToInject(@NotNull MultiHostRegistrar multiHostRegistrar, @NotNull PsiElement psiElement) {
+        if (!ProjectComponent.isEnabled(psiElement.getProject(), Features.XML_BINDING_INJECTION)) {
+            return;
+        }
+
         final XmlAttribute attribute = (XmlAttribute) psiElement;
         XmlAttributeValue value = attribute.getValueElement();
         if (value == null) {
@@ -35,6 +41,6 @@ public class XmlViewInjector implements MultiHostInjector {
     @NotNull
     @Override
     public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Arrays.asList(XmlAttribute.class);
+        return Collections.singletonList(XmlAttribute.class);
     }
 }

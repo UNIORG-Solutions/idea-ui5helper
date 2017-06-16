@@ -75,8 +75,10 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
         Settings setting = Settings.getInstance(project);
 
         switch (feature) {
-            case XML_COLLPASE_CONTROLLER_NAME:
+            case XML_COLLAPSE_CONTROLLER_NAME:
                 return setting.foldControllerName;
+            case XML_BINDING_INJECTION:
+                return setting.injectBindingLanguage;
             default:
                 return false;
         }

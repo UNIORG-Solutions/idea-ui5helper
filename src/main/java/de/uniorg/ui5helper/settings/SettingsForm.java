@@ -29,6 +29,7 @@ public class SettingsForm implements Configurable {
     private JCheckBox pluginEnabled;
     private JTabbedPane tabbedPane1;
     private JCheckBox collapseControllerName;
+    private JCheckBox bindingSyntaxSupport;
 
     public SettingsForm(@NotNull final Project project) {
         this.project = project;
@@ -86,7 +87,8 @@ public class SettingsForm implements Configurable {
     public boolean isModified() {
         return !getSelectedVersion().equals(getSettings().ui5Version)
                 || pluginEnabled.isSelected() != getSettings().pluginEnabled
-                || collapseControllerName.isSelected() != getSettings().foldControllerName;
+                || collapseControllerName.isSelected() != getSettings().foldControllerName
+                || bindingSyntaxSupport.isSelected() != getSettings().injectBindingLanguage;
     }
 
     /**
@@ -110,6 +112,7 @@ public class SettingsForm implements Configurable {
 
         pluginEnabled.setSelected(getSettings().pluginEnabled);
         collapseControllerName.setSelected(getSettings().foldControllerName);
+        bindingSyntaxSupport.setSelected(getSettings().injectBindingLanguage);
     }
 
     private String getSelectedVersion() {
@@ -131,6 +134,7 @@ public class SettingsForm implements Configurable {
         settings.ui5Version = getSelectedVersion();
         settings.pluginEnabled = pluginEnabled.isSelected();
         settings.foldControllerName = collapseControllerName.isSelected();
+        settings.injectBindingLanguage = bindingSyntaxSupport.isSelected();
 
         if (pluginEnabled.isSelected() && !wasEnabled) {
             this.project.getComponent(ProjectComponent.class).projectEnabled();
@@ -180,13 +184,17 @@ public class SettingsForm implements Configurable {
         tabbedPane1 = new JTabbedPane();
         panel.add(tabbedPane1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("XML Views", panel2);
         collapseControllerName = new JCheckBox();
         collapseControllerName.setText("Collapse controller name");
         panel2.add(collapseControllerName, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        panel2.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        bindingSyntaxSupport = new JCheckBox();
+        bindingSyntaxSupport.setText("Enhanced binding syntax support");
+        bindingSyntaxSupport.setToolTipText("Use own parser & lexer to read bindings");
+        panel2.add(bindingSyntaxSupport, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
