@@ -9,6 +9,7 @@ import com.intellij.xml.XmlAttributeDescriptor;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlElementsGroup;
 import com.intellij.xml.XmlNSDescriptor;
+import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor;
 import com.intellij.xml.impl.schema.AnyXmlElementDescriptor;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.codeInsight.xmlview.attributes.AggregationAttributeDescriptor;
@@ -165,6 +166,21 @@ public class ControlTag implements XmlElementDescriptor {
 
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        // add attributes that exists on any control but aren't part of the api.json
+        list.add(new AnyXmlAttributeDescriptor("id"));
+        list.add(new AnyXmlAttributeDescriptor("class"));
+
+        // add view specific attributes
+        if (this.self.getLocalName().endsWith("View")) {
+            //TODO: create a ControllerNameAttributeDescriptor for the reference. makes GotoControllerProvider obsolete.
+            list.add(new AnyXmlAttributeDescriptor("controllerName"));
+        }
+
+        if (this.self.getLocalName().endsWith("Fragment")) {
+            //TODO: add Descriptor for reference
+            list.add(new AnyXmlAttributeDescriptor("fragmentName"));
+        }
 
         final Map<String, XmlAttributeDescriptor> result = new THashMap<>();
         list.forEach(desc -> result.put(desc.getName(), desc));

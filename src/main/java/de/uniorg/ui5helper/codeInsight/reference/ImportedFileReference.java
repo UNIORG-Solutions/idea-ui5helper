@@ -44,7 +44,7 @@ public class ImportedFileReference extends PsiReferenceBase<PsiElement> implemen
         return null;
     }
 
-    protected PsiElement rename(final String newName) throws IncorrectOperationException {
+    private PsiElement rename(final String newName) throws IncorrectOperationException {
         final TextRange range = this.getRangeInElement();
         PsiElement element = getElement();
         try {
