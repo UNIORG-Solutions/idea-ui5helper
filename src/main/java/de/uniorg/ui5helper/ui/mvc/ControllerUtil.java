@@ -90,6 +90,9 @@ public class ControllerUtil {
 
     public static String getNameFromDeclaration(JSCallExpression call) {
         JSExpression[] arguments = call.getArguments();
+        if (arguments.length == 0) {
+            return null;
+        }
 
         if (arguments[0] instanceof JSLiteralExpression) {
             JSLiteralExpression classNameExpr = (JSLiteralExpression) arguments[0];
