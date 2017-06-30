@@ -186,7 +186,7 @@ BIN_LITERAL = "0b" [01_]*
 
 <IN_EXPRESSION> {
     "$"                      { yybegin(NEXT_IS_EMBEDDED); return BindingTypes.EMBEDDED_MARKER; }
-    "&amp;&amp;"             { return BindingTypes.LOGIC_AND; }
+    "&amp;&amp;"|"&&"        { return BindingTypes.LOGIC_AND; }
     "||"                     { return BindingTypes.LOGIC_OR; }
     "==="                    { return BindingTypes.EQEQEQ; }
     "!=="                    { return BindingTypes.NEEQEQ; }
