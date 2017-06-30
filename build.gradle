@@ -102,4 +102,4 @@ task generateBindingParser(type: GenerateParser) {
 compileJava.dependsOn(generateBindingLexer, generateBindingParser, unpackPHPStorm)
 
 group 'de.uniorg'
-version '0.2.6-rc1'
+version '0.3.0-rc1'

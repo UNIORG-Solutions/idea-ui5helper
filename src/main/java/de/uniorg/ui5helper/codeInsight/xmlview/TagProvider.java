@@ -9,6 +9,7 @@ import de.uniorg.ui5helper.codeInsight.xmlview.tags.ControlTag;
 import de.uniorg.ui5helper.ui5.ApiIndex;
 import de.uniorg.ui5helper.ui5.ApiSymbol;
 import de.uniorg.ui5helper.ui5.ClassDocumentation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TagProvider implements XmlElementDescriptorProvider {
@@ -32,8 +33,13 @@ public class TagProvider implements XmlElementDescriptorProvider {
     }
 
 
-    private ClassDocumentation getClassDoc(XmlTag tag) {
-        ApiSymbol tagDocs = this.getApiIndex(tag.getProject()).lookup(tag.getNamespace(), tag.getLocalName());
+    private ClassDocumentation getClassDoc(@NotNull XmlTag tag) {
+        ApiIndex index = this.getApiIndex(tag.getProject());
+        if (index == null) {
+            System.err.println("Cannot find a apiIndex for project " + tag.getProject().getName());
+            return null;
+        }
+        ApiSymbol tagDocs = index.lookup(tag.getNamespace(), tag.getLocalName());
         if (tagDocs == null || !(tagDocs instanceof ClassDocumentation)) {
             return null;
         }
