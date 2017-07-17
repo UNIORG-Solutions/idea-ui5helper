@@ -7,12 +7,16 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
+import de.uniorg.ui5helper.Features;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.ui5.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static de.uniorg.ui5helper.ProjectComponent.isEnabled;
 
 public class XMLDocumentationProvider implements DocumentationProvider {
 
@@ -23,6 +27,10 @@ public class XMLDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String getQuickNavigateInfo(PsiElement psiElement, PsiElement psiElement1) {
+        if (!isEnabled(psiElement.getProject(), Features.XML_DOCUMENTATION)) {
+            return null;
+        }
+
         if (psiElement1 instanceof XmlTag) {
             return getClassName((XmlTag) psiElement1);
         }
@@ -33,6 +41,10 @@ public class XMLDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public List<String> getUrlFor(PsiElement psiElement, PsiElement psiElement1) {
+        if (!isEnabled(psiElement.getProject(), Features.XML_DOCUMENTATION)) {
+            return null;
+        }
+
         if (psiElement1 instanceof XmlTag) {
             List<String> list = new ArrayList<>();
             list.add("https://openui5.hana.ondemand.com/docs/api/symbols/" + getClassName((XmlTag) psiElement1) + ".html");
@@ -53,6 +65,10 @@ public class XMLDocumentationProvider implements DocumentationProvider {
     @Nullable
     @Override
     public String generateDoc(PsiElement psiElement, @Nullable PsiElement psiElement1) {
+        if (!isEnabled(psiElement.getProject(), Features.XML_DOCUMENTATION)) {
+            return null;
+        }
+
         if (psiElement1 instanceof XmlToken) {
             psiElement1 = psiElement1.getParent();
         }
@@ -125,7 +141,7 @@ public class XMLDocumentationProvider implements DocumentationProvider {
         );
     }
 
-    private String getClassDoc(Project project, String className) {
+    private String getClassDoc(@NotNull Project project, @NotNull String className) {
         ApiIndex apiIndex = project.getComponent(ProjectComponent.class).getApiIndex();
         ApiSymbol doc = apiIndex.lookup(className);
         if (doc == null) {

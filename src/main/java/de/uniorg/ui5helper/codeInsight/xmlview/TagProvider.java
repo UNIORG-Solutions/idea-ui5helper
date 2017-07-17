@@ -24,6 +24,7 @@ public class TagProvider implements XmlElementDescriptorProvider {
         if (!fileName.endsWith("view.xml") && !fileName.endsWith("fragment.xml")) {
             return null;
         }
+
         ClassDocumentation classDoc = this.getClassDoc(context);
         if (classDoc == null) {
             return null;

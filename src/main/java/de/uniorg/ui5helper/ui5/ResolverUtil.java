@@ -1,10 +1,12 @@
 package de.uniorg.ui5helper.ui5;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ResolverUtil {
-    public static ApiSymbol getMetadataMember(ApiIndex apiIndex, String className, String memberName) {
+    public static ApiSymbol getMetadataMember(@NotNull ApiIndex apiIndex, @NotNull String className, @NotNull String memberName) {
         ApiSymbol doc = apiIndex.lookup(className);
         if (doc == null || !(doc instanceof ClassDocumentation)) {
             return null;

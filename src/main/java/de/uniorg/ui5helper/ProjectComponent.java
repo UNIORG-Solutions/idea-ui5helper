@@ -75,6 +75,10 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
         Settings setting = Settings.getInstance(project);
 
         switch (feature) {
+            case JS_FILE_IMPORT_REFERENCE:
+                return setting.jsFileImportReference;
+            case XML_DOCUMENTATION:
+                return setting.xmlDocumentation;
             case XML_COLLAPSE_CONTROLLER_NAME:
                 return setting.foldControllerName;
             case XML_BINDING_INJECTION:

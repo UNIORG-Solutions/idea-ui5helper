@@ -19,6 +19,10 @@ public class Settings implements PersistentStateComponent<Settings> {
 
     public boolean foldControllerName = true;
 
+    public boolean xmlDocumentation = true;
+
+    public boolean jsFileImportReference = true;
+
     public static Settings getInstance(Project project) {
         return ServiceManager.getService(project, Settings.class);
     }
