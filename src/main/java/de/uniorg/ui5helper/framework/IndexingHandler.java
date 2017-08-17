@@ -45,7 +45,6 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                         JSImplicitElementImpl.Builder getterBuilder = new JSImplicitElementImpl.Builder(JSSymbolUtil.suggestGetterName(titleCasedPropName), property);
                         getterBuilder.setNamespace(((JSProperty) value.getParent()).getNamespace())
                                 .setContext(JSContext.INSTANCE)
-                                .setProperties(JSImplicitElement.Property.GetFunction)
                                 .setType(JSImplicitElement.Type.Function)
                                 .setTypeString(typeString);
 
@@ -55,7 +54,6 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                         parameters.add(new JSImplicitParameterStructure("value", typeString, false, false, false));
                         setterBuilder.setNamespace(((JSProperty) value.getParent()).getNamespace())
                                 .setContext(JSContext.INSTANCE)
-                                .setProperties(JSImplicitElement.Property.SetFunction)
                                 .setType(JSImplicitElement.Type.Function)
                                 .setParameters(parameters);
                         outData.addImplicitElement(setterBuilder.toImplicitElement());
