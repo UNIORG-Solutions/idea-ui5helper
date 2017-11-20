@@ -1,0 +1,3 @@
+<core:View controllerName="my.controllers.NameFolding"<fold text='...'>>
+<Control/>
+</core:View</fold>>
