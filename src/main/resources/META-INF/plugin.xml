@@ -103,6 +103,7 @@
                              implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveXmlViewIndexer"/>
+        <fileBasedIndex implementation="de.uniorg.ui5helper.index.JavascriptClassIndexer"/>
         <codeInsight.lineMarkerProvider language="XML"
                                         implementationClass="de.uniorg.ui5helper.codeInsight.GotoControllerProvider"/>
         <codeInsight.lineMarkerProvider language="JavaScript"
@@ -113,6 +114,7 @@
         <xml.attributeDescriptorsProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.AttributesProvider"
                                           order="first"/>
         <annotator language="UI5 Binding" implementationClass="de.uniorg.ui5helper.codeInsight.binding.SimplifyBindingAnnotator" />
+        <annotator language="JavaScript" implementationClass="de.uniorg.ui5helper.codeInsight.js.ProblemAnnotator"/>
         <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>
         <multiHostInjector implementation="de.uniorg.ui5helper.binding.XmlViewInjector" />
         <lang.parserDefinition language="UI5 Binding" implementationClass="de.uniorg.ui5helper.binding.BindingParserDefinition" />

@@ -12,6 +12,15 @@ public class ApiIndex {
         this.index.put(className, docs);
     }
 
+    public ApiSymbol[] findClass(String classname) {
+        return index
+                .keySet()
+                .stream()
+                .filter(name -> name.endsWith("." + classname))
+                .map(name -> this.index.get(name).get(name))
+                .toArray(ApiSymbol[]::new);
+    }
+
     public ApiSymbol lookup(String className) {
         if (!this.index.containsKey(className)) {
             return null;
