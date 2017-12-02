@@ -8,6 +8,18 @@ import com.intellij.psi.xml.XmlTag;
 
 public class XmlViewUtil {
     public static Key<String> CONTROLLER_NAME = Key.create("ui5_helper.xmlview.controllerName");
+
+    public static boolean isXmlFragment(PsiFile file) {
+        if (!(file instanceof XmlFile)) {
+            return false;
+        }
+
+        XmlFile xmlFile = (XmlFile) file;
+
+        final XmlTag rootTag = xmlFile.getRootTag();
+        return rootTag != null && (rootTag.getLocalName().equals("FragmentDefinition"));
+    }
+
     public static boolean isXmlView(PsiFile file) {
         if (!(file instanceof XmlFile)) {
             return false;
@@ -15,11 +27,8 @@ public class XmlViewUtil {
 
         XmlFile xmlFile = (XmlFile) file;
 
-        try {
-            return xmlFile.getRootTag().getLocalName().equals("View") || xmlFile.getRootTag().getLocalName().equals("XMLView");
-        } catch (NullPointerException npe) {
-            return false;
-        }
+        final XmlTag rootTag = xmlFile.getRootTag();
+        return rootTag != null && (rootTag.getLocalName().equals("View") || rootTag.getLocalName().equals("XMLView"));
     }
 
     public static String getControllerName(PsiFile file) {
@@ -29,7 +38,7 @@ public class XmlViewUtil {
 
         try {
             XmlTag viewTag = ((XmlFile) file).getRootTag();
-            if (!viewTag.getLocalName().equals("View") && !viewTag.getLocalName().equals("XMLView")) {
+            if (!isXmlView(file) || viewTag == null) {
                 return null;
             }
 

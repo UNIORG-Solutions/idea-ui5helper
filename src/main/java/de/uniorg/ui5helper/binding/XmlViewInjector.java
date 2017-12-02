@@ -5,6 +5,7 @@ import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
@@ -24,7 +25,10 @@ public class XmlViewInjector implements MultiHostInjector {
             return;
         }
 
-        if (!(psiElement.getContainingFile().getFileType() instanceof XmlFileType) || !XmlViewUtil.isXmlView(psiElement.getContainingFile())) {
+        final PsiFile containingFile = psiElement.getContainingFile();
+        if (!(containingFile.getFileType() instanceof XmlFileType
+                || XmlViewUtil.isXmlView(containingFile)
+                || XmlViewUtil.isXmlFragment(containingFile))) {
             return;
         }
 
