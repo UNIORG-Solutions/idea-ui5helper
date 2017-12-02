@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GotoViewProvider extends RelatedItemLineMarkerProvider {
 
@@ -42,20 +44,26 @@ public class GotoViewProvider extends RelatedItemLineMarkerProvider {
 
         Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(NaiveXmlViewIndexer.KEY, controllerName, GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.allScope(psiElement.getProject()), XmlFileType.INSTANCE));
 
-        fileCollection.iterator().forEachRemaining(
-                virtualFile -> {
-                    PsiFile targetFile = PsiManager.getInstance(psiElement.getProject()).findFile(virtualFile);
-                    if (targetFile == null) {
-                        return;
-                    }
+        PsiManager psiManager = PsiManager.getInstance(psiElement.getProject());
+        List<PsiFile> targets = fileCollection.stream()
+                .map(psiManager::findFile)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
-                    NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(Icons.OPENUI5)
-                            .setTarget(targetFile)
-                            .setTooltipText("go to View");
+        if (targets.size() > 0) {
+            NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(Icons.OPENUI5)
+                    .setTargets(targets)
+                    .setNamer(psiFile -> {
+                        if (psiFile instanceof PsiFile) {
+                            return ((PsiFile) psiFile).getVirtualFile().getName();
+                        }
 
-                    list.add(builder.createLineMarkerInfo(psiElement));
-                }
-        );
+                        return psiFile.toString();
+                    })
+                    .setTooltipText("go to View");
+
+            list.add(builder.createLineMarkerInfo(psiElement));
+        }
 
         return list;
     }
