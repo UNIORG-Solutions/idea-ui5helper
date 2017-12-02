@@ -1,5 +1,6 @@
 package de.uniorg.ui5helper.binding;
 
+import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
 import com.intellij.openapi.util.TextRange;
@@ -10,6 +11,7 @@ import com.intellij.psi.xml.XmlAttributeValue;
 import de.uniorg.ui5helper.Features;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.binding.lang.BindingLanguage;
+import de.uniorg.ui5helper.ui.mvc.XmlViewUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -22,8 +24,13 @@ public class XmlViewInjector implements MultiHostInjector {
             return;
         }
 
+        if (!(psiElement.getContainingFile().getFileType() instanceof XmlFileType) || !XmlViewUtil.isXmlView(psiElement.getContainingFile())) {
+            return;
+        }
+
         final XmlAttribute attribute = (XmlAttribute) psiElement;
         XmlAttributeValue value = attribute.getValueElement();
+
         if (value == null) {
             return;
         }
