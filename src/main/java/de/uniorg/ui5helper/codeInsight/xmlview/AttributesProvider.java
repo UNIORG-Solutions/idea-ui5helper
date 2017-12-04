@@ -12,9 +12,6 @@ import de.uniorg.ui5helper.ui5.ClassDocumentation;
 import org.jetbrains.annotations.Nullable;
 
 public class AttributesProvider implements XmlAttributeDescriptorsProvider {
-    public AttributesProvider() {
-        System.out.println("test");
-    }
 
     @Override
     public XmlAttributeDescriptor[] getAttributeDescriptors(XmlTag context) {

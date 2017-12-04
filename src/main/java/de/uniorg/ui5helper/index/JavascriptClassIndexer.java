@@ -1,7 +1,9 @@
 package de.uniorg.ui5helper.index;
 
 import com.intellij.lang.javascript.JavaScriptFileType;
-import com.intellij.lang.javascript.psi.*;
+import com.intellij.lang.javascript.psi.JSCallExpression;
+import com.intellij.lang.javascript.psi.JSExpression;
+import com.intellij.lang.javascript.psi.JSLiteralExpression;
 import com.intellij.util.indexing.*;
 import com.intellij.util.io.EnumeratorStringDescriptor;
 import com.intellij.util.io.KeyDescriptor;
@@ -55,60 +57,17 @@ public class JavascriptClassIndexer extends ScalarIndexExtension<String> {
                 return map;
             }
 
-            JSFunctionExpression factory = (JSFunctionExpression) defineCall.getArguments()[1];
-            if (factory == null) {
-                return map;
-            }
-
-            JSReturnStatement ret = findReturn(factory.getBody());
-
-            if (ret == null) {
-                return map;
-            }
-
-            if (ret.getExpression() instanceof JSCallExpression && ((JSCallExpression) ret.getExpression()).getMethodExpression().getText().endsWith("extend")) {
-                JSCallExpression extendCall = (JSCallExpression) ret.getExpression();
-
-                String className = this.getClassName(extendCall);
-                if (className != null) {
-                    map.put(className, null);
+            JSCallExpression classDecl = JSTreeUtil.findClassDeclaration(defineCall);
+            if (classDecl != null) {
+                String className = getClassName(classDecl);
+                if (className == null) {
+                    return map;
                 }
+                map.put(className, null);
             }
 
             return map;
         };
-    }
-
-    private JSReturnStatement findReturn(JSSourceElement[] statements) {
-        for (JSSourceElement jsSourceElement : statements) {
-            if (jsSourceElement instanceof JSBlockStatement) {
-                JSReturnStatement tmp = findReturn(((JSBlockStatement) jsSourceElement).getStatements());
-                if (tmp != null) {
-                    return tmp;
-                }
-            }
-            if (jsSourceElement instanceof JSReturnStatement) {
-                return (JSReturnStatement) jsSourceElement;
-            }
-        }
-
-        return null;
-    }
-
-    private JSReturnStatement findReturn(JSStatement[] statements) {
-        for (JSStatement jsSourceElement : statements) {
-            if (jsSourceElement instanceof JSBlockStatement) {
-                JSReturnStatement tmp = findReturn(((JSBlockStatement) jsSourceElement).getStatements());
-                if (tmp != null) {
-                    return tmp;
-                }
-            }
-            if (jsSourceElement instanceof JSReturnStatement) {
-                return (JSReturnStatement) jsSourceElement;
-            }
-        }
-
-        return null;
     }
 
     @NotNull
@@ -119,7 +78,7 @@ public class JavascriptClassIndexer extends ScalarIndexExtension<String> {
 
     @Override
     public int getVersion() {
-        return 2;
+        return 3;
     }
 
     @NotNull

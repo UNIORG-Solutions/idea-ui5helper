@@ -95,7 +95,7 @@ public class HttpsClient implements ApiClient {
             String path = routeObj.getAsJsonPrimitive("path").getAsString();
             String name = path.replaceFirst("/", "");
             if (path.equals("/")) {
-                name = "latest";
+                return;
             }
             versions.add(name);
         });

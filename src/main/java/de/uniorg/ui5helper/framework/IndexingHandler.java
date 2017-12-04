@@ -9,7 +9,6 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSCallExpressionImpl;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.literal.JSLiteralImplicitElementProvider;
-import com.intellij.lang.javascript.psi.resolve.BaseJSSymbolProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSSimpleTypeProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSTypeEvaluator;
 import com.intellij.lang.javascript.psi.stubs.JSElementIndexingData;
@@ -18,6 +17,7 @@ import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitElementImpl;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitFunctionImpl;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitParameterStructure;
 import com.intellij.lang.javascript.psi.types.*;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -41,7 +41,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
     }
 
     @Override
-    public boolean processProperty(String name, @Nullable JSElement value, @NotNull JSElementIndexingData outData) {
+    public boolean processProperty(@Nullable String name, @NotNull JSProperty value, @NotNull JSElementIndexingData outData) {
         switch (name) {
             case "properties":
                 if (outData.getImplicitElements() == null) {
@@ -162,36 +162,41 @@ public class IndexingHandler extends FrameworkIndexingHandler {
             }
 
             JSExpression fileName = expressions[index];
-            if (fileName instanceof JSLiteralExpression && ((JSLiteralExpression) fileName).getValue() instanceof String) {
+
+            if (fileName instanceof JSLiteralExpression && ((JSLiteralExpression) fileName).getValue() instanceof String && !DumbService.isDumb(result.getProject())) {
+                GlobalSearchScope scope = GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.everythingScope(result.getProject()), JavaScriptFileType.INSTANCE);
+
+
                 String moduleName = (String) ((JSLiteralExpression) fileName).getValue();
-                if (moduleName.startsWith("sap")) {
-                    moduleName = moduleName.replaceAll("/", ".");
-                    Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(JavascriptClassIndexer.KEY, moduleName, GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.allScope(result.getProject()), JavaScriptFileType.INSTANCE));
-                    JSTypeSource source = JSTypeSourceFactory.createTypeSource(result);
-                    if (fileCollection.size() == 1) {
-                        VirtualFile file = fileCollection.toArray(new VirtualFile[1])[0];
-                        PsiFile targetFile = PsiManager.getInstance(result.getProject()).findFile(file);
-                        if (targetFile != null) {
+                moduleName = moduleName.replaceAll("/", ".");
+                Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(JavascriptClassIndexer.KEY, moduleName, scope);
+                JSTypeSource source = JSTypeSourceFactory.createTypeSource(result);
+                if (fileCollection.size() == 1) {
+                    VirtualFile file = fileCollection.toArray(new VirtualFile[1])[0];
+                    PsiFile targetFile = PsiManager.getInstance(result.getProject()).findFile(file);
+                    if (targetFile != null) {
+                        JSCallExpression defineCall = JSTreeUtil.getDefineCall(targetFile);
+                        if (defineCall != null) {
+                            JSCallExpression decl = JSTreeUtil.findClassDeclaration(defineCall);
+                            if (decl != null) {
+                                source = JSTypeSourceFactory.createTypeSource(decl);
+                            } else {
+                                source = JSTypeSourceFactory.createTypeSource(defineCall);
+                            }
+                        } else {
                             source = JSTypeSourceFactory.createTypeSource(targetFile);
                         }
                     }
-                    JSType type = JSNamedType.createFunctionBasedType(moduleName + ".prototype.constructor", source, JSTypeContext.PROTOTYPE);
-                    evaluator.addType(type, result);
-                    return true;
                 }
+                JSType type = JSNamedType.createType(moduleName + ".prototype.constructor", source, JSTypeContext.PROTOTYPE);
+
+                evaluator.addType(type, result);
+                return true;
             }
 
         }
-        /*JSTypeSource source = JSTypeSourceFactory.createTypeSource(result);
-        JSType type = JSNamedType.createType("it.masch.demo.Test", source, JSContext.INSTANCE);
-        evaluator.addType(type, result);
-        return true;*/
-        return super.addTypeFromResolveResult(evaluator, result, hasSomeType);
-    }
 
-    @Override
-    public void addContextType(BaseJSSymbolProcessor.TypeInfo info, PsiElement context) {
-        super.addContextType(info, context);
+        return super.addTypeFromResolveResult(evaluator, result, hasSomeType);
     }
 
     @Nullable
@@ -205,8 +210,6 @@ public class IndexingHandler extends FrameworkIndexingHandler {
             return new JSLiteralImplicitElementProvider() {
                 public void fillIndexingData(@NotNull JSLiteralExpression argument, @NotNull JSCallExpression callExpression, @NotNull JSElementIndexingData outIndexingData) {
                     JSExpression[] arguments = callExpression.getArguments();
-
-                    System.out.println(outIndexingData.getTypedefs());
                 }
             };
         }
@@ -229,7 +232,9 @@ public class IndexingHandler extends FrameworkIndexingHandler {
 
                         outIndexingData.addImplicitElement(builder.toImplicitElement());
 
-                        JSTypeEvaluator.evaluateTypes((JSExpression) callExpression.getMethodExpression().getFirstChild(), callExpression.getContainingFile(), new JSSimpleTypeProcessor());
+                        if (!DumbService.isDumb(argument.getProject())) {
+                            JSTypeEvaluator.evaluateTypes((JSExpression) callExpression.getMethodExpression().getFirstChild(), callExpression.getContainingFile(), new JSSimpleTypeProcessor());
+                        }
                     }
                 }
             };
