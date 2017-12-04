@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.3.0-rc1</version>
+    <version>0.3.0-rc2</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
@@ -118,9 +118,13 @@
         <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>
         <multiHostInjector implementation="de.uniorg.ui5helper.binding.XmlViewInjector" />
         <lang.parserDefinition language="UI5 Binding" implementationClass="de.uniorg.ui5helper.binding.BindingParserDefinition" />
+        <lang.syntaxHighlighterFactory language="UI5 Binding"
+                                       implementationClass="de.uniorg.ui5helper.binding.BindingSyntaxHighlighterFactory"/>
+        <colorSettingsPage implementation="de.uniorg.ui5helper.settings.BindingColorSettingsPage"/>
     </extensions>
     <extensions defaultExtensionNs="JavaScript">
         <frameworkIndexingHandler implementation="de.uniorg.ui5helper.framework.IndexingHandler" />
+        <predefinedLibraryProvider implementation="de.uniorg.ui5helper.library.PredefinedLibraryProvider"/>
     </extensions>
     <project-components>
         <component>

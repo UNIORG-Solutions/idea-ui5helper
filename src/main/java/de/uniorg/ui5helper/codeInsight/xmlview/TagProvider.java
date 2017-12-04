@@ -6,6 +6,7 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.xml.XmlElementDescriptor;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.codeInsight.xmlview.tags.ControlTag;
+import de.uniorg.ui5helper.ui.mvc.XmlViewUtil;
 import de.uniorg.ui5helper.ui5.ApiIndex;
 import de.uniorg.ui5helper.ui5.ApiSymbol;
 import de.uniorg.ui5helper.ui5.ClassDocumentation;
@@ -20,8 +21,7 @@ public class TagProvider implements XmlElementDescriptorProvider {
             return null;
         }
 
-        final String fileName = context.getContainingFile().getName();
-        if (!fileName.endsWith("view.xml") && !fileName.endsWith("fragment.xml")) {
+        if (!XmlViewUtil.isXmlFragment(context.getContainingFile()) && XmlViewUtil.isXmlView(context.getContainingFile())) {
             return null;
         }
 

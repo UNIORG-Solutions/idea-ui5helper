@@ -3,7 +3,6 @@ package de.uniorg.ui5helper.binding;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
@@ -17,7 +16,6 @@ import de.uniorg.ui5helper.binding.lang.BindingLanguage;
 import de.uniorg.ui5helper.binding.psi.BindingTypes;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Reader;
 
 public class BindingParserDefinition implements ParserDefinition {
 
@@ -28,7 +26,7 @@ public class BindingParserDefinition implements ParserDefinition {
     @NotNull
     @Override
     public Lexer createLexer(Project project) {
-        return new FlexAdapter(new BindingLexer((Reader) null));
+        return new LexerAdapter(null);
     }
 
     @Override

@@ -3,7 +3,7 @@ package de.uniorg.ui5helper.binding;
 import com.intellij.ide.highlighter.XmlFileType;
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.ElementManipulators;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLanguageInjectionHost;
@@ -39,11 +39,9 @@ public class XmlViewInjector implements MultiHostInjector {
             return;
         }
 
-        TextRange range = attribute.getValueTextRange();
-
         if (value.getValue().contains("{") && value.getValue().contains("}")) {
             multiHostRegistrar.startInjecting(BindingLanguage.INSTANCE);
-            multiHostRegistrar.addPlace("", "", (PsiLanguageInjectionHost) value, range);
+            multiHostRegistrar.addPlace(null, null, (PsiLanguageInjectionHost) value, ElementManipulators.getValueTextRange(value));
             multiHostRegistrar.doneInjecting();
         }
 

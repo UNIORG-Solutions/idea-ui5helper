@@ -55,6 +55,7 @@ WHITE_SPACE = [\ \t\n\r]
 PATH_START = [a-zA-Z0-9_.]
 PATH_CHAR = [a-zA-Z0-9_.\ -]
 IDENTIFIER_CHAR = [a-zA-Z0-9_]
+OBJECT_KEY = {IDENTIFIER_CHAR}+
 NOT_OPEN = [^{]
 
 EXPONENT      = [eE] [-+]? [0-9_]+
@@ -144,6 +145,19 @@ BIN_LITERAL = "0b" [01_]*
        }
     }
 
+
+    {IDENTIFIER_CHAR}+":"    {
+        if (beforeFirstIdentifier && !afterFirstIdentifier) {
+            yypushback(1);
+            beforeFirstIdentifier = false;
+            afterFirstIdentifier = true;
+
+            return BindingTypes.COMPLEX_BINDING_KEY;
+        }
+
+        return TokenType.BAD_CHARACTER;
+    }
+
     {PATH_START}{PATH_CHAR}* {
         yybegin(IN_CONTEXT);
         if (beforeFirstIdentifier && !afterFirstIdentifier) {
@@ -162,7 +176,7 @@ BIN_LITERAL = "0b" [01_]*
 
 <IN_PATH> {
     "/"                      { return BindingTypes.PATH_SEP; }
-    {PATH_START}{PATH_CHAR}* { return BindingTypes.STRING; }
+    {PATH_START}{PATH_CHAR}* { return BindingTypes.PATH_SEGMENT; }
     .                        { return TokenType.BAD_CHARACTER; }
 }
 
@@ -180,8 +194,8 @@ BIN_LITERAL = "0b" [01_]*
 <IN_COMPLEX> {
     "{"                      { contexts.push(ContextType.COMPLEX); return BindingTypes.CURLY_OPEN; }
     ","                      { return BindingTypes.COMMA; }
-    {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
-    .                       { return TokenType.BAD_CHARACTER; }
+    {IDENTIFIER_CHAR}+       { return BindingTypes.COMPLEX_BINDING_KEY; }
+    .                        { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_EXPRESSION> {
@@ -197,7 +211,7 @@ BIN_LITERAL = "0b" [01_]*
     ")"                      { return BindingTypes.ROUND_CLOSE;}
 
     {IDENTIFIER_CHAR}+       { return BindingTypes.STRING; }
-    .                       { return TokenType.BAD_CHARACTER; }
+    .                        { return TokenType.BAD_CHARACTER; }
 }
 
 <NEXT_IS_EMBEDDED> {

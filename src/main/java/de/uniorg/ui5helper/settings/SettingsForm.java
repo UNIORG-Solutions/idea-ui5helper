@@ -2,12 +2,15 @@ package de.uniorg.ui5helper.settings;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.cache.CacheStorage;
+import de.uniorg.ui5helper.cache.SdkVersionManager;
 import de.uniorg.ui5helper.ui5.receive.HttpsClient;
 import de.uniorg.ui5helper.ui5.receive.Provider;
 import org.jetbrains.annotations.Nls;
@@ -32,9 +35,12 @@ public class SettingsForm implements Configurable {
     private JCheckBox bindingSyntaxSupport;
     private JCheckBox xmlDocumentation;
     private JCheckBox checkImportedFileReferencesCheckBox;
+    private JButton downloadSources;
+    private SdkVersionManager versionManager;
 
     public SettingsForm(@NotNull final Project project) {
         this.project = project;
+        versionManager = SdkVersionManager.getInstance();
     }
 
     @Nls
@@ -70,6 +76,25 @@ public class SettingsForm implements Configurable {
             apiProvider.refreshAvailableVersions(this::onNewVersion);
         });
 
+        ui5Version.addActionListener(actionEvent -> {
+            String selectedVersion = getSelectedVersion();
+            if (selectedVersion == null) {
+                return;
+            }
+            if (versionManager.has(selectedVersion)) {
+                downloadSources.setVisible(false);
+                downloadSources.setEnabled(false);
+            } else {
+                downloadSources.setVisible(true);
+                downloadSources.setEnabled(true);
+            }
+        });
+
+        downloadSources.addActionListener(actionEvent -> {
+            Task.Backgroundable dl = versionManager.download(getSelectedVersion());
+            ProgressManager.getInstance().run(dl);
+        });
+
         return panel;
     }
 
@@ -87,7 +112,8 @@ public class SettingsForm implements Configurable {
 
     @Override
     public boolean isModified() {
-        return !getSelectedVersion().equals(getSettings().ui5Version)
+        String selectedVersion = getSelectedVersion();
+        return !(selectedVersion != null && selectedVersion.equals(getSettings().ui5Version))
                 || pluginEnabled.isSelected() != getSettings().pluginEnabled
                 || collapseControllerName.isSelected() != getSettings().foldControllerName
                 || bindingSyntaxSupport.isSelected() != getSettings().injectBindingLanguage
@@ -167,7 +193,7 @@ public class SettingsForm implements Configurable {
         panel = new JPanel();
         panel.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("UI5 Version");
@@ -189,6 +215,10 @@ public class SettingsForm implements Configurable {
         final JLabel label2 = new JLabel();
         label2.setText("Enabled");
         panel1.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        downloadSources = new JButton();
+        downloadSources.setEnabled(false);
+        downloadSources.setText("Download sources");
+        panel1.add(downloadSources, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tabbedPane1 = new JTabbedPane();
         panel.add(tabbedPane1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel2 = new JPanel();

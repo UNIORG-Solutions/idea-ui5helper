@@ -24,8 +24,7 @@ complex_array ::= BRACKET_OPEN complex_binding_value (COMMA complex_binding_valu
 complex_object ::= CURLY_OPEN complex_binding_entry (COMMA complex_binding_entry)* CURLY_CLOSE
 complex_boolean ::= TRUE|FALSE
 complex_binding_value ::= QUOTED_STRING|NUMBER|complex_array|complex_object|complex_boolean
-complex_binding_key ::= STRING|QUOTED_STRING
-complex_binding_entry ::= complex_binding_key COLON complex_binding_value
+complex_binding_entry ::= COMPLEX_BINDING_KEY COLON complex_binding_value
 complex_binding ::= CURLY_OPEN complex_binding_entry (COMMA complex_binding_entry)*CURLY_CLOSE
 
 embedded_binding ::= EMBEDDED_MARKER binding_
@@ -42,4 +41,4 @@ expression_binding ::= CURLY_OPEN EXPRESSION_MARKER statement_* CURLY_CLOSE
 
 model_name ::= STRING
 private simple_model_ ::= model_name MODEL_SEP
-simple_binding ::= CURLY_OPEN simple_model_? PATH_SEP? (STRING PATH_SEP)* STRING? CURLY_CLOSE
+simple_binding ::= CURLY_OPEN simple_model_? PATH_SEP? (PATH_SEGMENT PATH_SEP)* PATH_SEGMENT? CURLY_CLOSE
