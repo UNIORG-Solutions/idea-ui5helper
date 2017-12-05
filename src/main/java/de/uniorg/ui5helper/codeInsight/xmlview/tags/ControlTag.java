@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.util.ArrayUtil;
 import com.intellij.xml.XmlAttributeDescriptor;
 import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlElementsGroup;
@@ -13,10 +14,12 @@ import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor;
 import com.intellij.xml.impl.schema.AnyXmlElementDescriptor;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.codeInsight.xmlview.attributes.AggregationAttributeDescriptor;
+import de.uniorg.ui5helper.codeInsight.xmlview.attributes.ControllerNameAttributeDescriptor;
 import de.uniorg.ui5helper.codeInsight.xmlview.attributes.EventAttributeDescriptor;
 import de.uniorg.ui5helper.codeInsight.xmlview.attributes.PropertyAttributeDescriptor;
 import de.uniorg.ui5helper.ui5.*;
 import gnu.trove.THashMap;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -138,9 +141,10 @@ public class ControlTag implements XmlElementDescriptor {
      * @return objects this meta data depends on.
      * @see CachedValue
      */
+    @NotNull
     @Override
     public Object[] getDependences() {
-        return new Object[0];
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
     private ApiIndex getApiIndex(Project project) {
@@ -173,8 +177,7 @@ public class ControlTag implements XmlElementDescriptor {
 
         // add view specific attributes
         if (this.self.getLocalName().endsWith("View")) {
-            //TODO: create a ControllerNameAttributeDescriptor for the reference. makes GotoControllerProvider obsolete.
-            list.add(new AnyXmlAttributeDescriptor("controllerName"));
+            list.add(new ControllerNameAttributeDescriptor(this.self));
         }
 
         if (this.self.getLocalName().endsWith("Fragment")) {

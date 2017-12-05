@@ -21,7 +21,7 @@ public class TagProvider implements XmlElementDescriptorProvider {
             return null;
         }
 
-        if (!XmlViewUtil.isXmlFragment(context.getContainingFile()) && XmlViewUtil.isXmlView(context.getContainingFile())) {
+        if (!XmlViewUtil.isXmlFragment(context.getContainingFile()) && !XmlViewUtil.isXmlView(context.getContainingFile())) {
             return null;
         }
 
