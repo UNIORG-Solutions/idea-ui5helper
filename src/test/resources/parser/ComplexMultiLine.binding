@@ -7,6 +7,6 @@
     ],
     object: {
         bool: true,
-        'quoted_string': 'geht auch'
+        quoted_string: 'geht auch'
     }
 }

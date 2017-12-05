@@ -41,4 +41,4 @@ expression_binding ::= CURLY_OPEN EXPRESSION_MARKER statement_* CURLY_CLOSE
 
 model_name ::= STRING
 private simple_model_ ::= model_name MODEL_SEP
-simple_binding ::= CURLY_OPEN simple_model_? PATH_SEP? (PATH_SEGMENT PATH_SEP)* PATH_SEGMENT? CURLY_CLOSE
+simple_binding ::= CURLY_OPEN (simple_model_ | STRING)? PATH_SEP? (PATH_SEGMENT PATH_SEP)* PATH_SEGMENT? CURLY_CLOSE

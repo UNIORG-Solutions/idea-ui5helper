@@ -48,6 +48,10 @@ public class LexerTest extends LexerTestCase {
             return this.add("BindingTokenType.STRING", content);
         }
 
+        ResultBuilder complexKey(String content) {
+            return this.add("BindingTokenType.COMPLEX_BINDING_KEY", content);
+        }
+
         ResultBuilder number(String content) {
             return this.add("BindingTokenType.NUMBER", content);
         }
@@ -66,6 +70,10 @@ public class LexerTest extends LexerTestCase {
 
         ResultBuilder pathSeparator() {
             return this.add("BindingTokenType.PATH_SEP", "/");
+        }
+
+        ResultBuilder pathSegment(String value) {
+            return this.add("BindingTokenType.PATH_SEGMENT", value);
         }
 
         ResultBuilder modelSeparator() {
@@ -100,7 +108,7 @@ public class LexerTest extends LexerTestCase {
 
         ResultBuilder path(String... args) {
             for (int i = 0; i < args.length; i++) {
-                this.string(args[i]);
+                this.pathSegment(args[i]);
                 if (i < args.length - 1) {
                     this.pathSeparator();
                 }
@@ -133,13 +141,13 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.EMBEDDED_MARKER ('$')\n" +
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.STRING ('path')\n" +
+                        "BindingTokenType.COMPLEX_BINDING_KEY ('path')\n" +
                         "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.QUOTED_STRING ('\'cart>to_art_classf\'')\n" +
                         "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.STRING ('formatter')\n" +
+                        "BindingTokenType.COMPLEX_BINDING_KEY ('formatter')\n" +
                         "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.QUOTED_STRING ('\'.formatter.getGasketColor\'')\n" +
@@ -155,13 +163,13 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.EMBEDDED_MARKER ('$')\n" +
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.STRING ('path')\n" +
+                        "BindingTokenType.COMPLEX_BINDING_KEY ('path')\n" +
                         "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.QUOTED_STRING (''cart>to_art_classf'')\n" +
                         "BindingTokenType.COMMA (',')\n" +
                         "WHITE_SPACE (' ')\n" +
-                        "BindingTokenType.STRING ('formatter')\n" +
+                        "BindingTokenType.COMPLEX_BINDING_KEY ('formatter')\n" +
                         "BindingTokenType.COLON (':')\n" +
                         "WHITE_SPACE (' ')\n" +
                         "BindingTokenType.QUOTED_STRING (''.formatter.getGasketColor'')\n" +
@@ -180,7 +188,7 @@ public class LexerTest extends LexerTestCase {
                         .curlyOpen()
                         .expression()
                         .add("BindingTokenType.NOT_OPERATOR", "!")
-                        .embedded(builder().string("visibility").modelSeparator().pathSeparator().string("addAllToCart").get())
+                        .embedded(builder().string("visibility").modelSeparator().pathSeparator().pathSegment("addAllToCart").get())
                         .curlyClose().get()
         );
 
@@ -208,7 +216,7 @@ public class LexerTest extends LexerTestCase {
                         .curlyOpen()
                         .expression()
                         .space()
-                        .embedded(builder().path("my", "Path").get())
+                        .embedded(builder().string("my").pathSeparator().pathSegment("Path").get())
                         .add("BindingTokenType.DOT", ".")
                         .string("isCool")
                         .add("BindingTokenType.ROUND_OPEN", "(")
@@ -228,7 +236,7 @@ public class LexerTest extends LexerTestCase {
                         .curlyOpen()
                         .expression()
                         .space()
-                        .embedded(builder().path("my", "Path").get())
+                        .embedded(builder().string("my").pathSeparator().pathSegment("Path").get())
                         .add("BindingTokenType.DOT", ".")
                         .string("isCool")
                         .add("BindingTokenType.ROUND_OPEN", "(")
@@ -246,12 +254,12 @@ public class LexerTest extends LexerTestCase {
 
     public void testComplexBinding() {
         doTest(
-                "{ string: 'asdf', array: ['asdf', 2, true], object: { bool: true, 'quoted_string': 'geht auch' } }",
+                "{ string: 'asdf', array: ['asdf', 2, true], object: { bool: true, quoted_string: 'geht auch' } }",
                 builder()
                         .curlyOpen()
                         .space()
-                        .string("string").colon().space().quotedString("asdf").comma().space()
-                        .string("array").colon().space()
+                        .complexKey("string").colon().space().quotedString("asdf").comma().space()
+                        .complexKey("array").colon().space()
                             .brackedOpen()
                                 .quotedString("asdf").comma().space()
                                 .number("2").comma().space()
@@ -259,11 +267,11 @@ public class LexerTest extends LexerTestCase {
                             .brackedClose()
                             .comma()
                             .space()
-                        .string("object").colon().space()
+                        .complexKey("object").colon().space()
                             .curlyOpen()
                             .space()
-                            .string("bool").colon().space().boolTrue().comma().space()
-                            .quotedString("quoted_string").colon().space().quotedString("geht auch").space()
+                        .complexKey("bool").colon().space().boolTrue().comma().space()
+                        .complexKey("quoted_string").colon().space().quotedString("geht auch").space()
                             .curlyClose()
                         .space()
                         .curlyClose()
@@ -274,29 +282,29 @@ public class LexerTest extends LexerTestCase {
                 "{ path: 'cart>to_art_classf', formatter: '.formatter.getGasketColor' }",
                 builder()
                         .curlyOpen().space()
-                        .string("path").colon().space().quotedString("cart>to_art_classf").comma().space()
-                        .string("formatter").colon().space().quotedString(".formatter.getGasketColor").space()
+                        .complexKey("path").colon().space().quotedString("cart>to_art_classf").comma().space()
+                        .complexKey("formatter").colon().space().quotedString(".formatter.getGasketColor").space()
                         .curlyClose().get()
         );
         doTest(
                 "{ path: 'my/path', formatter: '.formatterFunction' }",
                 builder()
                         .curlyOpen().space()
-                        .string("path").colon().space().quotedString("my/path").comma().space()
-                        .string("formatter").colon().space().quotedString(".formatterFunction").space()
+                        .complexKey("path").colon().space().quotedString("my/path").comma().space()
+                        .complexKey("formatter").colon().space().quotedString(".formatterFunction").space()
                         .curlyClose().get()
         );
         doTest(
                 "{ parts: [ '{my/path}', '{model>bla}' ], formatter: '.formatterFunction', paused: true }",
                 builder()
                         .curlyOpen().space()
-                        .string("parts").colon().space()
+                        .complexKey("parts").colon().space()
                         .brackedOpen().space()
                         .quotedString("{my/path}").comma().space()
                         .quotedString("{model>bla}").space()
                         .brackedClose().comma().space()
-                        .string("formatter").colon().space().quotedString(".formatterFunction").comma().space()
-                        .string("paused").colon().space().boolTrue().space()
+                        .complexKey("formatter").colon().space().quotedString(".formatterFunction").comma().space()
+                        .complexKey("paused").colon().space().boolTrue().space()
                         .curlyClose().get()
         );
     }
@@ -308,14 +316,14 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.STRING ('model')\n" +
                         "BindingTokenType.MODEL_SEP ('>')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('path')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('path')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')\n" +
                         "BindingTokenType.STRING (' asdf ')\n" +
                         "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "BindingTokenType.STRING ('model')\n" +
                         "BindingTokenType.MODEL_SEP ('>')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('path')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('path')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
 
         );
@@ -328,7 +336,7 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.STRING ('model')\n" +
                         "BindingTokenType.MODEL_SEP ('>')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('path')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('path')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
 
@@ -338,11 +346,11 @@ public class LexerTest extends LexerTestCase {
                         "BindingTokenType.STRING ('model')\n" +
                         "BindingTokenType.MODEL_SEP ('>')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('some')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('some')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('path here')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('path here')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('123')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('123')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
 
@@ -350,11 +358,11 @@ public class LexerTest extends LexerTestCase {
                 "{/some/path here/123}",
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('some')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('some')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('path here')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('path here')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('123')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('123')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
 
@@ -363,9 +371,9 @@ public class LexerTest extends LexerTestCase {
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "BindingTokenType.STRING ('some')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('path here')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('path here')\n" +
                         "BindingTokenType.PATH_SEP ('/')\n" +
-                        "BindingTokenType.STRING ('123')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('123')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
 
@@ -374,7 +382,7 @@ public class LexerTest extends LexerTestCase {
                 "BindingTokenType.CURLY_OPEN ('{')\n" +
                         "BindingTokenType.STRING ('i18n')\n" +
                         "BindingTokenType.MODEL_SEP ('>')\n" +
-                        "BindingTokenType.STRING ('My.Crazy.Key')\n" +
+                        "BindingTokenType.PATH_SEGMENT ('My.Crazy.Key')\n" +
                         "BindingTokenType.CURLY_CLOSE ('}')"
         );
     }
