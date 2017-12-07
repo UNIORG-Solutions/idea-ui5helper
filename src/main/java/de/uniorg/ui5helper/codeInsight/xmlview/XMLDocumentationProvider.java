@@ -1,4 +1,4 @@
-package de.uniorg.ui5helper.docs;
+package de.uniorg.ui5helper.codeInsight.xmlview;
 
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.openapi.project.Project;

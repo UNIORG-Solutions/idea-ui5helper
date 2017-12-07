@@ -2,10 +2,29 @@ package de.uniorg.ui5helper.ui5;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ResolverUtil {
+
+    private static final Map<ApiIndex, ResolverUtil> INSTANCES = new HashMap<>();
+    private ApiIndex apiIndex;
+
+    private ResolverUtil(ApiIndex apiIndex) {
+        this.apiIndex = apiIndex;
+    }
+
+    @NotNull
+    public static ResolverUtil getInstanceOf(@NotNull ApiIndex apiIndex) {
+        if (!INSTANCES.containsKey(apiIndex)) {
+            INSTANCES.put(apiIndex, new ResolverUtil(apiIndex));
+        }
+
+        return INSTANCES.get(apiIndex);
+    }
+
     public static ApiSymbol getMetadataMember(@NotNull ApiIndex apiIndex, @NotNull String className, @NotNull String memberName) {
         ApiSymbol doc = apiIndex.lookup(className);
         if (doc == null || !(doc instanceof ClassDocumentation)) {
@@ -27,6 +46,45 @@ public class ResolverUtil {
 
         if (((ClassDocumentation) doc).getInherits() != null) {
             return getMetadataMember(apiIndex, ((ClassDocumentation) doc).getInherits(), memberName);
+        }
+
+        return null;
+    }
+
+    public boolean isInstanceOf(@NotNull String className, @NotNull String interfaceName) {
+        if (className.equals(interfaceName)) {
+            return true;
+        }
+
+        ApiSymbol classDoc = this.apiIndex.lookup(className);
+        if (classDoc == null || !(classDoc instanceof ClassDocumentation)) {
+            return false;
+        }
+
+        return isInstanceOf((ClassDocumentation) classDoc, interfaceName);
+    }
+
+    public boolean isInstanceOf(@NotNull ClassDocumentation classDocumentation, @NotNull String interfaceName) {
+        if ((classDocumentation.getModuleName() + "." + classDocumentation.getName()).equals(interfaceName)) {
+            return true;
+        }
+
+        if (classDocumentation.getInherits() == null) {
+            return false;
+        }
+
+        if (classDocumentation.getInherits().equals(interfaceName)) {
+            return true;
+        }
+
+        ClassDocumentation parent = getParent(classDocumentation);
+        return parent != null && this.isInstanceOf(parent, interfaceName);
+
+    }
+
+    private ClassDocumentation getParent(ClassDocumentation classDocumentation) {
+        if (classDocumentation.getInherits() != null) {
+            return (ClassDocumentation) apiIndex.lookup(classDocumentation.getInherits());
         }
 
         return null;

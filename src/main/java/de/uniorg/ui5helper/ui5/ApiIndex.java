@@ -21,6 +21,13 @@ public class ApiIndex {
                 .toArray(ApiSymbol[]::new);
     }
 
+    public ApiSymbol[] findInNamespace(String namespace) {
+        return index.keySet().stream()
+                .filter(name -> name.startsWith(namespace + "."))
+                .map(this::lookup)
+                .toArray(ApiSymbol[]::new);
+    }
+
     public ApiSymbol lookup(String className) {
         if (!this.index.containsKey(className)) {
             return null;

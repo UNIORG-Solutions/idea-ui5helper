@@ -87,7 +87,9 @@
         <cachesInvalidator implementation="de.uniorg.ui5helper.cache.CacheInvalidator"/>
 
         <lang.documentationProvider language="XML"
-                                    implementationClass="de.uniorg.ui5helper.docs.XMLDocumentationProvider"/>
+                                    implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.XMLDocumentationProvider"/>
+        <completion.contributor language="XML"
+                                implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.XMLCompletionContributor"/>
 
         <projectService serviceImplementation="de.uniorg.ui5helper.settings.Settings"/>
 

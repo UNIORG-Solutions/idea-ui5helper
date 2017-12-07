@@ -38,6 +38,10 @@ public class ControlTag implements XmlElementDescriptor {
         this.self = self;
     }
 
+    public ClassDocumentation getClassDocumentation() {
+        return classDocumentation;
+    }
+
     @Override
     public String getQualifiedName() {
         return classDocumentation.getModuleName() + "." + classDocumentation.getName();
