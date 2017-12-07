@@ -28,19 +28,25 @@ public class PredefinedLibraryProvider extends JSPredefinedLibraryProvider {
 
         ArrayList<VirtualFile> libraryPaths = new ArrayList<>();
         try {
-            new ZipFile(srcZip).stream().forEach(entry -> {
-                if (entry.getName().endsWith(".js")) {
-                    String url = "jar:file://" + srcZip.getAbsolutePath() + "!/" + entry.getName();
-                    try {
-                        VirtualFile file = VfsUtil.findFileByURL(new URL(url));
-                        if (file != null) {
-                            libraryPaths.add(file);
+            new ZipFile(srcZip).stream()
+                    .filter(
+                            entry ->
+                                    entry.getName().endsWith(".js")
+                                            && !entry.getName().contains("testsuite")
+                                            && !entry.getName().contains("demokit")
+                                            && !entry.getName().contains("/test/")
+                    )
+                    .forEach(entry -> {
+                        String url = "jar:file://" + srcZip.getAbsolutePath() + "!/" + entry.getName();
+                        try {
+                            VirtualFile file = VfsUtil.findFileByURL(new URL(url));
+                            if (file != null) {
+                                libraryPaths.add(file);
+                            }
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
                         }
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+                    });
         } catch (IOException e) {
             e.printStackTrace();
         }
