@@ -1,6 +1,11 @@
 package de.uniorg.ui5helper;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VfsUtil;
 import de.uniorg.ui5helper.cache.CacheStorage;
 import de.uniorg.ui5helper.index.PathResolver;
 import de.uniorg.ui5helper.settings.Settings;
@@ -40,8 +45,41 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
         this.pathResolver.updateMap();
     }
 
+    public void enableProject() {
+        Settings settings = Settings.getInstance(this.project);
+        settings.pluginEnabled = true;
+        this.projectEnabled();
+    }
+
     private void checkEnabled() {
-        Settings.getInstance(project);
+        if (!isEnabled() && !Settings.getInstance(project).notificationDismissed) {
+            DumbService.getInstance(project).runWhenSmart(() -> {
+                long foundFiles = VfsUtil.collectChildrenRecursively(this.project.getBaseDir())
+                        .stream()
+                        .filter(file -> file.getName().contains("manifest.json") || file.getName().contains("Component.js"))
+                        .count();
+
+                if (foundFiles > 0) {
+                    Notification notification = new Notification(
+                            "UI5 Helper",
+                            "UI5 Helper",
+                            "This seems to be a UI5 project. <a href='enable'>Enable</a> the UI5 Helper plugin?<br />" +
+                                    "<a href='dismiss'>Do not ask me again</a>",
+                            NotificationType.INFORMATION,
+                            (notifi, event) -> {
+                                if ("enable".equals(event.getDescription())) {
+                                    enableProject();
+                                } else if ("dismiss".equals(event.getDescription())) {
+                                    Settings.getInstance(project).notificationDismissed = true;
+                                }
+                                notifi.expire();
+                            }
+                    );
+
+                    Notifications.Bus.notify(notification);
+                }
+            });
+        }
     }
 
     @Override

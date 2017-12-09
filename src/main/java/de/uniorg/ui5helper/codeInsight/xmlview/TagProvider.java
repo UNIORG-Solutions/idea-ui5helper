@@ -13,11 +13,17 @@ import de.uniorg.ui5helper.ui5.ClassDocumentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static de.uniorg.ui5helper.ProjectComponent.isEnabled;
+
 public class TagProvider implements XmlElementDescriptorProvider {
     @Nullable
     @Override
     public XmlElementDescriptor getDescriptor(XmlTag context) {
-        if (context == null || context.getContainingFile() == null) {
+        if (context == null || !isEnabled(context.getProject())) {
+            return null;
+        }
+
+        if (context.getContainingFile() == null) {
             return null;
         }
 

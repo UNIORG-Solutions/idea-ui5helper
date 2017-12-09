@@ -23,6 +23,8 @@ public class Settings implements PersistentStateComponent<Settings> {
 
     public boolean jsFileImportReference = true;
 
+    public boolean notificationDismissed = false;
+
     public static Settings getInstance(Project project) {
         return ServiceManager.getService(project, Settings.class);
     }
