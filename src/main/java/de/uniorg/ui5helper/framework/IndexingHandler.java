@@ -14,7 +14,6 @@ import com.intellij.lang.javascript.psi.resolve.JSTypeEvaluator;
 import com.intellij.lang.javascript.psi.stubs.JSElementIndexingData;
 import com.intellij.lang.javascript.psi.stubs.JSImplicitElement;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitElementImpl;
-import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitFunctionImpl;
 import com.intellij.lang.javascript.psi.stubs.impl.JSImplicitParameterStructure;
 import com.intellij.lang.javascript.psi.types.*;
 import com.intellij.openapi.project.DumbService;
@@ -32,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class IndexingHandler extends FrameworkIndexingHandler {
 
@@ -56,41 +56,195 @@ public class IndexingHandler extends FrameworkIndexingHandler {
 
                 break;
             case "metadata":
-                if (!(value instanceof JSObjectLiteralExpression)) {
+                if (!(value.getValue() instanceof JSObjectLiteralExpression)) {
                     return true;
                 }
-                JSObjectLiteralExpression object = (JSObjectLiteralExpression) value;
+                JSObjectLiteralExpression object = (JSObjectLiteralExpression) value.getValue();
                 String namespace = this.getMetadataNamespace(object);
 
+                boolean keepIndexing = true;
                 JSProperty properties = object.findProperty("properties");
                 if (namespace != null && properties != null && properties.getValue() instanceof JSObjectLiteralExpression) {
                     JSObjectLiteralExpression props = (JSObjectLiteralExpression) properties.getValue();
-                    JSSymbolUtil.forEachIdentifierProperty(props, (titleCasedPropName, property) -> {
-                        String typeString = getPropertyType(property);
-                        JSImplicitElementImpl.Builder getterBuilder = new JSImplicitElementImpl.Builder(JSSymbolUtil.suggestGetterName(titleCasedPropName), property);
-                        getterBuilder.setNamespace(JSQualifiedNameImpl.fromQualifiedName(namespace))
-                                .setContext(JSContext.INSTANCE)
-                                .setType(JSImplicitElement.Type.Function)
-                                .setTypeString(typeString)
-                                .setUserString("ui5_accessor");
-
-                        outData.addImplicitElement(getterBuilder.toImplicitElement());
-                        JSImplicitFunctionImpl.Builder setterBuilder = (new JSImplicitFunctionImpl.Builder(JSSymbolUtil.suggestSetterName(titleCasedPropName), property));
-                        List<JSImplicitParameterStructure> parameters = new ArrayList<>();
-                        parameters.add(new JSImplicitParameterStructure("value", typeString, false, false, false));
-                        setterBuilder.setNamespace(JSQualifiedNameImpl.fromQualifiedName(namespace))
-                                .setContext(JSContext.INSTANCE)
-                                .setType(JSImplicitElement.Type.Function)
-                                .setParameters(parameters)
-                                .setUserString("ui5_accessor");
-                        outData.addImplicitElement(setterBuilder.toImplicitElement());
-                    });
-
-                    return false;
+                    addProperties(outData, namespace, props);
+                    keepIndexing = false;
                 }
+
+                JSProperty aggregations = object.findProperty("aggregations");
+                if (namespace != null && aggregations != null && aggregations.getValue() instanceof JSObjectLiteralExpression) {
+                    JSObjectLiteralExpression props = (JSObjectLiteralExpression) aggregations.getValue();
+                    addAggregations(outData, namespace, props);
+                    keepIndexing = false;
+                }
+
+                return keepIndexing;
         }
 
         return true;
+    }
+
+    private void addAggregations(JSElementIndexingData outData, String namespace, JSObjectLiteralExpression props) {
+        JSSymbolUtil.forEachIdentifierProperty(props, (titleCasedPropName, property) -> {
+            if (property.getValue() == null || !(property.getValue() instanceof JSObjectLiteralExpression)) {
+                return;
+            }
+            String typeString = getPropertyType(property);
+            if (isMultipleAggregation(property)) {
+                String singularName = getAggregationSingularName(titleCasedPropName, (JSObjectLiteralExpression) property.getValue());
+                JSQualifiedName qualifiedName = JSQualifiedNameImpl.fromQualifiedName(namespace);
+                /* get_s
+                 * indexOf_
+                 * add_
+                 * insert_
+                 * remove_
+                 * removeAll_s
+                 * destroy_s
+                 */
+                outData.addImplicitElement(createGetter(namespace, property, titleCasedPropName, typeString + "[]"));
+
+                outData.addImplicitElement(createAccessorFunction(
+                        "indexOf" + singularName,
+                        property,
+                        qualifiedName,
+                        builder -> {
+                            List<JSImplicitParameterStructure> insertParameters = new ArrayList<>();
+                            insertParameters.add(new JSImplicitParameterStructure("oObject", typeString, false, false, false));
+                            builder.setParameters(insertParameters);
+                            builder.setTypeString("integer");
+                        }
+                ));
+
+                outData.addImplicitElement(createAccessorFunction(
+                        "add" + singularName,
+                        property,
+                        qualifiedName,
+                        builder -> {
+                            List<JSImplicitParameterStructure> insertParameters = new ArrayList<>();
+                            insertParameters.add(new JSImplicitParameterStructure("oObject", typeString, false, false, false));
+                            builder.setParameters(insertParameters);
+                        }
+                ));
+
+                outData.addImplicitElement(createAccessorFunction(
+                        "insert" + singularName,
+                        property,
+                        qualifiedName,
+                        builder -> {
+                            List<JSImplicitParameterStructure> insertParameters = new ArrayList<>();
+                            insertParameters.add(new JSImplicitParameterStructure("oObject", typeString, false, false, false));
+                            insertParameters.add(new JSImplicitParameterStructure("iIndex", "integer", false, false, false));
+                            builder.setParameters(insertParameters);
+                        }
+                ));
+
+                outData.addImplicitElement(createAccessorFunction(
+                        "remove" + singularName,
+                        property,
+                        qualifiedName,
+                        builder -> {
+                            List<JSImplicitParameterStructure> removeParameters = new ArrayList<>();
+                            removeParameters.add(new JSImplicitParameterStructure("vObject", typeString + "|integer", false, false, false));
+                            builder.setParameters(removeParameters);
+                        }
+                ));
+
+                outData.addImplicitElement(createAccessorFunction(
+                        "removeAll" + titleCasedPropName,
+                        property,
+                        qualifiedName,
+                        null
+                ));
+
+                outData.addImplicitElement(createAccessorFunction(
+                        "destroy" + titleCasedPropName,
+                        property,
+                        qualifiedName,
+                        null
+                ));
+
+            } else {
+                outData.addImplicitElement(createGetter(namespace, property, titleCasedPropName, typeString));
+                outData.addImplicitElement(createSetter(namespace, property, titleCasedPropName, typeString));
+            }
+        });
+    }
+
+    private String getAggregationSingularName(String titleCasedPropName, JSObjectLiteralExpression property) {
+        JSProperty singularName = property.findProperty("singularName");
+
+        if (singularName != null && singularName.getValue() instanceof JSLiteralExpression && ((JSLiteralExpression) singularName).isQuotedLiteral()) {
+            return ((JSLiteralExpression) singularName).getSignificantValue();
+        }
+
+        return guessSingularName(titleCasedPropName);
+    }
+
+    private String guessSingularName(String plural) {
+        final String[] pluralEndings = new String[]{
+                "children", "ies", "ves", "oes", "ses", "ches", "shes", "xes", "s"
+        };
+        final String[] pluralReplace = new String[]{
+                "child", "y", "f", "o", "s", "ch", "sh", "x", ""
+        };
+
+        for (int i = 0; i < pluralEndings.length; i++) {
+            if (plural.toLowerCase().endsWith(pluralEndings[i])) {
+                return plural.replaceFirst(pluralEndings[i] + "$", pluralReplace[i]);
+            }
+        }
+
+        return plural;
+    }
+
+    private JSImplicitElement createAccessorFunction(String name, PsiElement element, JSQualifiedName namespace, @Nullable Consumer<JSImplicitElementImpl.Builder> builderConsumer) {
+
+        return createElement(name, element, builder -> {
+            builder.setNamespace(namespace)
+                    .setContext(JSContext.INSTANCE)
+                    .setType(JSImplicitElement.Type.Function)
+                    .setUserString("ui5_accessor");
+
+            if (builderConsumer != null) builderConsumer.accept(builder);
+        });
+    }
+
+    private JSImplicitElement createElement(String name, PsiElement element, Consumer<JSImplicitElementImpl.Builder> builderConsumer) {
+        JSImplicitElementImpl.Builder builder = new JSImplicitElementImpl.Builder(name, element);
+        builderConsumer.accept(builder);
+        return builder.toImplicitElement();
+    }
+
+    @NotNull
+    private JSImplicitElement createGetter(String namespace, JSProperty property, String propName, String typeString) {
+        return createAccessorFunction(
+                JSSymbolUtil.suggestGetterName(propName),
+                property,
+                JSQualifiedNameImpl.fromQualifiedName(namespace),
+                builder -> builder.setTypeString(typeString)
+        );
+    }
+
+    @NotNull
+    private JSImplicitElement createSetter(String namespace, JSProperty property, String propName, String typeString) {
+        return createAccessorFunction(
+                JSSymbolUtil.suggestSetterName(propName),
+                property,
+                JSQualifiedNameImpl.fromQualifiedName(namespace),
+                builder -> {
+                    List<JSImplicitParameterStructure> parameters = new ArrayList<>();
+                    parameters.add(new JSImplicitParameterStructure("value", typeString, false, false, false));
+                    builder.setParameters(parameters);
+                }
+        );
+    }
+
+
+    private void addProperties(@NotNull JSElementIndexingData outData, String namespace, JSObjectLiteralExpression props) {
+        JSSymbolUtil.forEachIdentifierProperty(props, (titleCasedPropName, property) -> {
+            String typeString = getPropertyType(property);
+            outData.addImplicitElement(createGetter(namespace, property, titleCasedPropName, typeString));
+            outData.addImplicitElement(createSetter(namespace, property, titleCasedPropName, typeString));
+        });
     }
 
     private String getMetadataNamespace(JSObjectLiteralExpression value) {
@@ -113,6 +267,24 @@ public class IndexingHandler extends FrameworkIndexingHandler {
 
         return null;
     }
+
+    private boolean isMultipleAggregation(JSProperty jsProperty) {
+        try {
+            if (jsProperty.getValue() != null && jsProperty.getValue() instanceof JSObjectLiteralExpression) {
+                JSObjectLiteralExpression propertyDefinition = (JSObjectLiteralExpression) jsProperty.getValue();
+                if (propertyDefinition.findProperty("multiple") != null && (propertyDefinition.findProperty("multiple").getValue() instanceof JSLiteralExpression)) {
+                    if (((JSLiteralExpression) propertyDefinition.findProperty("multiple").getValue()).isBooleanLiteral()) {
+                        return (boolean) ((JSLiteralExpression) propertyDefinition.findProperty("multiple").getValue()).getValue();
+                    }
+                }
+            }
+        } catch (NullPointerException npe) {
+            return false;
+        }
+
+        return false;
+    }
+
 
     private String getPropertyType(JSProperty jsProperty) {
         String type = "mixed";
