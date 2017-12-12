@@ -5,11 +5,13 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.util.io.HttpRequests;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 public class SdkVersionManager {
     private String basePath;
@@ -40,7 +42,11 @@ public class SdkVersionManager {
         return Paths.get(getPath(version).toString(), "release.zip").toFile();
     }
 
-    public Task.Backgroundable download(String version) {
+    public Task.Backgroundable download(@NotNull String version) {
+        return download(version, null);
+    }
+
+    public Task.Backgroundable download(@NotNull String version, @Nullable Consumer<File> callback) {
 
         return new Task.Backgroundable(null, "Downloading OpenUI5 v" + version, true) {
 
@@ -55,6 +61,14 @@ public class SdkVersionManager {
                             .saveToFile(Paths.get(getPath(version).toString(), "release.zip").toFile(), indicator);
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSuccess() {
+                super.onSuccess();
+                if (callback != null) {
+                    callback.accept(getZipFile(version));
                 }
             }
 

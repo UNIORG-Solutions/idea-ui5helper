@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.3.0-rc2</version>
+    <version>0.3.0-rc5</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
@@ -96,6 +96,7 @@
 
         <projectConfigurable instance="de.uniorg.ui5helper.settings.SettingsForm"
                              displayName="UI5 Helper"
+                             parentId="Settings.JavaScript"
                              id="UI5.SettingsForm"
                              nonDefaultProject="true"/>
         <psi.referenceContributor language="JSON"

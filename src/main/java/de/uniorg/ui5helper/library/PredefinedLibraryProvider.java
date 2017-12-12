@@ -26,6 +26,10 @@ public class PredefinedLibraryProvider extends JSPredefinedLibraryProvider {
 
         File srcZip = SdkVersionManager.getInstance().getZipFile(version);
 
+        if (!srcZip.exists()) {
+            return ScriptingLibraryModel.EMPTY_ARRAY;
+        }
+
         ArrayList<VirtualFile> libraryPaths = new ArrayList<>();
         try {
             new ZipFile(srcZip).stream()
