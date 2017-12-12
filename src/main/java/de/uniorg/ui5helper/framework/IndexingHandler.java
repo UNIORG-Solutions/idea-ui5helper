@@ -172,8 +172,8 @@ public class IndexingHandler extends FrameworkIndexingHandler {
     private String getAggregationSingularName(String titleCasedPropName, JSObjectLiteralExpression property) {
         JSProperty singularName = property.findProperty("singularName");
 
-        if (singularName != null && singularName.getValue() instanceof JSLiteralExpression && ((JSLiteralExpression) singularName).isQuotedLiteral()) {
-            return ((JSLiteralExpression) singularName).getSignificantValue();
+        if (singularName != null && singularName.getValue() instanceof JSLiteralExpression && ((JSLiteralExpression) singularName.getValue()).isQuotedLiteral()) {
+            return ((JSLiteralExpression) singularName.getValue()).getSignificantValue();
         }
 
         return guessSingularName(titleCasedPropName);

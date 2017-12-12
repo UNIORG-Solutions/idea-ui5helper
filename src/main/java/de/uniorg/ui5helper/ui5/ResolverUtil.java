@@ -65,7 +65,7 @@ public class ResolverUtil {
     }
 
     public boolean isInstanceOf(@NotNull ClassDocumentation classDocumentation, @NotNull String interfaceName) {
-        if ((classDocumentation.getModuleName() + "." + classDocumentation.getName()).equals(interfaceName)) {
+        if (classDocumentation.getName().equals(interfaceName)) {
             return true;
         }
 

@@ -31,8 +31,11 @@ public class XMLCompletionContributor extends CompletionContributor {
                         }
 
                         XmlFile file = (XmlFile) completionParameters.getOriginalFile();
+                        if (file.getRootTag() == null) {
+                            return;
+                        }
 
-                        Map<String, String> namspeaces = file.getRootTag().getLocalNamespaceDeclarations();
+                        Map<String, String> namespaces = file.getRootTag().getLocalNamespaceDeclarations();
 
                         PsiElement element = completionParameters.getPosition();
                         if (!(element instanceof XmlTokenImpl)) {
@@ -77,17 +80,28 @@ public class XMLCompletionContributor extends CompletionContributor {
                             }
                         }
 
-                        for (String nsname : namspeaces.keySet()) {
-                            ApiSymbol[] symbols = apiIndex.findInNamespace(namspeaces.get(nsname));
+                        for (String nsname : namespaces.keySet()) {
+                            ApiSymbol[] symbols = apiIndex.findInNamespace(namespaces.get(nsname));
                             for (ApiSymbol symbol : symbols) {
                                 if (!(symbol instanceof ClassDocumentation)) {
                                     continue;
                                 }
+
+                                String name = symbol.getName().replace(namespaces.get(nsname) + ".", "");
+                                if (name.contains(".")) { // "<core:layout.form.SimpleForm" does not work
+                                    continue;
+                                }
+
                                 if (aggregation != null && aggregation.getType() != null && !resolver.isInstanceOf((ClassDocumentation) symbol, aggregation.getType())) {
                                     continue;
                                 }
-                                String name = symbol.getName().replace(namspeaces.get(nsname) + ".", nsname.length() == 0 ? "" : nsname + ":");
-                                completionResultSet.addElement(LookupElementBuilder.create(name));
+
+                                String lookup = symbol.getName().replace(namespaces.get(nsname) + ".", nsname.length() == 0 ? "" : nsname + ":");
+                                completionResultSet.addElement(
+                                        LookupElementBuilder.create(symbol, lookup)
+                                                .withPresentableText(name)
+                                                .withTypeText(namespaces.get(nsname), true)
+                                );
                             }
                         }
                     }

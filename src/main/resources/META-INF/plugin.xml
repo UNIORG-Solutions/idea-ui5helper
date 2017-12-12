@@ -90,6 +90,7 @@
                                     implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.XMLDocumentationProvider"/>
         <completion.contributor language="XML"
                                 implementationClass="de.uniorg.ui5helper.codeInsight.xmlview.XMLCompletionContributor"/>
+        <xml.xmlExtension implementation="de.uniorg.ui5helper.codeInsight.xmlview.UI5XmlExtension"/>
 
         <projectService serviceImplementation="de.uniorg.ui5helper.settings.Settings"/>
 
