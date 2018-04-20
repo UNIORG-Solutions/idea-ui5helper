@@ -430,7 +430,6 @@ public class IndexingHandler extends FrameworkIndexingHandler {
     }
 
     @NotNull
-    @Override
     public String[] interestedMethodNames() {
         return new String[]{"extend", "define"};
     }

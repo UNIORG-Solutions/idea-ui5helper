@@ -5,13 +5,12 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.github.hurricup:gradle-grammar-kit-plugin:2017.1.1"
+        classpath "com.github.hurricup:gradle-grammar-kit-plugin:2018.1.1"
     }
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version '0.2.17'
-    id 'de.undercouch.download' version '3.2.0'
+    id 'org.jetbrains.intellij' version '0.3.1'
 }
 
 repositories {
@@ -19,12 +18,11 @@ repositories {
 }
 
 
-import de.undercouch.gradle.tasks.download.Download
 import org.jetbrains.grammarkit.tasks.GenerateLexer
 import org.jetbrains.grammarkit.tasks.GenerateParser
 
 def isCi = System.env.CI != null
-def ideVersion = "2017.3"
+def ideVersion = "2018.1"
 
 apply plugin: 'idea'
 apply plugin: 'java'
@@ -60,20 +58,19 @@ allprojects {
 
 
     intellij {
-        version null
-        plugins 'JavaScriptLanguage', 'CSS'
+        version ideVersion
+        type 'IU'
+        plugins 'JavaScriptLanguage'
         pluginName 'ui5-helper'
         instrumentCode false
         localPath PhpStormPath
-        if (!isCi) {
-            alternativeIdePath PhpStormPath
-        }
+        alternativeIdePath PhpStormPath
     }
 
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
     dependencies {
-        compileOnly("com.github.hurricup:gradle-grammar-kit-plugin:2017.1.1") {
+        compileOnly("com.github.hurricup:gradle-grammar-kit-plugin:2018.1.1") {
             exclude group: 'org.jetbrains.plugins'
             exclude module: 'idea'
         }
@@ -86,7 +83,7 @@ allprojects {
     }
 
 }
-
+/*
 task downloadPHPStorm(type: Download) {
     src "https://download.jetbrains.com/webide/PhpStorm-${ideVersion}.tar.gz"
     dest new File(project.projectDir, "debugger/lib/phpstorm-${ideVersion}.tar.gz")
@@ -97,7 +94,7 @@ task unpackPHPStorm(dependsOn: downloadPHPStorm, type: Copy) {
     from tarTree("debugger/lib/phpstorm-${ideVersion}.tar.gz")
     into new File(project.projectDir, 'debugger/lib')
 }
-
+*/
 task generateBindingLexer(type: GenerateLexer) {
     source 'src/main/grammars/binding/BindingLexer.flex'
     targetDir 'src/main/gen/de/uniorg/ui5helper/binding/'
@@ -111,7 +108,7 @@ task generateBindingParser(type: GenerateParser) {
     pathToPsiRoot '/de/uniorg/ui5helper/binding/psi/'
 }
 
-compileJava.dependsOn(generateBindingLexer, generateBindingParser, unpackPHPStorm)
+compileJava.dependsOn(generateBindingLexer, generateBindingParser)
 
 group 'de.uniorg'
-version '0.3.0-rc5'
+version '0.3.0-rc6'

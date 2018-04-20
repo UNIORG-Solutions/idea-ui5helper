@@ -105,6 +105,7 @@
                                   implementation="de.uniorg.ui5helper.codeInsight.js.IncludeReferenceProvider"/>
         <lang.foldingBuilder language="XML"
                              implementationClass="de.uniorg.ui5helper.folding.XmlViewControllerNameFolder"/>
+
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveControllerIndexer"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.mvc.NaiveXmlViewIndexer"/>
         <fileBasedIndex implementation="de.uniorg.ui5helper.index.JavascriptClassIndexer"/>
@@ -115,12 +116,18 @@
         <xml.elementDescriptorProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.TagProvider"/>
         <xml.attributeDescriptorsProvider implementation="de.uniorg.ui5helper.codeInsight.xmlview.AttributesProvider"
                                           order="first"/>
-        <annotator language="UI5 Binding" implementationClass="de.uniorg.ui5helper.codeInsight.binding.SimplifyBindingAnnotator" />
-        <annotator language="JavaScript" implementationClass="de.uniorg.ui5helper.codeInsight.js.ProblemAnnotator"/>
+        <annotator language="UI5 Binding"
+                   implementationClass="de.uniorg.ui5helper.codeInsight.binding.SimplifyBindingAnnotator"/>
+        <annotator language="JavaScript"
+                   implementationClass="de.uniorg.ui5helper.codeInsight.js.ProblemAnnotator"/>
+
+        <codeInsight.lineMarkerProvider language="XML"
+                                        implementationClass="de.uniorg.ui5helper.framework.Annotator.IconPreview"/>
 
         <fileTypeFactory implementation="de.uniorg.ui5helper.binding.lang.BindingFileTypeFactory"/>
         <multiHostInjector implementation="de.uniorg.ui5helper.binding.XmlViewInjector" />
-        <lang.parserDefinition language="UI5 Binding" implementationClass="de.uniorg.ui5helper.binding.BindingParserDefinition" />
+        <lang.parserDefinition language="UI5 Binding"
+                               implementationClass="de.uniorg.ui5helper.binding.BindingParserDefinition"/>
         <lang.syntaxHighlighterFactory language="UI5 Binding"
                                        implementationClass="de.uniorg.ui5helper.binding.BindingSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="de.uniorg.ui5helper.settings.BindingColorSettingsPage"/>
