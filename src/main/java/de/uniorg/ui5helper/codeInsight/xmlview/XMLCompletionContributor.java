@@ -65,7 +65,7 @@ public class XMLCompletionContributor extends CompletionContributor {
                             XmlElementDescriptor descriptor = parentTag.getParentTag().getDescriptor();
                             if (descriptor instanceof ControlTag) {
                                 ControlTag parentControlDescriptor = (ControlTag) descriptor;
-                                ApiSymbol property = ResolverUtil.getMetadataMember(apiIndex, parentControlDescriptor.getQualifiedName(), parentTag.getName());
+                                ApiSymbol property = ResolverUtil.getMetadataMember(apiIndex, parentControlDescriptor.getName(), parentTag.getName());
 
                                 if (property instanceof AggregationDocumentation) {
                                     aggregation = (AggregationDocumentation) property;
