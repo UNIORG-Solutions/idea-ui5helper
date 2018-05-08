@@ -15,6 +15,9 @@ public class AttributesProvider implements XmlAttributeDescriptorsProvider {
 
     @Override
     public XmlAttributeDescriptor[] getAttributeDescriptors(XmlTag context) {
+        if (context.getContainingFile() == null || context.getContainingFile().getVirtualFile() == null) {
+            return XmlAttributeDescriptor.EMPTY;
+        }
         final String fileName = context.getContainingFile().getVirtualFile().getName();
         if (!fileName.endsWith("view.xml") && !fileName.endsWith("fragment.xml")) {
             return XmlAttributeDescriptor.EMPTY;
