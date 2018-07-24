@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class ClassDocumentation implements ModuleApiSymbol {
+public class ClassDocumentation implements ModuleApiSymbol, DeprecateableInterface {
 
     private String className;
 
@@ -24,6 +24,9 @@ public class ClassDocumentation implements ModuleApiSymbol {
 
     private UI5Metadata ui5Metadata;
 
+    private Deprecation deprecation = null;
+
+
     static ClassDocumentation fromJsonDoc(JsonObject doc) {
         ClassDocumentation cdoc = new ClassDocumentation();
         ParserUtil parser = new ParserUtil(doc);
@@ -36,7 +39,18 @@ public class ClassDocumentation implements ModuleApiSymbol {
         cdoc.module = parser.getString("module", null);
         cdoc.ui5Metadata = parser.getObject("ui5-metadata", UI5Metadata::fromJsonDoc);
         cdoc.inherits = parser.getString("extends", null);
+        cdoc.deprecation = parser.getObject("deprecated", Deprecation::fromJsonDoc);
+
         return cdoc;
+    }
+
+
+    public boolean isDeprecated() {
+        return deprecation != null;
+    }
+
+    public Deprecation getDeprecation() {
+        return deprecation;
     }
 
     @NotNull

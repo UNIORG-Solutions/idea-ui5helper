@@ -14,7 +14,7 @@ public class EventDocumentation extends AbstractApiSymbol {
         edoc.name = parser.getName();
         edoc.description = parser.getDescription();
         edoc.visibility = parser.getString("visibility", "public");
-
+        edoc.deprecation = parser.getObject("deprecated", Deprecation::fromJsonDoc);
         return edoc;
     }
 

@@ -21,6 +21,7 @@ public class ParameterDocumentation extends AbstractApiSymbol {
         pdoc.description = parser.getDescription();
         pdoc.type = parser.getString("type", "");
         pdoc.optional = parser.getBool("optional", false);
+        pdoc.deprecation = parser.getObject("deprecated", Deprecation::fromJsonDoc);
 
         return pdoc;
     }

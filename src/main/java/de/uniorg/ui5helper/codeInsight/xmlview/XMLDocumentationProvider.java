@@ -110,6 +110,12 @@ public class XMLDocumentationProvider implements DocumentationProvider {
         return member.getDescription();
     }
 
+    private String getDeprecationInfo(DeprecateableInterface symbol) {
+        return symbol.isDeprecated()
+                ? String.format("<strong>Deprecated since %s:</strong> %s", symbol.getDeprecation().getSince(), symbol.getDeprecation().getMessage())
+                : "";
+    }
+
     private String renderAggregationDocumentation(AggregationDocumentation aggregationDocumentation) {
         return String.format(
                 "<strong>%s%s %s</strong> (Aggregation)<br />" +
@@ -118,17 +124,16 @@ public class XMLDocumentationProvider implements DocumentationProvider {
                 aggregationDocumentation.isMultiple() ? "[]" : "",
                 aggregationDocumentation.getName(),
                 aggregationDocumentation.getDescription()
-        );
+        ) + this.getDeprecationInfo(aggregationDocumentation);
     }
 
     private String renderPropertyDocumentation(PropertyDocumentation propertyDocumentation) {
         return String.format(
-                "<strong>%s %s</strong><br />" +
-                        "<p>%s</p>",
+                "<strong>%s %s</strong><br /><p>%s</p>",
                 propertyDocumentation.getType(),
                 propertyDocumentation.getName(),
                 propertyDocumentation.getDescription()
-        );
+        ) + this.getDeprecationInfo(propertyDocumentation);
     }
 
     private String renderEventDocumentation(EventDocumentation member) {
@@ -138,7 +143,7 @@ public class XMLDocumentationProvider implements DocumentationProvider {
                 member.getVisibility(),
                 member.getName(),
                 member.getDescription()
-        );
+        ) + this.getDeprecationInfo(member);
     }
 
     private String getClassDoc(@NotNull Project project, @NotNull String className) {

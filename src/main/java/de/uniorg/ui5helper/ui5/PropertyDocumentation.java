@@ -20,6 +20,7 @@ public class PropertyDocumentation extends AbstractApiSymbol {
         pdoc.description = parser.getDescription();
         pdoc.type = parser.getString("type", "");
         pdoc.defaultValue = parser.getString("defaultValue", "");
+        pdoc.deprecation = parser.getObject("deprecated", Deprecation::fromJsonDoc);
 
         return pdoc;
     }

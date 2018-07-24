@@ -51,6 +51,45 @@ public class ResolverUtil {
         return null;
     }
 
+    public Map<String, AggregationDocumentation> getAllAggregations(@NotNull ClassDocumentation classDocumentation) {
+        UI5Metadata metadata = classDocumentation.getUI5Metadata();
+        if (metadata == null) {
+            return new HashMap<>();
+        }
+
+        Map<String, AggregationDocumentation> aggregations = metadata.getAggregations();
+
+        if (classDocumentation.getInherits() != null) {
+            ApiSymbol parent = this.apiIndex.lookup(classDocumentation.getInherits());
+            if (parent instanceof ClassDocumentation) {
+                Map<String, AggregationDocumentation> parentAggregations = this.getAllAggregations((ClassDocumentation) parent);
+                parentAggregations.forEach(aggregations::putIfAbsent);
+            }
+        }
+
+        return aggregations;
+    }
+
+    public AggregationDocumentation getDefaultAggregations(@NotNull ClassDocumentation classDocumentation) {
+        UI5Metadata metadata = classDocumentation.getUI5Metadata();
+        if (metadata == null) {
+            return null;
+        }
+
+        if (metadata.getDefaultAggregation() != null) {
+            return metadata.getDefaultAggregation();
+        }
+
+        if (classDocumentation.getInherits() != null) {
+            ApiSymbol parent = this.apiIndex.lookup(classDocumentation.getInherits());
+            if (parent instanceof ClassDocumentation) {
+                return this.getDefaultAggregations((ClassDocumentation) parent);
+            }
+        }
+
+        return null;
+    }
+
     public boolean isInstanceOf(@NotNull String className, @NotNull String interfaceName) {
         if (className.equals(interfaceName)) {
             return true;

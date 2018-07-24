@@ -2,11 +2,13 @@ package de.uniorg.ui5helper.ui5;
 
 import org.jetbrains.annotations.NotNull;
 
-abstract class AbstractApiSymbol implements ApiSymbol {
+abstract class AbstractApiSymbol implements ApiSymbol, DeprecateableInterface {
 
     protected String name;
 
     protected String description;
+
+    protected Deprecation deprecation = null;
 
     @NotNull
     @Override
@@ -20,5 +22,12 @@ abstract class AbstractApiSymbol implements ApiSymbol {
         return description;
     }
 
+    public boolean isDeprecated() {
+        return deprecation != null;
+    }
+
+    public Deprecation getDeprecation() {
+        return deprecation;
+    }
 
 }

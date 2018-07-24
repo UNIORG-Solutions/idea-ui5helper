@@ -24,8 +24,10 @@ public class AggregationDocumentation extends AbstractApiSymbol {
         if (card == null) {
             adoc.multiple = parser.getBool("multiple", false);
         } else {
-            adoc.multiple = card.equals("0..n") | card.equals("1..n");
+            adoc.multiple = card.equals("0..n") || card.equals("1..n");
         }
+
+        adoc.deprecation = parser.getObject("deprecated", Deprecation::fromJsonDoc);
 
         return adoc;
     }

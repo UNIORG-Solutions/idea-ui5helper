@@ -29,6 +29,7 @@ public class MethodDocumentation extends AbstractApiSymbol {
         mdoc.isStatic = parser.getBool("static", false);
         mdoc.parameters = parser.mapArray("parameters", ParameterDocumentation::fromJsonDoc);
         mdoc.returnValue = parser.getObject("returnValue", ReturnValueDocumentation::fromJsonDoc);
+        mdoc.deprecation = parser.getObject("deprecated", Deprecation::fromJsonDoc);
 
         return mdoc;
     }
