@@ -1,6 +1,8 @@
 package de.uniorg.ui5helper.codeInsight.xmlview.attributes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.meta.PsiPresentableMetaData;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xml.impl.BasicXmlAttributeDescriptor;
@@ -8,10 +10,12 @@ import de.uniorg.ui5helper.ui5.ApiIndex;
 import de.uniorg.ui5helper.ui5.ApiSymbol;
 import de.uniorg.ui5helper.ui5.EnumDocumentation;
 import de.uniorg.ui5helper.ui5.PropertyDocumentation;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.Set;
 
-public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor {
+public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor implements PsiPresentableMetaData {
 
     private final String[] BOOL_ENUM = new String[]{"true", "false"};
 
@@ -64,7 +68,6 @@ public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor {
 
     @Override
     public void init(PsiElement element) {
-
     }
 
     @Override
@@ -95,5 +98,16 @@ public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor {
 
         Set<String> keys = ((EnumDocumentation) symbol).getProperties().keySet();
         return keys.toArray(new String[keys.size()]);
+    }
+
+    @Override
+    public String getTypeName() {
+        return this.propertyDocumentation.getType();
+    }
+
+    @Nullable
+    @Override
+    public Icon getIcon() {
+        return AllIcons.Nodes.Property;
     }
 }

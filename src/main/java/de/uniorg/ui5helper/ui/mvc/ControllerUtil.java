@@ -27,6 +27,10 @@ import java.util.Set;
 public class ControllerUtil {
 
     public static PsiElement[] findReferences(Project project, String controllerName) {
+        if (controllerName == null) {
+            return new PsiElement[0];
+        }
+
         Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance()
                 .getContainingFiles(
                         NaiveControllerIndexer.KEY,

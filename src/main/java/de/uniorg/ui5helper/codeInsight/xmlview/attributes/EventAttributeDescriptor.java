@@ -1,7 +1,9 @@
 package de.uniorg.ui5helper.codeInsight.xmlview.attributes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.meta.PsiPresentableMetaData;
 import com.intellij.psi.xml.XmlElement;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xml.impl.BasicXmlAttributeDescriptor;
@@ -12,11 +14,13 @@ import de.uniorg.ui5helper.ui5.ApiIndex;
 import de.uniorg.ui5helper.ui5.EventDocumentation;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.Set;
 
 
-public class EventAttributeDescriptor extends BasicXmlAttributeDescriptor {
+public class EventAttributeDescriptor extends BasicXmlAttributeDescriptor implements PsiPresentableMetaData {
 
     private final EventDocumentation eventDocumentation;
 
@@ -96,5 +100,16 @@ public class EventAttributeDescriptor extends BasicXmlAttributeDescriptor {
     public PsiReference[] getValueReferences(XmlElement element, @NotNull String text) {
 
         return new PsiReference[]{new EventHandlerReference(element)};
+    }
+
+    @Override
+    public String getTypeName() {
+        return "object";
+    }
+
+    @Nullable
+    @Override
+    public Icon getIcon() {
+        return AllIcons.General.Run;
     }
 }
