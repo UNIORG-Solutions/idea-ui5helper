@@ -1,6 +1,7 @@
 package de.uniorg.ui5helper.codeInsight.xmlview;
 
 import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
 import com.intellij.patterns.PlatformPatterns;
@@ -11,15 +12,13 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTokenType;
 import com.intellij.util.ProcessingContext;
-import com.intellij.xml.XmlElementDescriptor;
-import de.uniorg.ui5helper.ProjectComponent;
-import de.uniorg.ui5helper.codeInsight.xmlview.tags.ControlTag;
-import de.uniorg.ui5helper.ui5.*;
+import de.uniorg.ui5helper.ui5.AggregationDocumentation;
+import de.uniorg.ui5helper.ui5.ClassDocumentation;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class XMLCompletionContributor extends CompletionContributor {
 
@@ -38,7 +37,6 @@ public class XMLCompletionContributor extends CompletionContributor {
                             return;
                         }
 
-                        Map<String, String> namespaces = file.getRootTag().getLocalNamespaceDeclarations();
 
                         PsiElement element = completionParameters.getPosition();
                         if (!(element instanceof XmlTokenImpl)) {
@@ -57,72 +55,31 @@ public class XMLCompletionContributor extends CompletionContributor {
                             return;
                         }
 
-                        ApiIndex apiIndex = completionParameters.getOriginalFile().getProject().getComponent(ProjectComponent.class).getApiIndex();
-                        ResolverUtil resolver = ResolverUtil.getInstanceOf(apiIndex);
-                        XmlTag parentTag = (XmlTag) parentElement;
 
-                        AggregationDocumentation aggregation = null;
-                        boolean hasNoFixedAggregation = true;
-                        //... tag name starts with a lower-case-character.
-                        if (parentTag.getLocalName().startsWith(parentTag.getLocalName().substring(0, 1).toLowerCase())) {
-                            // das könnte eine Aggregation sein
-                            hasNoFixedAggregation = false;
-                            XmlElementDescriptor descriptor = parentTag.getParentTag().getDescriptor();
-                            if (descriptor instanceof ControlTag) {
-                                ControlTag parentControlDescriptor = (ControlTag) descriptor;
-                                ApiSymbol property = ResolverUtil.getMetadataMember(apiIndex, parentControlDescriptor.getName(), parentTag.getName());
-
-                                if (property instanceof AggregationDocumentation) {
-                                    aggregation = (AggregationDocumentation) property;
-                                }
-                            }
-                        } else {
-                            // default aggregation?
-                            XmlElementDescriptor descriptor = parentTag.getDescriptor();
-                            if (descriptor instanceof ControlTag) {
-                                ControlTag parentControlDescriptor = (ControlTag) descriptor;
-                                aggregation = resolver.getDefaultAggregations(parentControlDescriptor.getClassDocumentation());
-                            }
-                        }
-
-                        if (hasNoFixedAggregation && parentTag.getDescriptor() instanceof ControlTag) {
-                            ControlTag parentControlDescriptor = (ControlTag) parentTag.getDescriptor();
-                            resolver.getAllAggregations(parentControlDescriptor.getClassDocumentation()).forEach((name, aggregationDocumentation) -> {
-                                String lookup = aggregationDocumentation.getName();
-                                String nsprefix = !Objects.equals(parentTag.getNamespacePrefix(), "") ? parentTag.getNamespacePrefix() + ":" : "";
-                                completionResultSet.addElement(
-                                        LookupElementBuilder.create(aggregationDocumentation, nsprefix + lookup)
-                                                .withPresentableText(lookup)
+                        Collection<LookupElement> elements = XMLViewHelper.getPossibleTags(file, (XmlTag) parentElement).stream()
+                                .map(possibleTag -> {
+                                    String nsprefix = !possibleTag.prefix.equals("") ? possibleTag.prefix + ":" : "";
+                                    if (possibleTag.documentation instanceof AggregationDocumentation) {
+                                        AggregationDocumentation aggregationDocumentation = (AggregationDocumentation) possibleTag.documentation;
+                                        return LookupElementBuilder.create(aggregationDocumentation, possibleTag.prefix + possibleTag.name)
+                                                .withPresentableText(possibleTag.name)
                                                 .withTypeText(aggregationDocumentation.getType() + (aggregationDocumentation.isMultiple() ? "[]" : ""))
                                                 .withIcon(AllIcons.General.Recursive)
-                                                .withStrikeoutness(aggregationDocumentation.isDeprecated())
-                                );
-                            });
-                        }
+                                                .withStrikeoutness(aggregationDocumentation.isDeprecated());
+                                    } else if (possibleTag.documentation instanceof ClassDocumentation) {
+                                        ClassDocumentation classDocumentation = (ClassDocumentation) possibleTag.documentation;
+                                        return LookupElementBuilder.create(possibleTag.documentation, nsprefix + possibleTag.name)
+                                                .withPresentableText(possibleTag.name)
+                                                .withTypeText(possibleTag.namespace, true)
+                                                .withStrikeoutness(classDocumentation.isDeprecated());
+                                    }
 
-                        for (Map.Entry<String, String> namespace : namespaces.entrySet()) {
-                            ClassDocumentation[] symbols = Arrays.stream(apiIndex.findInNamespace(namespace.getValue()))
-                                    .filter(apiSymbol -> apiSymbol instanceof ClassDocumentation)
-                                    .toArray(ClassDocumentation[]::new);
-                            for (ClassDocumentation symbol : symbols) {
-                                String name = symbol.getName().replace(namespace.getValue() + ".", "");
-                                if (name.contains(".")) { // "<core:layout.form.SimpleForm" does not work
-                                    continue;
-                                }
+                                    return null;
+                                })
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList());
 
-                                if (aggregation != null && aggregation.getType() != null && !resolver.isInstanceOf(symbol, aggregation.getType())) {
-                                    continue;
-                                }
-
-                                String lookup = symbol.getName().replace(namespace.getValue() + ".", namespace.getKey().length() == 0 ? "" : namespace.getKey() + ":");
-                                completionResultSet.addElement(
-                                        LookupElementBuilder.create(symbol, lookup)
-                                                .withPresentableText(name)
-                                                .withTypeText(namespace.getValue(), true)
-                                                .withStrikeoutness(symbol.isDeprecated())
-                                );
-                            }
-                        }
+                        completionResultSet.addAllElements(elements);
                     }
                 });
     }
