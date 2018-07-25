@@ -21,6 +21,11 @@ public class Settings implements PersistentStateComponent<Settings> {
 
     public boolean xmlDocumentation = true;
 
+    /**
+     * show an icon preview in the editor gutter
+     */
+    public boolean xmlGutterIcon = true;
+
     public boolean jsFileImportReference = true;
 
     public boolean notificationDismissed = false;

@@ -36,6 +36,7 @@ public class SettingsForm implements Configurable {
     private JCheckBox xmlDocumentation;
     private JCheckBox checkImportedFileReferencesCheckBox;
     private JButton downloadSources;
+    private JCheckBox xmlGutterIconCheckbox;
     private SdkVersionManager versionManager;
 
     public SettingsForm(@NotNull final Project project) {
@@ -118,7 +119,8 @@ public class SettingsForm implements Configurable {
                 || collapseControllerName.isSelected() != getSettings().foldControllerName
                 || bindingSyntaxSupport.isSelected() != getSettings().injectBindingLanguage
                 || xmlDocumentation.isSelected() != getSettings().xmlDocumentation
-                || checkImportedFileReferencesCheckBox.isSelected() != getSettings().jsFileImportReference;
+                || checkImportedFileReferencesCheckBox.isSelected() != getSettings().jsFileImportReference
+                || xmlGutterIconCheckbox.isSelected() != getSettings().xmlGutterIcon;
     }
 
     /**
@@ -144,6 +146,7 @@ public class SettingsForm implements Configurable {
         collapseControllerName.setSelected(getSettings().foldControllerName);
         bindingSyntaxSupport.setSelected(getSettings().injectBindingLanguage);
         xmlDocumentation.setSelected(getSettings().xmlDocumentation);
+        xmlGutterIconCheckbox.setSelected(getSettings().xmlGutterIcon);
         checkImportedFileReferencesCheckBox.setSelected(getSettings().jsFileImportReference);
     }
 
@@ -168,6 +171,7 @@ public class SettingsForm implements Configurable {
         settings.foldControllerName = collapseControllerName.isSelected();
         settings.injectBindingLanguage = bindingSyntaxSupport.isSelected();
         settings.xmlDocumentation = xmlDocumentation.isSelected();
+        settings.xmlGutterIcon = xmlGutterIconCheckbox.isSelected();
         settings.jsFileImportReference = checkImportedFileReferencesCheckBox.isSelected();
 
         if (pluginEnabled.isSelected() && !wasEnabled) {
@@ -222,13 +226,13 @@ public class SettingsForm implements Configurable {
         tabbedPane1 = new JTabbedPane();
         panel.add(tabbedPane1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("XML Views", panel2);
         collapseControllerName = new JCheckBox();
         collapseControllerName.setText("Collapse controller name");
         panel2.add(collapseControllerName, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        panel2.add(spacer1, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(spacer1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         bindingSyntaxSupport = new JCheckBox();
         bindingSyntaxSupport.setText("Enhanced binding syntax support");
         bindingSyntaxSupport.setToolTipText("Use own parser & lexer to read bindings");
@@ -236,6 +240,9 @@ public class SettingsForm implements Configurable {
         xmlDocumentation = new JCheckBox();
         xmlDocumentation.setText("Documentation");
         panel2.add(xmlDocumentation, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        xmlGutterIconCheckbox = new JCheckBox();
+        xmlGutterIconCheckbox.setText("SAP-Icon preview");
+        panel2.add(xmlGutterIconCheckbox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("JavaScript", panel3);

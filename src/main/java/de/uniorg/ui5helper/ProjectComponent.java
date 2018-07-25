@@ -175,6 +175,8 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
                 return setting.foldControllerName;
             case XML_BINDING_INJECTION:
                 return setting.injectBindingLanguage;
+            case XML_GUTTER_ICON:
+                return setting.xmlGutterIcon;
             default:
                 return false;
         }
