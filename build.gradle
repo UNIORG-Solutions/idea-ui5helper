@@ -60,11 +60,9 @@ allprojects {
     intellij {
         version ideVersion
         type 'IU'
-        plugins 'JavaScriptLanguage'
+        plugins 'JavaScriptLanguage', 'CSS'
         pluginName 'ui5-helper'
         instrumentCode false
-        localPath PhpStormPath
-        alternativeIdePath PhpStormPath
     }
 
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
@@ -83,18 +81,7 @@ allprojects {
     }
 
 }
-/*
-task downloadPHPStorm(type: Download) {
-    src "https://download.jetbrains.com/webide/PhpStorm-${ideVersion}.tar.gz"
-    dest new File(project.projectDir, "debugger/lib/phpstorm-${ideVersion}.tar.gz")
-    overwrite false
-}
 
-task unpackPHPStorm(dependsOn: downloadPHPStorm, type: Copy) {
-    from tarTree("debugger/lib/phpstorm-${ideVersion}.tar.gz")
-    into new File(project.projectDir, 'debugger/lib')
-}
-*/
 task generateBindingLexer(type: GenerateLexer) {
     source 'src/main/grammars/binding/BindingLexer.flex'
     targetDir 'src/main/gen/de/uniorg/ui5helper/binding/'
@@ -111,4 +98,4 @@ task generateBindingParser(type: GenerateParser) {
 compileJava.dependsOn(generateBindingLexer, generateBindingParser)
 
 group 'de.uniorg'
-version '0.3.0-rc6'
+version '0.3.0-rc7'

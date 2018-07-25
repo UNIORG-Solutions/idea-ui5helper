@@ -13,7 +13,7 @@ public class SdkVersionManagerTest extends LightPlatformTestCase {
         assertFalse(man.has("1.52.1"));
     }
 
-    public void testDownload() {
+    public void _testDownload() {
         SdkVersionManager man = new SdkVersionManager(generateTemporaryPath("ui5_sdk_download_test").toString());
         assertFalse(man.has("1.52.1"));
         Task dl = man.download("1.52.1");
