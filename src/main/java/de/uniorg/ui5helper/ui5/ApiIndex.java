@@ -3,6 +3,7 @@ package de.uniorg.ui5helper.ui5;
 import gnu.trove.THashMap;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class ApiIndex {
 
@@ -26,6 +27,37 @@ public class ApiIndex {
                 .filter(name -> name.startsWith(namespace + "."))
                 .map(this::lookup)
                 .toArray(ApiSymbol[]::new);
+    }
+
+    /**
+     * Finds all known elements that are a direct child of the given namespace.
+     * For example
+     * sap.m.Page is a direct child of sap.m
+     * sap.m.semantic.Page is not
+     *
+     * @param namespace
+     * @return a stream of matching api symbols
+     */
+    public Stream<ApiSymbol> findDirectInNamespace(String namespace) {
+        return index.keySet().stream()
+                .filter(name -> name.startsWith(namespace + "."))
+                .filter(name -> !name.replace(namespace + ".", "").contains("."))
+                .map(this::lookup);
+    }
+
+    /**
+     * Finds all known elements that are a direct child of the given namespace.
+     * For example
+     * sap.m.Page is a direct child of sap.m
+     * sap.m.semantic.Page is not
+     *
+     * @param namespace
+     * @return a stream of T
+     */
+    public <T extends ApiSymbol> Stream<T> findDirectInNamespace(String namespace, Class<T> tClass) {
+        return this.findDirectInNamespace(namespace)
+                .filter(tClass::isInstance)
+                .map(apiSymbol -> (T) apiSymbol);
     }
 
     public ApiSymbol lookup(String className) {

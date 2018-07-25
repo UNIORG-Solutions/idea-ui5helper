@@ -30,12 +30,14 @@ import java.util.stream.Collectors;
 public class ControlTag implements XmlElementDescriptor {
 
     private final ClassDocumentation classDocumentation;
+    private final PsiElement declaration;
     private XmlTag self;
     private Map<String, XmlAttributeDescriptor> _attributeMap;
 
-    public ControlTag(ClassDocumentation classDocumentation, XmlTag self) {
+    public ControlTag(ClassDocumentation classDocumentation, XmlTag self, PsiElement declaration) {
         this.classDocumentation = classDocumentation;
         this.self = self;
+        this.declaration = declaration;
     }
 
     public ClassDocumentation getClassDocumentation() {
@@ -123,7 +125,7 @@ public class ControlTag implements XmlElementDescriptor {
 
     @Override
     public PsiElement getDeclaration() {
-        return self;
+        return this.declaration;
     }
 
     @Override

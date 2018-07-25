@@ -33,7 +33,7 @@ public class JSTreeUtil {
             }
         });
 
-        if (foundExpr.size() == 0) {
+        if (foundExpr.isEmpty()) {
             return null;
         }
 
