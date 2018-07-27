@@ -9,6 +9,7 @@ import com.intellij.lang.javascript.psi.*;
 import com.intellij.lang.javascript.psi.impl.JSCallExpressionImpl;
 import com.intellij.lang.javascript.psi.impl.JSReferenceExpressionImpl;
 import com.intellij.lang.javascript.psi.literal.JSLiteralImplicitElementProvider;
+import com.intellij.lang.javascript.psi.resolve.JSEvaluateContext;
 import com.intellij.lang.javascript.psi.resolve.JSSimpleTypeProcessor;
 import com.intellij.lang.javascript.psi.resolve.JSTypeEvaluator;
 import com.intellij.lang.javascript.psi.stubs.JSElementIndexingData;
@@ -309,7 +310,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
     }
 
     @Override
-    public boolean addTypeFromResolveResult(JSTypeEvaluator evaluator, PsiElement result, boolean hasSomeType) {
+    public boolean addTypeFromResolveResult(@NotNull JSTypeEvaluator evaluator, @NotNull JSEvaluateContext context, @NotNull PsiElement result) {
         if (result instanceof JSParameter) {
             JSParameter param = (JSParameter) result;
             if (param.getDeclaringFunction() == null) {
@@ -342,7 +343,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                 String moduleName = (String) ((JSLiteralExpression) fileName).getValue();
                 moduleName = moduleName.replaceAll("/", ".");
                 Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(JavascriptClassIndexer.KEY, moduleName, scope);
-                JSTypeSource source = JSTypeSourceFactory.createTypeSource(result);
+                JSTypeSource source = JSTypeSourceFactory.createTypeSource(result, false);
                 if (fileCollection.size() == 1) {
                     VirtualFile file = fileCollection.toArray(new VirtualFile[1])[0];
                     PsiFile targetFile = PsiManager.getInstance(result.getProject()).findFile(file);
@@ -351,16 +352,16 @@ public class IndexingHandler extends FrameworkIndexingHandler {
                         if (defineCall != null) {
                             JSCallExpression decl = JSTreeUtil.findClassDeclaration(defineCall);
                             if (decl != null) {
-                                source = JSTypeSourceFactory.createTypeSource(decl);
+                                source = JSTypeSourceFactory.createTypeSource(decl, false);
                             } else {
-                                source = JSTypeSourceFactory.createTypeSource(defineCall);
+                                source = JSTypeSourceFactory.createTypeSource(defineCall, false);
                             }
                         } else {
-                            source = JSTypeSourceFactory.createTypeSource(targetFile);
+                            source = JSTypeSourceFactory.createTypeSource(targetFile, false);
                         }
                     }
                 }
-                JSType type = JSNamedType.createType(moduleName + ".prototype.constructor", source, JSTypeContext.PROTOTYPE);
+                JSType type = JSNamedTypeFactory.createType(moduleName + ".prototype.constructor", source, JSTypeContext.PROTOTYPE);
 
                 evaluator.addType(type, result);
                 return true;
@@ -368,7 +369,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
 
         }
 
-        return super.addTypeFromResolveResult(evaluator, result, hasSomeType);
+        return super.addTypeFromResolveResult(evaluator, context, result);
     }
 
     @Nullable
@@ -377,6 +378,7 @@ public class IndexingHandler extends FrameworkIndexingHandler {
         return super.findModule(result);
     }
 
+    @Override
     public JSLiteralImplicitElementProvider createLiteralImplicitElementProvider(@NotNull String calledMethodName) {
         if ("define".equals(calledMethodName)) {
             return new JSLiteralImplicitElementProvider() {
