@@ -29,7 +29,7 @@
         </dl>
         ]]></description>
 
-    <idea-version since-build="181"/>
+    <idea-version since-build="182"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.xml</depends>
     <depends>JavaScript</depends>

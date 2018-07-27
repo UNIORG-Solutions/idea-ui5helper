@@ -1,0 +1,28 @@
+## 0.3.0
+  - Preview for sap-icons in XMLViews
+  - better notifcation to enable the plugin
+  - better xml completion.
+  - Syntax highlighting for bindings
+  - SDK Version Manager & Predefined Library support.
+  - Made most features configurable, improved configuration overall.
+  - Replaced own xml support with intellijs xml support.
+  - got to view from manifest.
+  - annotation for "wrong" attribute values.
+
+ ## 0.2.5
+ - References to event handlers
+ - Caching for API docs
+ - Version selection in settings actually works.
+ - Completion in XML Views
+ - Gathers some knowledge about own ui5 classes. Not that useful for now.
+
+ ## 0.2.4
+ - First implementation of API docs in XMLViews. More to come!
+
+ ## 0.2.3
+ - Bugfix: controllerName lookup for "sap.ui.core.mvc.XMLView" should work just like "sap.ui.core.mvc.View"</li>
+
+ ## 0.2.2
+ - Feature: Controller: go to View
+
+

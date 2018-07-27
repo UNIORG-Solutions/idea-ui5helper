@@ -5,12 +5,12 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.github.hurricup:gradle-grammar-kit-plugin:2018.1.1"
+        classpath 'com.github.hurricup:gradle-grammar-kit-plugin:2018.1.7'
     }
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version '0.3.1'
+    id 'org.jetbrains.intellij' version '0.3.4'
 }
 
 repositories {
@@ -21,8 +21,7 @@ repositories {
 import org.jetbrains.grammarkit.tasks.GenerateLexer
 import org.jetbrains.grammarkit.tasks.GenerateParser
 
-def isCi = System.env.CI != null
-def ideVersion = "2018.1"
+def ideVersion = "2018.2"
 
 apply plugin: 'idea'
 apply plugin: 'java'
@@ -47,7 +46,6 @@ allprojects {
 
     patchPluginXml {
         pluginId "${group}.${project.name}"
-
     }
 
     sourceSets {
@@ -55,7 +53,6 @@ allprojects {
             java.srcDirs += 'src/main/gen'
         }
     }
-
 
     intellij {
         version ideVersion
@@ -68,7 +65,7 @@ allprojects {
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
 
     dependencies {
-        compileOnly("com.github.hurricup:gradle-grammar-kit-plugin:2018.1.1") {
+        compileOnly("com.github.hurricup:gradle-grammar-kit-plugin:2018.1.2") {
             exclude group: 'org.jetbrains.plugins'
             exclude module: 'idea'
         }
