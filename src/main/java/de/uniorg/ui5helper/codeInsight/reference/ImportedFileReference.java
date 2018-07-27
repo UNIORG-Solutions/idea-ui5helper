@@ -113,4 +113,18 @@ public class ImportedFileReference extends PsiReferenceBase<PsiElement> implemen
     private boolean isRelativePath() {
         return this.filePath.startsWith(".");
     }
+
+    /**
+     * Returns false if the underlying element is guaranteed to be a reference, or true
+     * if the underlying element is a possible reference which should not be reported as
+     * an error if it fails to resolve. For example, a text in an XML file which looks
+     * like a full-qualified Java class name is a soft reference.
+     *
+     * @return true if the reference is soft, false otherwise.
+     */
+    @NotNull
+    @Override
+    public boolean isSoft() {
+        return true;
+    }
 }
