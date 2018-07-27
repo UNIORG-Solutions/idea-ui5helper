@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.uniorg.ui5helper</id>
     <name>UI5 Helper</name>
-    <version>0.3.0-rc5</version>
+    <version>0.3.0</version>
     <vendor email="m.schmale@uniorg.de" url="http://www.uniorg.de">UNIORG Solutions GmbH</vendor>
 
     <description><![CDATA[
@@ -18,66 +18,18 @@
             <li>complete target names in manifest.json</li>
             <li>go to views from manifest.json</li>
             <li>Provide API Docs in XMLView</li>
-            <li>References to event handler implementation in XMLViews</li>
+            <li>Provide some basic context sensitive auto completion in XMLViews</li>
+            <li>References & auto completion of event handler implementation in XMLViews</li>
             <li>Basic understanding of the binding syntax for XMLViews</li>
         </ul>
 
-        <h3>Things that will (or will not) come:</h3>
-        <ul>
-            <li>Better understanding & support for the UI5 binding syntax incl. completion, references, syntax checking</li>
-            <li>Indexer for UI5 classes including metadata and inheritance tree</li>
-            <li><s>Go to Controller, go to View, </s>go to formatter<s>, go to event handler,</s> ...</li>
-            <li>support for manifest metadata like routes etc.</li>
-        </ul>
-
-        <h4>Changelog<h4>
-        <dl>
-            <dt>0.2.6</dt>
-            <dd>
-                <ul>
-                    <li>Basic binding support</li>
-                    <li>References in manifest.json</li>
-                    <li>Documentation for UI5 API in XMLViews</li>
-                    <li>Annotations for wrong attributes in XMLView (a lot false positives)</li>
-                    <li>References to event handlers in XMLViews<li>
-                    <li>References to required files & rename handling</li>
-                </ul>
-            </dd>
-            <dt>0.2.5</dt>
-            <dd>
-                <ul>
-                    <li>References to event handlers</li>
-                    <li>Caching for API docs</li>
-                    <li>Version selection in settings actually works.</li>
-                    <li>Completion in XML Views</li>
-                    <li>Gathers some knowledge about own ui5 classes. Not that useful for now.</li>
-                </ul>
-            </dd>
-
-            <dt>0.2.4</dt>
-            <dd>
-                <ul>
-                    <li>First implementation of API docs in XMLViews. More to come!</li>
-                </ul>
-            </dd>
-
-            <dt>0.2.3</dt>
-            <dd>
-                <ul>
-                    <li>Bugfix: controllerName lookup for "sap.ui.core.mvc.XMLView" should work just like "sap.ui.core.mvc.View"</li>
-                </ul>
-            </dd>
-
-            <dt>0.2.2</dt>
-            <dd>
-                <ul>
-                    <li>Feature: Controller: go to View</li>
-                </ul>
-            </dd>
+        <h4>Version 0.3</h4>
+        <p>This version focuses more on consolidating existing features and improving consistency and usability of existing features.</p>
+        <p>
         </dl>
         ]]></description>
 
-    <idea-version since-build="171"/>
+    <idea-version since-build="181"/>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.xml</depends>
     <depends>JavaScript</depends>

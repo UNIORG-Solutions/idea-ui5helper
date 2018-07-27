@@ -98,4 +98,4 @@ task generateBindingParser(type: GenerateParser) {
 compileJava.dependsOn(generateBindingLexer, generateBindingParser)
 
 group 'de.uniorg'
-version '0.3.0-rc7'
+version '0.3.0'
