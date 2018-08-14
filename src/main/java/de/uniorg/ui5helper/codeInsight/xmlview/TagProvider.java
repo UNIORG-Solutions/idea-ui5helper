@@ -2,6 +2,7 @@ package de.uniorg.ui5helper.codeInsight.xmlview;
 
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.lang.javascript.psi.JSCallExpression;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 import static de.uniorg.ui5helper.ProjectComponent.isEnabled;
 
 public class TagProvider implements XmlElementDescriptorProvider {
+    private static final Logger logger = Logger.getInstance("ui5helper");
+
     @Nullable
     @Override
     public XmlElementDescriptor getDescriptor(XmlTag context) {
@@ -79,11 +82,12 @@ public class TagProvider implements XmlElementDescriptorProvider {
     private ClassDocumentation getClassDoc(@NotNull XmlTag tag) {
         ApiIndex index = this.getApiIndex(tag.getProject());
         if (index == null) {
-            System.err.println("Cannot find a apiIndex for project " + tag.getProject().getName());
+            logger.warn("Cannot find a apiIndex for project " + tag.getProject().getName());
             return null;
         }
+
         ApiSymbol tagDocs = index.lookup(tag.getNamespace(), tag.getLocalName());
-        if (tagDocs == null || !(tagDocs instanceof ClassDocumentation)) {
+        if (!(tagDocs instanceof ClassDocumentation)) {
             return null;
         }
 

@@ -84,7 +84,7 @@ public class JavascriptClassIndexer extends ScalarIndexExtension<String> {
     @NotNull
     @Override
     public FileBasedIndex.InputFilter getInputFilter() {
-        return (file) -> file.getFileType() instanceof JavaScriptFileType;
+        return file -> file.getFileType() instanceof JavaScriptFileType;
     }
 
 }

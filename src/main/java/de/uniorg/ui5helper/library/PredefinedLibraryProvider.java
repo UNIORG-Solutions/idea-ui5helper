@@ -1,6 +1,7 @@
 package de.uniorg.ui5helper.library;
 
 import com.intellij.lang.javascript.library.JSPredefinedLibraryProvider;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -17,6 +18,9 @@ import java.util.ArrayList;
 import java.util.zip.ZipFile;
 
 public class PredefinedLibraryProvider extends JSPredefinedLibraryProvider {
+    private static final Logger logger = Logger.getInstance("ui5helper");
+
+    @Override
     @NotNull
     public ScriptingLibraryModel[] getPredefinedLibraries(@NotNull Project project) {
         String version = Settings.getInstance(project).ui5Version;
@@ -31,8 +35,8 @@ public class PredefinedLibraryProvider extends JSPredefinedLibraryProvider {
         }
 
         ArrayList<VirtualFile> libraryPaths = new ArrayList<>();
-        try {
-            new ZipFile(srcZip).stream()
+        try (ZipFile zip = new ZipFile(srcZip)) {
+            zip.stream()
                     .filter(
                             entry ->
                                     entry.getName().endsWith(".js")
@@ -41,23 +45,25 @@ public class PredefinedLibraryProvider extends JSPredefinedLibraryProvider {
                                             && !entry.getName().contains("/test/")
                     )
                     .forEach(entry -> {
-                        String url = "jar:file://" + srcZip.getAbsolutePath() + "!/" + entry.getName();
+                        String url = "jar:file://" + srcZip.getAbsolutePath().replace("\\", "/") + "!/" + entry.getName();
                         try {
                             VirtualFile file = VfsUtil.findFileByURL(new URL(url));
                             if (file != null) {
                                 libraryPaths.add(file);
+                            } else {
+                                logger.error("file not found: " + url);
                             }
                         } catch (MalformedURLException e) {
-                            e.printStackTrace();
+                            logger.error(e);
                         }
                     });
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         ScriptingLibraryModel model = ScriptingLibraryModel.createPredefinedLibrary(
                 "OpenUI5 v" + version,
-                libraryPaths.toArray(new VirtualFile[libraryPaths.size()]),
+                libraryPaths.toArray(new VirtualFile[0]),
                 true
         );
 
