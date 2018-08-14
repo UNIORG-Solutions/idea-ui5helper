@@ -45,6 +45,10 @@ public class XMLDocumentationProvider implements DocumentationProvider {
             return null;
         }
 
+        if (psiElement1 == null) {
+            return null;
+        }
+
         if (psiElement1 instanceof XmlTag) {
             List<String> list = new ArrayList<>();
             list.add("https://openui5.hana.ondemand.com/docs/api/symbols/" + getClassName((XmlTag) psiElement1) + ".html");

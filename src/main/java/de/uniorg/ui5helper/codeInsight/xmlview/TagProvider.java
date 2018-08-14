@@ -56,7 +56,7 @@ public class TagProvider implements XmlElementDescriptorProvider {
     }
 
     private PsiElement getDeclaration(ClassDocumentation classDoc, Project project) {
-        Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(JavascriptClassIndexer.KEY, classDoc.getName(), GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.allScope(project), JavaScriptFileType.INSTANCE));
+        Collection<VirtualFile> fileCollection = FileBasedIndexImpl.getInstance().getContainingFiles(JavascriptClassIndexer.KEY, classDoc.getName(), GlobalSearchScope.getScopeRestrictedByFileTypes(GlobalSearchScope.everythingScope(project), JavaScriptFileType.INSTANCE));
 
         PsiManager psiManager = PsiManager.getInstance(project);
 
