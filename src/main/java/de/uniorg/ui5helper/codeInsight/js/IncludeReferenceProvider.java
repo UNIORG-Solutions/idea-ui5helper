@@ -46,10 +46,6 @@ public class IncludeReferenceProvider extends PsiReferenceContributor {
 
                         String filePath = (String) ((JSLiteralExpression) element).getValue();
 
-                        if (filePath == null || filePath.startsWith("sap")) {
-                            return PsiReference.EMPTY_ARRAY;
-                        }
-
                         return new PsiReference[]{new ImportedFileReference(element, filePath)};
                     }
                 }

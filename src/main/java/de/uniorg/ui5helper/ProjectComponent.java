@@ -12,9 +12,11 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
+import com.intellij.util.indexing.FileBasedIndex;
 import de.uniorg.ui5helper.cache.CacheStorage;
 import de.uniorg.ui5helper.cache.SdkVersionManager;
 import de.uniorg.ui5helper.framework.ManifestUtil;
+import de.uniorg.ui5helper.index.JavascriptClassIndexer;
 import de.uniorg.ui5helper.index.PathResolver;
 import de.uniorg.ui5helper.settings.Settings;
 import de.uniorg.ui5helper.ui5.ApiIndex;
@@ -107,6 +109,7 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
                                 } else if ("enable_and_download".equals(event.getDescription()) && version != null) {
                                     enableProject(version);
                                     Task.Backgroundable task = SdkVersionManager.getInstance().download(version, file -> {
+                                        ProjectComponent.rebuildIndexes();
                                         Notification restart = new Notification(
                                                 "UI5 Helper",
                                                 "UI5 Helper",
@@ -198,5 +201,9 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
 
     public void changeApiVersion(String selectedVersion) {
         this.apiProvider.getApiIndex(selectedVersion, index -> this.apiIndex = index);
+    }
+
+    public static void rebuildIndexes() {
+        FileBasedIndex.getInstance().requestRebuild(JavascriptClassIndexer.KEY);
     }
 }

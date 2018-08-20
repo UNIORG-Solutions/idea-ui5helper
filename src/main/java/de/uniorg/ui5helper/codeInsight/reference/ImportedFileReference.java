@@ -9,6 +9,7 @@ import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileSyst
 import com.intellij.refactoring.rename.BindablePsiReference;
 import com.intellij.util.IncorrectOperationException;
 import de.uniorg.ui5helper.ProjectComponent;
+import de.uniorg.ui5helper.index.JavascriptClassIndexer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -100,6 +101,11 @@ public class ImportedFileReference extends PsiReferenceBase<PsiElement> implemen
                 return ResolveResult.EMPTY_ARRAY;
             }
             return new PsiElementResolveResult[]{new PsiElementResolveResult(pref)};
+        }
+
+        PsiElement decl = JavascriptClassIndexer.lookupDeclaration(this.getElement().getProject(), this.filePath.replace("/", "."));
+        if (decl != null) {
+            return new PsiElementResolveResult[]{new PsiElementResolveResult(decl)};
         }
 
         PsiFile[] possibleFiles = this.getElement().getProject().getComponent(ProjectComponent.class).getPathResolver().tryLookupFile(filePath, JAVASCRIPT);

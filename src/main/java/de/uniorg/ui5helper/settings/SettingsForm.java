@@ -92,7 +92,9 @@ public class SettingsForm implements Configurable {
         });
 
         downloadSources.addActionListener(actionEvent -> {
-            Task.Backgroundable dl = versionManager.download(getSelectedVersion());
+            Task.Backgroundable dl = versionManager.download(getSelectedVersion(), file -> {
+                ProjectComponent.rebuildIndexes();
+            });
             ProgressManager.getInstance().run(dl);
         });
 
