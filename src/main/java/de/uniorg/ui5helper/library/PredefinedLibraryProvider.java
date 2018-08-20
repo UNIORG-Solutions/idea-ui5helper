@@ -45,7 +45,11 @@ public class PredefinedLibraryProvider extends JSPredefinedLibraryProvider {
                                             && !entry.getName().contains("/test/")
                     )
                     .forEach(entry -> {
-                        String url = "jar:file://" + srcZip.getAbsolutePath().replace("\\", "/") + "!/" + entry.getName();
+                        String path = srcZip.getAbsolutePath().replace("\\", "/");
+                        if (!path.startsWith("/")) {
+                            path = "/" + path;
+                        }
+                        String url = "jar:file:" + path + "!/" + entry.getName();
                         try {
                             VirtualFile file = VfsUtil.findFileByURL(new URL(url));
                             if (file != null) {
