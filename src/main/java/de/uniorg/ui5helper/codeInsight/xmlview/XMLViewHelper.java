@@ -22,6 +22,10 @@ class XMLViewHelper {
         List<PossibleTag> tags = new SmartList<>();
 
         final ApiIndex apiIndex = file.getProject().getComponent(ProjectComponent.class).getApiIndex();
+        if (apiIndex == null) {
+            return Collections.emptyList();
+        }
+
         final ResolverUtil resolver = ResolverUtil.getInstanceOf(apiIndex);
 
         AggregationDocumentation aggregation = null;
@@ -58,7 +62,7 @@ class XMLViewHelper {
         return tags;
     }
 
-    private static Collection<PossibleTag> getPossibleAggregations(@NotNull XmlTag tag, ResolverUtil resolver, ControlTag parentControlDescriptor) {
+    private static Collection<PossibleTag> getPossibleAggregations(@NotNull XmlTag tag, @NotNull ResolverUtil resolver, @NotNull ControlTag parentControlDescriptor) {
         return resolver.getAllAggregations(parentControlDescriptor.getClassDocumentation()).values().stream()
                 .map(aggregationDocumentation -> {
                     String nsprefix = !Objects.equals(tag.getNamespacePrefix(), "") ? tag.getNamespacePrefix() : "";
@@ -71,7 +75,7 @@ class XMLViewHelper {
                 }).collect(Collectors.toSet());
     }
 
-    private static Collection<PossibleTag> getPossibleChildTags(Map<String, String> namespaces, ApiIndex apiIndex, ResolverUtil resolver, AggregationDocumentation aggregation) {
+    private static Collection<PossibleTag> getPossibleChildTags(@NotNull Map<String, String> namespaces, @NotNull ApiIndex apiIndex, @NotNull ResolverUtil resolver, AggregationDocumentation aggregation) {
         List<PossibleTag> tags = new SmartList<>();
         for (Map.Entry<String, String> namespace : namespaces.entrySet()) {
             apiIndex.findDirectInNamespace(namespace.getValue(), ClassDocumentation.class)

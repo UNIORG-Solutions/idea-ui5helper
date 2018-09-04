@@ -24,7 +24,7 @@ import org.jetbrains.grammarkit.tasks.GenerateParser
 def ideVersion = "2018.2"
 
 def group  = 'de.uniorg'
-def pluginVersion = '0.3.1'
+def pluginVersion = '0.3.2'
 
 apply plugin: 'idea'
 apply plugin: 'java'
