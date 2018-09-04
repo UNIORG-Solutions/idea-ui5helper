@@ -13,10 +13,7 @@ import com.intellij.xml.XmlNSDescriptor;
 import com.intellij.xml.impl.schema.AnyXmlAttributeDescriptor;
 import com.intellij.xml.impl.schema.AnyXmlElementDescriptor;
 import de.uniorg.ui5helper.ProjectComponent;
-import de.uniorg.ui5helper.codeInsight.xmlview.attributes.AggregationAttributeDescriptor;
-import de.uniorg.ui5helper.codeInsight.xmlview.attributes.ControllerNameAttributeDescriptor;
-import de.uniorg.ui5helper.codeInsight.xmlview.attributes.EventAttributeDescriptor;
-import de.uniorg.ui5helper.codeInsight.xmlview.attributes.PropertyAttributeDescriptor;
+import de.uniorg.ui5helper.codeInsight.xmlview.attributes.*;
 import de.uniorg.ui5helper.ui5.*;
 import gnu.trove.THashMap;
 import org.jetbrains.annotations.NotNull;
@@ -179,7 +176,7 @@ public class ControlTag implements XmlElementDescriptor {
 
         // add attributes that exists on any control but aren't part of the api.json
         list.add(new AnyXmlAttributeDescriptor("id"));
-        list.add(new AnyXmlAttributeDescriptor("class"));
+        list.add(new ClassAttributeDescriptor());
 
         // add view specific attributes
         if (this.self.getLocalName().endsWith("View")) {
