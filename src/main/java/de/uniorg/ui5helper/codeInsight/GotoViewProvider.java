@@ -50,7 +50,7 @@ public class GotoViewProvider extends RelatedItemLineMarkerProvider {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        if (targets.size() > 0) {
+        if (!targets.isEmpty()) {
             NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(Icons.OPENUI5)
                     .setTargets(targets)
                     .setNamer(psiFile -> {

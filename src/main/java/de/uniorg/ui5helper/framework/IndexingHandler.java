@@ -43,42 +43,44 @@ public class IndexingHandler extends FrameworkIndexingHandler {
 
     @Override
     public boolean processProperty(@Nullable String name, @NotNull JSProperty value, @NotNull JSElementIndexingData outData) {
-        switch (name) {
-            case "properties":
-                if (outData.getImplicitElements() == null) {
-                    return false;
-                }
-                if (value.getContext() != null
-                        && value.getContext().getContext() != null
-                        && value.getContext().getContext().getContext() instanceof JSProperty
-                        && ((JSProperty) value.getContext().getContext().getContext()).getName().equals("metadata")) {
-                    outData.getImplicitElements().removeIf(jsImplicitElement -> jsImplicitElement.getTypeString() == null && (jsImplicitElement.getName().startsWith("get") || jsImplicitElement.getName().startsWith("set")));
-                }
+        if (name == null) {
+            return true;
+        }
+        if ("properties".equals(name)) {
+            if (outData.getImplicitElements() == null) {
+                return false;
+            }
+            if (value.getContext() != null
+                    && value.getContext().getContext() != null
+                    && value.getContext().getContext().getContext() instanceof JSProperty
+                    && ((JSProperty) value.getContext().getContext().getContext()).getName().equals("metadata")) {
+                outData.getImplicitElements().removeIf(jsImplicitElement -> jsImplicitElement.getTypeString() == null && (jsImplicitElement.getName().startsWith("get") || jsImplicitElement.getName().startsWith("set")));
+            }
 
-                break;
-            case "metadata":
-                if (!(value.getValue() instanceof JSObjectLiteralExpression)) {
-                    return true;
-                }
-                JSObjectLiteralExpression object = (JSObjectLiteralExpression) value.getValue();
-                String namespace = this.getMetadataNamespace(object);
 
-                boolean keepIndexing = true;
-                JSProperty properties = object.findProperty("properties");
-                if (namespace != null && properties != null && properties.getValue() instanceof JSObjectLiteralExpression) {
-                    JSObjectLiteralExpression props = (JSObjectLiteralExpression) properties.getValue();
-                    addProperties(outData, namespace, props);
-                    keepIndexing = false;
-                }
+        } else if ("metadata".equals(name)) {
+            if (!(value.getValue() instanceof JSObjectLiteralExpression)) {
+                return true;
+            }
+            JSObjectLiteralExpression object = (JSObjectLiteralExpression) value.getValue();
+            String namespace = this.getMetadataNamespace(object);
 
-                JSProperty aggregations = object.findProperty("aggregations");
-                if (namespace != null && aggregations != null && aggregations.getValue() instanceof JSObjectLiteralExpression) {
-                    JSObjectLiteralExpression props = (JSObjectLiteralExpression) aggregations.getValue();
-                    addAggregations(outData, namespace, props);
-                    keepIndexing = false;
-                }
+            boolean keepIndexing = true;
+            JSProperty properties = object.findProperty("properties");
+            if (namespace != null && properties != null && properties.getValue() instanceof JSObjectLiteralExpression) {
+                JSObjectLiteralExpression props = (JSObjectLiteralExpression) properties.getValue();
+                addProperties(outData, namespace, props);
+                keepIndexing = false;
+            }
 
-                return keepIndexing;
+            JSProperty aggregations = object.findProperty("aggregations");
+            if (namespace != null && aggregations != null && aggregations.getValue() instanceof JSObjectLiteralExpression) {
+                JSObjectLiteralExpression props = (JSObjectLiteralExpression) aggregations.getValue();
+                addAggregations(outData, namespace, props);
+                keepIndexing = false;
+            }
+
+            return keepIndexing;
         }
 
         return true;
@@ -432,8 +434,9 @@ public class IndexingHandler extends FrameworkIndexingHandler {
     }
 
     @NotNull
-    public String[] interestedMethodNames() {
-        return new String[]{"extend", "define"};
+    @Override
+    public String[] inheritanceMethodNames() {
+        return new String[]{"extend"};
     }
 
     @Override
