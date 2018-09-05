@@ -163,11 +163,8 @@ public class SettingsForm implements Configurable {
     @Override
     public void apply() throws ConfigurationException {
         Settings settings = getSettings();
-        if (!settings.ui5Version.equals(getSelectedVersion())) {
-            this.project.getComponent(ProjectComponent.class).changeApiVersion(getSelectedVersion());
-        }
-
         boolean wasEnabled = settings.pluginEnabled;
+        String oldVersion = settings.ui5Version;
         settings.ui5Version = getSelectedVersion();
         settings.pluginEnabled = pluginEnabled.isSelected();
         settings.foldControllerName = collapseControllerName.isSelected();
@@ -175,6 +172,10 @@ public class SettingsForm implements Configurable {
         settings.xmlDocumentation = xmlDocumentation.isSelected();
         settings.xmlGutterIcon = xmlGutterIconCheckbox.isSelected();
         settings.jsFileImportReference = checkImportedFileReferencesCheckBox.isSelected();
+
+        if (!oldVersion.equals(getSelectedVersion())) {
+            this.project.getComponent(ProjectComponent.class).changeApiVersion(getSelectedVersion());
+        }
 
         if (pluginEnabled.isSelected() && !wasEnabled) {
             this.project.getComponent(ProjectComponent.class).projectEnabled();

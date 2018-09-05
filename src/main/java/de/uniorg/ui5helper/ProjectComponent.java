@@ -1,9 +1,12 @@
 package de.uniorg.ui5helper;
 
+import com.intellij.lang.javascript.library.JSLibraryManager;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.TransactionGuard;
+import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbService;
@@ -201,6 +204,11 @@ public class ProjectComponent implements com.intellij.openapi.components.Project
 
     public void changeApiVersion(String selectedVersion) {
         this.apiProvider.getApiIndex(selectedVersion, index -> this.apiIndex = index);
+        TransactionGuard.submitTransaction(this.project, () -> {
+            WriteAction.run(() -> {
+                JSLibraryManager.getInstance(this.project).commitChanges();
+            });
+        });
     }
 
     public static void rebuildIndexes() {
