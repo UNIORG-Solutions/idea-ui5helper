@@ -57,10 +57,7 @@ public class ImportedFileReference extends PsiReferenceBase<PsiElement> implemen
 
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
         //TODO: keep absolute paths absolute.
-        String relPath = PsiFileSystemItemUtil.getRelativePath(
-                this.getElement().getContainingFile(),
-                element.getContainingFile()
-        ).replace(".js", "");
+        String relPath = PsiFileSystemItemUtil.getRelativePathFromAncestor(this.getElement().getContainingFile(), element.getContainingFile()).replace(".js", "");
         return rename(relPath);
     }
 
