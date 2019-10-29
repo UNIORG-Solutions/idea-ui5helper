@@ -11,8 +11,6 @@
   elementTypeHolderClass="de.uniorg.ui5helper.binding.psi.BindingTypes"
   elementTypeClass="de.uniorg.ui5helper.binding.psi.BindingElementType"
   tokenTypeClass="de.uniorg.ui5helper.binding.psi.BindingTokenType"
-
-  psiImplUtilClass="de.uniorg.ui5helper.binding.psi.impl.BindingParserImplUtil"
 }
 
 value ::= item_*
