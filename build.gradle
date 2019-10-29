@@ -1,8 +1,8 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
-        maven { url 'https://jitpack.io' }
+        maven { url = "http://dl.bintray.com/jetbrains/intellij-plugin-service" }
+        maven { url = "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.github.hurricup:gradle-grammar-kit-plugin:2018.1.7'
@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.intellij' version '0.3.5'
+    id 'org.jetbrains.intellij' version '0.4.10'
 }
 
 repositories {
@@ -21,10 +21,10 @@ repositories {
 import org.jetbrains.grammarkit.tasks.GenerateLexer
 import org.jetbrains.grammarkit.tasks.GenerateParser
 
-def ideVersion = "2018.2"
+def ideVersion = "2019.2"
 
 def group  = 'de.uniorg'
-def pluginVersion = '0.3.2'
+def pluginVersion = '0.4.0'
 
 apply plugin: 'idea'
 apply plugin: 'java'
@@ -37,6 +37,7 @@ allprojects {
         plugin("org.jetbrains.intellij")
     }
 
+    sourceCompatibility = 1.8
     repositories {
         mavenCentral()
     }
@@ -48,8 +49,8 @@ allprojects {
     }
 
     patchPluginXml {
-        version pluginVersion
-        pluginId "${group}.${project.name}"
+        version = pluginVersion
+        pluginId  = "${group}.${project.name}"
     }
 
     sourceSets {
@@ -84,16 +85,16 @@ allprojects {
 }
 
 task generateBindingLexer(type: GenerateLexer) {
-    source 'src/main/grammars/binding/BindingLexer.flex'
-    targetDir 'src/main/gen/de/uniorg/ui5helper/binding/'
-    targetClass 'BindingLexer'
+    source = 'src/main/grammars/binding/BindingLexer.flex'
+    targetDir = 'src/main/gen/de/uniorg/ui5helper/binding/'
+    targetClass = 'BindingLexer'
 }
 
 task generateBindingParser(type: GenerateParser) {
-    source 'src/main/grammars/binding/Binding.bnf'
-    targetRoot 'src/main/gen'
-    pathToParser '/de/uniorg/ui5helper/binding/RustParser.java'
-    pathToPsiRoot '/de/uniorg/ui5helper/binding/psi/'
+    source = 'src/main/grammars/binding/Binding.bnf'
+    targetRoot = 'src/main/gen'
+    pathToParser = '/de/uniorg/ui5helper/binding/RustParser.java'
+    pathToPsiRoot = '/de/uniorg/ui5helper/binding/psi/'
 }
 
 compileJava.dependsOn(generateBindingLexer, generateBindingParser)
