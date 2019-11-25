@@ -140,16 +140,6 @@ public class ControlTag implements XmlElementDescriptor {
 
     }
 
-    /**
-     * @return objects this meta data depends on.
-     * @see CachedValue
-     */
-    @NotNull
-    @Override
-    public Object[] getDependences() {
-        return ArrayUtil.EMPTY_OBJECT_ARRAY;
-    }
-
     private ApiIndex getApiIndex(Project project) {
         return project.getComponent(ProjectComponent.class).getApiIndex();
     }

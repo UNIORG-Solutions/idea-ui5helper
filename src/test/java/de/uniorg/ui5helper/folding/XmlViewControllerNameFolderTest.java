@@ -1,13 +1,13 @@
 package de.uniorg.ui5helper.folding;
 
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import de.uniorg.ui5helper.Features;
 import de.uniorg.ui5helper.ProjectComponent;
 import de.uniorg.ui5helper.settings.Settings;
 
 import java.io.File;
 
-public class XmlViewControllerNameFolderTest extends LightPlatformCodeInsightFixtureTestCase {
+public class XmlViewControllerNameFolderTest extends BasePlatformTestCase {
     @Override
     public String getTestDataPath() {
         return new File("src/test/resources/folding").getAbsolutePath();
