@@ -3,14 +3,14 @@ package de.uniorg.ui5helper.codeInsight.xmlview;
 import com.intellij.lang.xml.XMLLanguage;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import de.uniorg.ui5helper.ProjectComponent;
 
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class XMLViewHelperTest extends LightPlatformCodeInsightFixtureTestCase {
+public class XMLViewHelperTest extends BasePlatformTestCase {
     public void setUp() throws java.lang.Exception {
         super.setUp();
         myFixture.getProject().getComponent(ProjectComponent.class).enableProject(null);

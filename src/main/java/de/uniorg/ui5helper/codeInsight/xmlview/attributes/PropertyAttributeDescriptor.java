@@ -71,11 +71,6 @@ public class PropertyAttributeDescriptor extends BasicXmlAttributeDescriptor imp
     }
 
     @Override
-    public Object[] getDependences() {
-        return ArrayUtil.EMPTY_OBJECT_ARRAY;
-    }
-
-    @Override
     public boolean isFixed() {
         return false;
     }

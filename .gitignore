@@ -1,5 +1,23 @@
-.gradle/
+# Gen & Build
 src/main/gen/
 build/
+
+# Gradle
+.gradle/
+.idea/**/gradle.xml
+.idea/**/libraries
 gradle.properties
-.idea/workspace.xml
+
+.idea/artifacts
+.idea/compiler.xml
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+

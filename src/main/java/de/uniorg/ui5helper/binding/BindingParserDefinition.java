@@ -67,9 +67,4 @@ public class BindingParserDefinition implements ParserDefinition {
     public PsiFile createFile(FileViewProvider fileViewProvider) {
         return new BindingFile(fileViewProvider);
     }
-
-    @Override
-    public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode astNode, ASTNode astNode1) {
-        return SpaceRequirements.MAY;
-    }
 }

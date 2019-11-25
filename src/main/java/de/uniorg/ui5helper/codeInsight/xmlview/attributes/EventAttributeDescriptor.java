@@ -70,11 +70,6 @@ public class EventAttributeDescriptor extends BasicXmlAttributeDescriptor implem
     }
 
     @Override
-    public Object[] getDependences() {
-        return ArrayUtil.EMPTY_OBJECT_ARRAY;
-    }
-
-    @Override
     public boolean isFixed() {
         return false;
     }

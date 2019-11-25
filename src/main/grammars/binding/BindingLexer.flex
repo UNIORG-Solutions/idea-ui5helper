@@ -216,11 +216,11 @@ BIN_LITERAL = "0b" [01_]*
 
 <NEXT_IS_EMBEDDED> {
     "{"                      {
-        yybegin(IN_CONTEXT);
-        contexts.push(ContextType.UNKNOWN);
-        beforeFirstIdentifier = true;
-        afterFirstIdentifier = false;
-        return BindingTypes.CURLY_OPEN;
-     }
-    .                       { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
+                                yybegin(IN_CONTEXT);
+                                contexts.push(ContextType.UNKNOWN);
+                                beforeFirstIdentifier = true;
+                                afterFirstIdentifier = false;
+                                return BindingTypes.CURLY_OPEN;
+                             }
+    .                        { yybegin(YYINITIAL); return TokenType.BAD_CHARACTER; }
 }

@@ -1,9 +1,9 @@
 package de.uniorg.ui5helper.codeInsight.binding;
 
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import de.uniorg.ui5helper.ProjectComponent;
 
-public class SimplifyBindingAnnotatorTest extends LightPlatformCodeInsightFixtureTestCase {
+public class SimplifyBindingAnnotatorTest extends BasePlatformTestCase {
     public void testCreatesAnnotation() {
         myFixture.getProject().getComponent(ProjectComponent.class).enableProject(null);
 
